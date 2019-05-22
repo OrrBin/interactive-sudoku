@@ -5,10 +5,10 @@
  *      Author: orrbo
  */
 #include <stdio.h>
-#include "SPBufferset.h"
-#include "main_aux.h"
 
-#define MAX_HEAPS = 32
+#include "main_aux.h"
+#include "SPBufferset.h"
+
 
 int main(void) {
 
