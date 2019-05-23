@@ -25,3 +25,5 @@ int isLastCell(Board* board, int row, int col);
 int isLastCellInRow(Board* board, int row, int col);
 
 void freeBoard(Board *board);
+
+int isStringsEqual(char *string1, char *string2);

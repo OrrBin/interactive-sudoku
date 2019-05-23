@@ -23,6 +23,8 @@ typedef struct Boards
 	int rows;
 	int cols;
 	Cell* cells ;
+	Cell* solution;
+
 	int numOfEmptyCells;
 	int blockHeight;
 	int blockWidth;
