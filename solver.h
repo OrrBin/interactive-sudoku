@@ -11,3 +11,8 @@
 
 
 #endif /* SOLVER_H_ */
+
+
+Board *recursiveBackTracking(Board* board, Board* destination);
+
+Board randomizeBackTracking(Board board);
