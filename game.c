@@ -8,8 +8,22 @@
 #include <stdlib.h>
 #include "util.h"
 
-void setValueOfCell(Board *board, int row, int col, int value) {
-	board->cells[cellNum(board, row, col)].value = value;
+void setValueOfCell(Board *board, int row, int col, int value)
+{
+	if(board->cells[cellNum(board, row, col)].isFixed)
+	{
+		printf("Error: cell is fixed\n");
+	}
+
+	else if(checkValidValue(board, row, col, value))
+	{
+		board->cells[cellNum(board, row, col)].value = value;
+	}
+
+	else
+	{
+		printf("Error: value is invalid\n");
+	}
 }
 
 void clearCell(Board *board, int row, int col) {
@@ -75,3 +89,22 @@ int validateValue(Board *board, int row, int col, int value) {
 	return valid;
 }
 
+void hint(Board *board, int row, int col)
+{
+	printf("Hint: set cell to %d\n", board->solution[cellNum(board, row, col)].value);
+}
+
+void validate(Board *board)
+{
+
+}
+
+void restart(Board *board)
+{
+
+}
+
+void exitGame(Board *board)
+{
+
+}

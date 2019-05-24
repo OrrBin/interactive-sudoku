@@ -11,6 +11,7 @@
 #include "SPBufferset.h"
 #include  "util.h"
 #include "solver.h"
+#include "parser.h"
 
 int main() {
 
@@ -39,8 +40,6 @@ int main() {
 //		}
 	}
 
-	printf("after init cells\n");
-
 	board->cols = 9;
 	board->rows = 9;
 	board->cells = cells;
@@ -52,7 +51,7 @@ int main() {
 
 	isSuccess = recursiveBackTracking(board, result);
 
-	if(!isSuccess) {
+	if (!isSuccess) {
 		printf("NULLLLL");
 	}
 

@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "types.h"
+#include <string.h>
 
 int cellNum(Board* board, int row, int col) {
 	return row * (board->cols) + col;
@@ -51,4 +52,9 @@ int isLastCellInRow(Board* board, int row, int col) {
 void freeBoard(Board *board) {
 	free(board->cells);
 	free(board);
+}
+
+int isStringsEqual(char *string1, char *string2)
+{
+	return strcmp(string1, string2)==0;
 }
