@@ -9,41 +9,46 @@
 #include "util.h"
 #include "game.h"
 
-Board *recursiveBackTrackingStep(Board *board, int row, int col) {
-	int idx;
+int recursiveBackTrackingStep(Board *board, int row, int col) {
+	int idx, result;
 
 	printf("Got row,col: %d, %d\n", row, col);
 
 	if (isCellFixed(board, row, col)) {
-//		printf("cell fixed");
+		if (isLastCell(board, row, col)) {
+			return 1;
+		}
 		if (isLastCellInRow(board, row, col))
 			return recursiveBackTrackingStep(board, row + 1, 0);
 
 		return recursiveBackTrackingStep(board, row, col + 1);
 	}
-//	printf("cell NOT fixed");
 
-	for (idx = 1; idx <= 9; idx++) {
-		if (checkValidValue(board, row, col, idx)) {
+	for (idx = 1; idx <= board->rows; idx++) {
+		if (validateValue(board, row, col, idx)) {
 			setValueOfCell(board, row, col, idx);
 			if (!isLastCell(board, row, col)) {
 				if (isLastCellInRow(board, row, col)) {
-					board = recursiveBackTrackingStep(board, row + 1, 0);
-				}
+					result = recursiveBackTrackingStep(board, row + 1, 0);
+				} else
+					result = recursiveBackTrackingStep(board, row, col + 1);
 
-				board = recursiveBackTrackingStep(board, row, col + 1);
 			}
-			if (board != NULL)
-				return board;
+			if (result)
+				return 1;
 		}
 	}
-
-	return NULL;
+	clearCell(board, row, col);
+	return 0;
 }
 
-Board *recursiveBackTracking(Board *board, Board *result) {
+int recursiveBackTracking(Board *board, Board *result) {
+	int isSuccess;
 	printf("going to cpy board\n");
 	cpyBoard(board, result);
 	printf("cpyd board\n");
-	return recursiveBackTrackingStep(result, 0, 0);
+	isSuccess = recursiveBackTrackingStep(result, 0, 0);
+
+
+	return isSuccess;
 }

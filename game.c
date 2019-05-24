@@ -12,7 +12,12 @@ void setValueOfCell(Board *board, int row, int col, int value) {
 	board->cells[cellNum(board, row, col)].value = value;
 }
 
-int checkValidRow(Board *board, int row, int col, int value) {
+void clearCell(Board *board, int row, int col) {
+	setValueOfCell(board, row, col, 0);
+}
+
+
+int validateRow(Board *board, int row, int col, int value) {
 	int i, testCell;
 	int currentCell = cellNum(board, row, col);
 	for (i = 0; i < board->cols; i++) {
@@ -24,29 +29,34 @@ int checkValidRow(Board *board, int row, int col, int value) {
 	return 1;
 }
 
-int checkValidCol(Board *board, int row, int col, int value) {
+int validateCol(Board *board, int row, int col, int value) {
+	printf("validate col\n");
 	int i, testCell;
 	int currentCell = cellNum(board, row, col);
 	for (i = 0; i < board->rows; i++) {
 		testCell = cellNum(board, i, col);
+		printf("col cell num : %d\n", testCell);
 		if (testCell != currentCell && board->cells[testCell].value == value) {
+			printf("Not valid\n");
 			return 0;
 		}
 	}
+	printf("Valid\n");
 	return 1;
 }
 
-int checkValidBlock(Board *board, int row, int col, int value) {
+int validateBlock(Board *board, int row, int col, int value) {
 	int i, j, testCell;
 	int blocRow = row / (board->blockHeight);
-	int blocCol = col/ (board->blockWidth);
-	printf("%d, %d, %d , %d\n",row, col, blocRow, blocCol);
+	int blocCol = col / (board->blockWidth);
+//	printf("%d, %d, %d , %d\n", row, col, blocRow, blocCol);
 	int currentCell = cellNum(board, row, col);
 
-	for (i = blocRow * board->blockHeight; i < board->blockHeight; i++) {
-		for (j = blocCol * board->blockWidth; j < board->blockWidth; j++) {
+	for (i = blocRow * (board->blockHeight); i < blocRow * (board->blockHeight) + board->blockHeight; i++) {
+		for (j = blocCol * (board->blockWidth); j < blocCol * (board->blockWidth) + board->blockWidth; j++) {
 			testCell = cellNum(board, i, j);
-			if (testCell != currentCell && board->cells[testCell].value == value) {
+			if (testCell != currentCell
+					&& board->cells[testCell].value == value) {
 				return 0;
 			}
 		}
@@ -54,10 +64,14 @@ int checkValidBlock(Board *board, int row, int col, int value) {
 	return 1;
 }
 
-int checkValidValue(Board *board, int row, int col, int value) {
-	return
-			checkValidBlock(board, row, col, value);
-//		 checkValidRow(board, row, col, value);
-//			&& checkValidCol(board, row, col, value);
+int validateValue(Board *board, int row, int col, int value) {
+	int valid;
+	valid = validateBlock(board, row, col, value)
+			&& validateRow(board, row, col, value)
+			&& validateCol(board, row, col, value);
+
+	printf("validate value: %d, %d\n", valid, value);
+
+	return valid;
 }
 

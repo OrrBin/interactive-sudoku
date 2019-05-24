@@ -10,11 +10,11 @@
 #endif /* GAME_H_ */
 
 
-int checkValidValue(Board *board, int row, int col, int value);
+int validateValue(Board *board, int row, int col, int value);
 
 void setValueOfCell(Board *board, int row, int col, int value);
 
-void clearCell(Board board, int row, int col);
+void clearCell(Board *board, int row, int col);
 
 Board initBoard(int rows, int cols, int numOfFixedCells);
 

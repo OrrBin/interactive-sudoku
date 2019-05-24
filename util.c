@@ -41,7 +41,7 @@ int isCellFixed(Board* board, int row, int col) {
 }
 
 int isLastCell(Board* board, int row, int col) {
-	return cellNum(board, row, col) == board->cols * board->rows - 1;
+	return cellNum(board, row, col) == (board->cols) * (board->rows) - 1;
 }
 
 int isLastCellInRow(Board* board, int row, int col) {

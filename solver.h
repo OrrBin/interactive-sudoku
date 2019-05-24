@@ -13,6 +13,6 @@
 #endif /* SOLVER_H_ */
 
 
-Board *recursiveBackTracking(Board* board, Board* destination);
+int recursiveBackTracking(Board* board, Board* destination);
 
-Board randomizeBackTracking(Board board);
+int randomizeBackTracking(Board* board, Board* destination);
