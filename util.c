@@ -14,31 +14,77 @@ int cellNum(Board* board, int row, int col) {
 	return row * (board->cols) + col;
 }
 
-void cpyBoard(Board* board, Board* destination) {
+
+int cellRow(Board* board, int cellNum) {
+	return cellNum / (board->cols);
+}
+
+int cellCol(Board* board, int cellNum) {
+	return cellNum % (board->cols);
+}
+
+int *createRange(int numOfValidValues, int *validIndexes) {
+	int idx;
+	validIndexes = (int *) malloc(numOfValidValues * sizeof(int));
+	for (idx = 0; idx < numOfValidValues; idx++) {
+		validIndexes[idx] = idx;
+	}
+
+	return validIndexes;
+}
+
+int *removeAtIndex(int *array, int size, int idx) {
+	int* temp = malloc((size - 1) * sizeof(int)); // allocate an array with a size 1 less than the current one
+
+	if (idx != 0)
+		memcpy(temp, array, idx * sizeof(int)); // copy everything BEFORE the index
+
+	if (idx != (size - 1))
+		memcpy(temp + idx, array + idx + 1, (size - idx - 1) * sizeof(int)); // copy everything AFTER the index
+
+	free(array);
+	return temp;
+}
+
+int isCellFixed(Board* board, int row, int col) {
+	return board->cells[cellNum(board, row, col)].isFixed;
+}
+
+int isCellEmpty(Board* board, int row, int col) {
+	return board->cells[cellNum(board, row, col)].value == 0;
+}
+
+Board *cpyBoardImpl(Board* board, Board* destination, int asFixed) {
 	int i;
 	Cell *cells;
-	printf("before cells init board rows and cols: %d\n", ((board->rows * board->cols) * sizeof(Cell)));
 	cells = (Cell*) malloc((board->rows * board->cols) * sizeof(Cell));
-	if(cells == NULL) {
+	if (cells == NULL) {
 		printf("ERROR in malloc cells\n");
 	}
-	printf("cells init\n");
 	for (i = 0; i < board->rows * board->cols; i++) {
 		cells[i].value = board->cells[i].value;
-		cells[i].isFixed = board->cells[i].isFixed;
+
+		if (asFixed && cells[i].value != 0)
+			cells[i].isFixed = 1;
+		else
+			cells[i].isFixed = board->cells[i].isFixed;
 	}
-	printf("for cells init");
 	destination->rows = board->rows;
 	destination->cols = board->cols;
 	destination->numOfEmptyCells = board->numOfEmptyCells;
 	destination->cells = cells;
 	destination->blockHeight = board->blockHeight;
 	destination->blockWidth = board->blockWidth;
-	printf("destination init");
+
+	return destination;
 }
 
-int isCellFixed(Board* board, int row, int col) {
-	return board->cells[cellNum(board, row, col)].isFixed;
+Board *cpyBoard(Board* board, Board* destination) {
+	return cpyBoardImpl(board, destination, 0);
+}
+
+Board *cpyBoardAsFixed(Board* board, Board* destination) {
+	return cpyBoardImpl(board, destination, 1);
 }
 
 int isLastCell(Board* board, int row, int col) {
@@ -51,10 +97,39 @@ int isLastCellInRow(Board* board, int row, int col) {
 
 void freeBoard(Board *board) {
 	free(board->cells);
+	free(board->solution);
 	free(board);
 }
 
-int isStringsEqual(char *string1, char *string2)
-{
-	return strcmp(string1, string2)==0;
+int isStringsEqual(char *string1, char *string2) {
+	return strcmp(string1, string2) == 0;
+}
+
+void printBoard(Board *board) {
+	int i, j;
+
+	printf("----------------------------------\n");
+	for (i = 0; i < board->rows; i++) {
+		printf("| ");
+		for (j = 0; j < board->cols; j++) {
+
+			if (isCellFixed(board, i, j)) {
+				if (isCellEmpty(board, i, j))
+					printf(".  ");
+				else
+					printf(".%d ", board->cells[cellNum(board, i, j)].value);
+			} else {
+				if (isCellEmpty(board, i, j))
+					printf("   ");
+				else
+					printf(" %d ", board->cells[cellNum(board, i, j)].value);
+			}
+			if ((j + 1) % (board->blockWidth) == 0)
+				printf("| ");
+		}
+		printf("\n");
+		if ((i + 1) % (board->blockHeight) == 0)
+			printf("----------------------------------\n");
+
+	}
 }

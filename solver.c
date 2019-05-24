@@ -5,16 +5,31 @@
  *      Author: yarden.flori
  */
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "util.h"
 #include "game.h"
 
+int handleCell(Board *board, int row, int col, int value,
+		int (*callback)(Board *, int, int)) {
+	int result;
+	setValueOfCell(board, row, col, value);
+	if (!isLastCell(board, row, col)) {
+		if (isLastCellInRow(board, row, col)) {
+			result = callback(board, row + 1, 0);
+		} else
+			result = callback(board, row, col + 1);
+	}
+	return result;
+
+}
+
 int recursiveBackTrackingStep(Board *board, int row, int col) {
 	int idx, result;
 
-	printf("Got row,col: %d, %d\n", row, col);
-
 	if (isCellFixed(board, row, col)) {
+		if(!validateValue(board, row, col, board->cells[cellNum(board, row, col)].value))
+			return 0;
 		if (isLastCell(board, row, col)) {
 			return 1;
 		}
@@ -26,14 +41,8 @@ int recursiveBackTrackingStep(Board *board, int row, int col) {
 
 	for (idx = 1; idx <= board->rows; idx++) {
 		if (validateValue(board, row, col, idx)) {
-			setValueOfCell(board, row, col, idx);
-			if (!isLastCell(board, row, col)) {
-				if (isLastCellInRow(board, row, col)) {
-					result = recursiveBackTrackingStep(board, row + 1, 0);
-				} else
-					result = recursiveBackTrackingStep(board, row, col + 1);
-
-			}
+			result = handleCell(board, row, col, idx,
+					recursiveBackTrackingStep);
 			if (result)
 				return 1;
 		}
@@ -42,13 +51,95 @@ int recursiveBackTrackingStep(Board *board, int row, int col) {
 	return 0;
 }
 
-int recursiveBackTracking(Board *board, Board *result) {
+int recursiveBackTracking(Board *board, Board *destination) {
 	int isSuccess;
-	printf("going to cpy board\n");
-	cpyBoard(board, result);
-	printf("cpyd board\n");
-	isSuccess = recursiveBackTrackingStep(result, 0, 0);
-
+	destination = cpyBoard(board, destination);
+	isSuccess = recursiveBackTrackingStep(destination, 0, 0);
 
 	return isSuccess;
 }
+
+int checkValidValuesNum(Board *board, int row, int col) {
+	int idx, numOfValidValues = 0;
+	for (idx = 1; idx <= board->rows; idx++) {
+		if (validateValue(board, row, col, idx)) {
+			numOfValidValues++;
+		}
+	}
+	return numOfValidValues;
+}
+
+int *checkValidValues(Board *board, int row, int col, int *validValues) {
+	int idx, counter, values[9] = { 0 }, numOfValidValues = 0;
+	for (idx = 1; idx <= board->rows; idx++) {
+		if (validateValue(board, row, col, idx)) {
+			values[idx - 1] = 1;
+			numOfValidValues++;
+		}
+	}
+
+	validValues = (int *) malloc(numOfValidValues * sizeof(int));
+
+	counter = 0;
+	for (idx = 0; idx <= 9; idx++) {
+		if (values[idx] == 1)
+			validValues[counter++] = idx + 1;
+	}
+
+	return validValues;
+
+}
+
+
+int randomizeBackTrackingStep(Board *board, int row, int col) {
+	int idx, result, currentIdx, currentValue = 0;
+	int *validValues = NULL, numOfValidValues = 0, *validIndexes = NULL;
+
+	if (isCellFixed(board, row, col)) {
+		if (isLastCell(board, row, col)) {
+			return 1;
+		}
+		if (isLastCellInRow(board, row, col))
+			return randomizeBackTrackingStep(board, row + 1, 0);
+
+		return randomizeBackTrackingStep(board, row, col + 1);
+	}
+
+	numOfValidValues = checkValidValuesNum(board, row, col);
+	validValues = checkValidValues(board, row, col, validValues);
+
+
+	if (numOfValidValues == 1) {
+		currentValue = validValues[0];
+		result = handleCell(board, row, col, currentValue,
+				randomizeBackTrackingStep);
+		if (result)
+			return 1;
+
+	} else if(numOfValidValues > 1) {
+		validIndexes = createRange(numOfValidValues, validIndexes);
+
+		for (idx = 0; idx < numOfValidValues; idx++) {
+			currentIdx = rand() % (numOfValidValues - idx);
+			currentValue = validValues[currentIdx];
+			validIndexes = removeAtIndex(validIndexes, (numOfValidValues - idx),
+					currentIdx);
+			result = handleCell(board, row, col, currentValue,
+					randomizeBackTrackingStep);
+			if (result)
+				return 1;
+		}
+	}
+
+	clearCell(board, row, col);
+	return 0;
+}
+
+int randomizeBackTracking(Board* board, Board* destination) {
+	int isSuccess;
+	destination = cpyBoard(board, destination);
+	isSuccess = randomizeBackTrackingStep(destination, 0, 0);
+
+	return isSuccess;
+}
+

@@ -14,9 +14,22 @@
 
 #include "types.h"
 
+
+void printBoard(Board* board);
+
+int *createRange(int numOfValidValues, int *validIndexes);
+
+int *removeAtIndex(int *array, int size, int idx);
+
 int cellNum(Board* board, int row, int col);
 
+int cellRow(Board* board, int cellNum);
+
+int cellCol(Board* board, int cellNum);
+
 Board* cpyBoard(Board* board, Board* destination);
+
+Board *cpyBoardAsFixed(Board* board, Board* destination);
 
 int isCellFixed(Board* board, int row, int col);
 
