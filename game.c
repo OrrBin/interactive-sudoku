@@ -124,8 +124,6 @@ Board* initGameWithNumberOfCellsToFill(int dimension, int numberOfCellsToFill)
 	cells1 = (Cell *) malloc((81) * sizeof(Cell));
 	cells2 = (Cell *) malloc((81) * sizeof(Cell));
 
-	printBoard(board);
-
 	for (i = 0; i < 81; i++)
 	{
 		cells1[i].value = 0;
@@ -144,13 +142,7 @@ Board* initGameWithNumberOfCellsToFill(int dimension, int numberOfCellsToFill)
 	board->blockHeight=3;
 	board->blockWidth=3;
 
-	solution->rows=dimension;
-	solution->cols=dimension;
-	solution->cells=cells2;
-	solution->solution=solution->cells;
-	solution->numOfEmptyCells=dimension*dimension;
-	solution->blockHeight=3;
-	solution->blockWidth=3;
+	solution = cpyBoard(board, solution);
 
 	randomizeBackTrackingStep(solution, 0, 0);
 
