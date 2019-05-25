@@ -18,6 +18,8 @@ void clearCell(Board *board, int row, int col);
 
 Board initBoard(int rows, int cols, int numOfFixedCells);
 
+void initGame();
+
 void hint(Board *board, int row, int col);
 
 void validate(Board *board);
