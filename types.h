@@ -12,6 +12,8 @@
 
 #endif /* TYPES_H_ */
 
+#define MAX_CHARS_IN_COMMAND 1024
+
 typedef struct Cells
 {
 	int value;

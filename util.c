@@ -7,13 +7,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "types.h"
 #include <string.h>
+#include "types.h"
 
 int cellNum(Board* board, int row, int col) {
 	return row * (board->cols) + col;
 }
-
 
 int cellRow(Board* board, int cellNum) {
 	return cellNum / (board->cols);
@@ -83,6 +82,12 @@ Board *cpyBoard(Board* board, Board* destination) {
 	return cpyBoardImpl(board, destination, 0);
 }
 
+Cell *cpyCellArray(Cell *src, int size) {
+	Cell * p = (Cell *) malloc(size * sizeof(Cell));
+	memcpy(p, src, size * sizeof(Cell));
+	return p;
+}
+
 Board *cpyBoardAsFixed(Board* board, Board* destination) {
 	return cpyBoardImpl(board, destination, 1);
 }
@@ -96,13 +101,21 @@ int isLastCellInRow(Board* board, int row, int col) {
 }
 
 void freeBoard(Board *board) {
-	free(board->cells);
-	free(board->solution);
-	free(board);
+	if (board != NULL) {
+		if (board->cells != NULL)
+			free(board->cells);
+		if (board->solution != NULL)
+			free(board->solution);
+		free(board);
+	}
 }
 
 int isStringsEqual(char *string1, char *string2) {
 	return strcmp(string1, string2) == 0;
+}
+
+void getStringFromUser(char *cmd) {
+	fgets(cmd, MAX_CHARS_IN_COMMAND, stdin);
 }
 
 void printBoard(Board *board) {

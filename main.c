@@ -15,14 +15,21 @@
 #include "parser.h"
 
 int main() {
+
+	Board* board;
+	SP_BUFF_SET();
+
+
 	setbuf(stdout, NULL);
 	int seed = 11;
 	srand(seed);
 
-	Board* board;
+	board = initGame(9, 3, 3);
 
+	while(1) {
+		playTurn(&board);
+	}
 
-	initGame(9);
 
 
 

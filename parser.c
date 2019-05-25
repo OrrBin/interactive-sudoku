@@ -12,17 +12,21 @@
 #include "util.h"
 #include "game.h"
 
-void parseCommand(Board *board, char* command)
+void parseCommand(Board **boardP, char* command)
 {
+
 	int col, row, val;
 	char *token = strtok(command, " ");
+	Board *board = *boardP;
 
 	if(isStringsEqual(token, "set"))
 	{
 		row = atoi (strtok(NULL, " "));
 		col = atoi (strtok(NULL, " "));
 		val = atoi (strtok(NULL, " "));
+
 		setValueOfCell(board, row, col, val);
+		printBoard(board);
 	}
 
 	else if(isStringsEqual(token, "hint"))
@@ -39,7 +43,7 @@ void parseCommand(Board *board, char* command)
 
 	else if(isStringsEqual(token, "restart"))
 	{
-		restart(board);
+		*boardP = restart(board);
 	}
 
 

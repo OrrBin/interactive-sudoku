@@ -14,7 +14,6 @@
 
 #include "types.h"
 
-
 void printBoard(Board* board);
 
 int *createRange(int numOfValidValues, int *validIndexes);
@@ -29,6 +28,8 @@ int cellCol(Board* board, int cellNum);
 
 Board* cpyBoard(Board* board, Board* destination);
 
+Cell *cpyCellArray(Cell *src, int size);
+
 Board *cpyBoardAsFixed(Board* board, Board* destination);
 
 int isCellFixed(Board* board, int row, int col);
@@ -40,3 +41,5 @@ int isLastCellInRow(Board* board, int row, int col);
 void freeBoard(Board *board);
 
 int isStringsEqual(char *string1, char *string2);
+
+void getStringFromUser();

@@ -18,13 +18,15 @@ void clearCell(Board *board, int row, int col);
 
 Board initBoard(int rows, int cols, int numOfFixedCells);
 
-void initGame();
+Board* initGame(int dimension, int blockHeight, int blockWidth);
+
+void playTurn(Board **boardP);
 
 void hint(Board *board, int row, int col);
 
 void validate(Board *board);
 
-void restart(Board *board);
+Board* restart(Board *board);
 
 void exitGame(Board *board);
 

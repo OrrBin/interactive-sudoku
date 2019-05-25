@@ -6,9 +6,10 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "util.h"
 #include "solver.h"
-#include <time.h>
+#include "parser.h"
 
 int validateRow(Board *board, int row, int col, int value) {
 	int i, testCell;
@@ -56,6 +57,7 @@ int validateBlock(Board *board, int row, int col, int value) {
 
 int validateValue(Board *board, int row, int col, int value) {
 	int valid;
+
 	valid = validateBlock(board, row, col, value)
 			&& validateRow(board, row, col, value)
 			&& validateCol(board, row, col, value);
@@ -64,6 +66,7 @@ int validateValue(Board *board, int row, int col, int value) {
 }
 
 void setValueOfCell(Board *board, int row, int col, int value) {
+
 	if (board->cells[cellNum(board, row, col)].isFixed) {
 		printf("Error: cell is fixed\n");
 	}
@@ -95,7 +98,7 @@ void validate(Board *board) {
 	int isSuccess;
 	Board *resultBoard = (Board *) malloc(sizeof(Board));
 	Board *fixedBoard = cpyBoardAsFixed(board, resultBoard);
-	printBoard(fixedBoard);
+	//printBoard(fixedBoard);
 	isSuccess = recursiveBackTracking(fixedBoard, resultBoard);
 	if (isSuccess) {
 		board->solution = resultBoard->cells;
@@ -106,25 +109,31 @@ void validate(Board *board) {
 	}
 }
 
-void restart(Board *board) {
+void playTurn(Board **boardP) {
+	char cmd[MAX_CHARS_IN_COMMAND];
 
+	getStringFromUser(cmd);
+
+	parseCommand(boardP, cmd);
 }
 
 void exitGame(Board *board) {
-
+	freeBoard(board);
+	printf("Exiting…\n");
+	exit(0);
 }
 
-Board* initGameWithNumberOfCellsToFill(int dimension, int numberOfCellsToFill)
+Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight, int blockWidth, int numberOfCellsToFill)
 {
 	int i=0, randX, randY;
 	Cell *cells1, *cells2;
 	Board *solution = (Board *) malloc(sizeof(Board));
 	Board *board = (Board *) malloc(sizeof(Board));
 
-	cells1 = (Cell *) malloc((81) * sizeof(Cell));
-	cells2 = (Cell *) malloc((81) * sizeof(Cell));
+	cells1 = (Cell *) malloc((dimension*dimension) * sizeof(Cell));
+	cells2 = (Cell *) malloc((dimension*dimension) * sizeof(Cell));
 
-	for (i = 0; i < 81; i++)
+	for (i = 0; i < dimension*dimension; i++)
 	{
 		cells1[i].value = 0;
 		cells1[i].isFixed = 0;
@@ -137,14 +146,15 @@ Board* initGameWithNumberOfCellsToFill(int dimension, int numberOfCellsToFill)
 	board->rows=dimension;
 	board->cols=dimension;
 	board->cells=cells1;
-	board->solution=solution->cells;
 	board->numOfEmptyCells=dimension*dimension;
-	board->blockHeight=3;
-	board->blockWidth=3;
+	board->blockHeight=blockHeight;
+	board->blockWidth=blockWidth;
 
 	solution = cpyBoard(board, solution);
 
-	randomizeBackTrackingStep(solution, 0, 0);
+	randomizeBackTracking(solution, solution);
+
+	board->solution=cpyCellArray(solution->cells, dimension*dimension);
 
 	while(i<numberOfCellsToFill)
 	{
@@ -160,11 +170,15 @@ Board* initGameWithNumberOfCellsToFill(int dimension, int numberOfCellsToFill)
 		}
 	}
 
+	//TODO: check if this isn't wrong
+	free(solution->cells);
+	free(solution);
+
 	printBoard(board);
 	return board;
 }
 
-Board* initGame(int dimension)
+Board* initGame(int dimension, int blockHeight, int blockWidth)
 {
 	int input;
 	int numberOfCellsToFill;
@@ -189,6 +203,12 @@ Board* initGame(int dimension)
 		exit(0);
 	}
 
-	return initGameWithNumberOfCellsToFill(dimension, numberOfCellsToFill);
+	return initGameWithNumberOfCellsToFill(dimension, blockHeight, blockWidth,numberOfCellsToFill);
 
+}
+
+Board* restart(Board *board) {
+	int rows = board->rows, blockHeight = board->blockHeight, blockWidth = board->blockWidth;
+	freeBoard(board);
+	return initGame(rows, blockHeight, blockWidth);
 }

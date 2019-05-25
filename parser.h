@@ -13,4 +13,4 @@
 #include <stdio.h>
 #include <string.h>
 
-void parseCommand(Board *board, char *command);
+void parseCommand(Board **boardP, char *command);
