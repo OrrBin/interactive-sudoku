@@ -16,9 +16,15 @@ void parseCommand(Board **boardP, char* command)
 {
 
 	int col, row, val;
+	Board *board = *boardP;
 
 	char *token = strtok(command, " \t\r\n");
-	Board *board = *boardP;
+
+	printf("token : %s", token);
+
+	if(token == NULL) {
+		return;
+	}
 
 	if(isStringsEqual(token, "set"))
 	{
