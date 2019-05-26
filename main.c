@@ -24,11 +24,16 @@ int main() {
 	int seed = 11;
 	srand(seed);
 
+	char command[] = "exit";
+
 	board = initGame(9, 3, 3);
 
-	while(1) {
-		playTurn(&board);
-	}
+	parseCommand(&board, command);
+	printBoard(board);
+
+//	while(1) {
+//		playTurn(&board);
+//	}
 
 
 

@@ -16,14 +16,15 @@ void parseCommand(Board **boardP, char* command)
 {
 
 	int col, row, val;
-	char *token = strtok(command, " ");
+	char *token = strtok(command, " \t\r\n");
 	Board *board = *boardP;
 
+	printf("%s\n", token);
 	if(isStringsEqual(token, "set"))
 	{
-		row = atoi (strtok(NULL, " "));
-		col = atoi (strtok(NULL, " "));
-		val = atoi (strtok(NULL, " "));
+		row = atoi (strtok(NULL, " \t\r\n"));
+		col = atoi (strtok(NULL, " \t\r\n"));
+		val = atoi (strtok(NULL, " \t\r\n"));
 
 		setValueOfCell(board, row, col, val);
 		printBoard(board);
@@ -31,8 +32,8 @@ void parseCommand(Board **boardP, char* command)
 
 	else if(isStringsEqual(token, "hint"))
 	{
-		row = atoi (strtok(NULL, " "));
-		col = atoi (strtok(NULL, " "));
+		row = atoi (strtok(NULL, " \t\r\n"));
+		col = atoi (strtok(NULL, " \t\r\n"));
 		hint(board, row, col);
 	}
 
