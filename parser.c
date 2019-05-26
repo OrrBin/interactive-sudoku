@@ -24,11 +24,11 @@ void parseCommand(Board **boardP, char* command) {
 
 	char *rowStr, *colStr, *valStr;
 	int col, row, val, isGameOverFlag;
+	char *token;
 	Board *board = *boardP;
-
 	isGameOverFlag = isGameOver(board);
 
-	char *token = strtok(command, " \t\r\n");
+	token = strtok(command, " \t\r\n");
 
 	if (token == NULL) {
 		return;

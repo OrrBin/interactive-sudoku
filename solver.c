@@ -15,7 +15,7 @@ int handleCell(Board *board, int row, int col, int value,
 	int result;
 	setValueOfCell(board, row, col, value);
 	if (!isLastCell(board, row, col)) {
-		if (isLastCellInRow(board, row, col)) {
+		if (isLastCellInRow(board, col)) {
 			result = callback(board, row + 1, 0);
 		} else
 			result = callback(board, row, col + 1);
@@ -33,7 +33,7 @@ int recursiveBackTrackingStep(Board *board, int row, int col) {
 		if (isLastCell(board, row, col)) {
 			return 1;
 		}
-		if (isLastCellInRow(board, row, col))
+		if (isLastCellInRow(board, col))
 			return recursiveBackTrackingStep(board, row + 1, 0);
 
 		return recursiveBackTrackingStep(board, row, col + 1);
@@ -99,7 +99,7 @@ int randomizeBackTrackingStep(Board *board, int row, int col) {
 		if (isLastCell(board, row, col)) {
 			return 1;
 		}
-		if (isLastCellInRow(board, row, col))
+		if (isLastCellInRow(board, col))
 			return randomizeBackTrackingStep(board, row + 1, 0);
 
 		return randomizeBackTrackingStep(board, row, col + 1);

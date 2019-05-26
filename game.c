@@ -99,7 +99,6 @@ void validate(Board *board) {
 	int isSuccess;
 	Board *resultBoard = (Board *) malloc(sizeof(Board));
 	Board *fixedBoard = cpyBoardAsFixed(board, resultBoard);
-	//printBoard(fixedBoard);
 	isSuccess = recursiveBackTracking(fixedBoard, resultBoard);
 	if (isSuccess) {
 		board->solution = resultBoard->cells;
@@ -169,7 +168,6 @@ Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight, int block
 		}
 	}
 
-	//TODO: check if this isn't wrong
 	free(solution->cells);
 	free(solution);
 
@@ -185,7 +183,6 @@ Board* initGame(int dimension, int blockHeight, int blockWidth)
 	printf("Please enter the number of cells to fill [0-80]:\n");
 
 	input = scanf("%d", &numberOfCellsToFill);
-//	numberOfCellsToFill=75;
 
 	if(input == EOF)
 	{

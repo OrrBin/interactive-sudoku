@@ -36,7 +36,7 @@ int isCellFixed(Board* board, int row, int col);
 
 int isLastCell(Board* board, int row, int col);
 
-int isLastCellInRow(Board* board, int row, int col);
+int isLastCellInRow(Board* board, int col);
 
 void freeBoard(Board *board);
 

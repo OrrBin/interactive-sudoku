@@ -33,13 +33,13 @@ int *createRange(int numOfValidValues, int *validIndexes) {
 }
 
 int *removeAtIndex(int *array, int size, int idx) {
-	int* temp = malloc((size - 1) * sizeof(int)); // allocate an array with a size 1 less than the current one
+	int* temp = malloc((size - 1) * sizeof(int));
 
 	if (idx != 0)
-		memcpy(temp, array, idx * sizeof(int)); // copy everything BEFORE the index
+		memcpy(temp, array, idx * sizeof(int));
 
 	if (idx != (size - 1))
-		memcpy(temp + idx, array + idx + 1, (size - idx - 1) * sizeof(int)); // copy everything AFTER the index
+		memcpy(temp + idx, array + idx + 1, (size - idx - 1) * sizeof(int));
 
 	free(array);
 	return temp;
@@ -96,7 +96,7 @@ int isLastCell(Board* board, int row, int col) {
 	return cellNum(board, row, col) == (board->cols) * (board->rows) - 1;
 }
 
-int isLastCellInRow(Board* board, int row, int col) {
+int isLastCellInRow(Board* board, int col) {
 	return col == board->cols - 1;
 }
 

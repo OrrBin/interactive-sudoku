@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "main_aux.h"
 #include "SPBufferset.h"
 #include  "util.h"
 #include "solver.h"
@@ -21,11 +20,14 @@ int main(int argc, char *argv[]) {
 	SP_BUFF_SET();
 	setbuf(stdout, NULL);
 
+	if (argc < 1) {
+		exit(-1);
+	}
 	srand(seed);
 
 	board = initGame(9, 3, 3);
 
-	while(1) {
+	while (1) {
 		playTurn(&board);
 	}
 }
