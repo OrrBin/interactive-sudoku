@@ -111,10 +111,9 @@ void validate(Board *board) {
 
 void playTurn(Board **boardP) {
 	char cmd[MAX_CHARS_IN_COMMAND];
-
 	getStringFromUser(cmd);
-
 	parseCommand(boardP, cmd);
+
 }
 
 void exitGame(Board *board) {
@@ -185,7 +184,7 @@ Board* initGame(int dimension, int blockHeight, int blockWidth)
 	printf("Please enter the number of cells to fill [0-80]:\n");
 
 	input = scanf("%d", &numberOfCellsToFill);
-
+	numberOfCellsToFill=75;
 
 	if(input == EOF)
 	{

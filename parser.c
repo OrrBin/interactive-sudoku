@@ -16,16 +16,15 @@ void parseCommand(Board **boardP, char* command)
 {
 
 	int col, row, val;
+
 	char *token = strtok(command, " \t\r\n");
 	Board *board = *boardP;
 
-	printf("%s\n", token);
 	if(isStringsEqual(token, "set"))
 	{
 		row = atoi (strtok(NULL, " \t\r\n"));
 		col = atoi (strtok(NULL, " \t\r\n"));
 		val = atoi (strtok(NULL, " \t\r\n"));
-
 		setValueOfCell(board, row, col, val);
 		printBoard(board);
 	}
@@ -51,6 +50,11 @@ void parseCommand(Board **boardP, char* command)
 	else if(isStringsEqual(token, "exit"))
 	{
 		exitGame(board);
+	}
+
+	else
+	{
+		printf("Error: invalid command\n");
 	}
 
 }
