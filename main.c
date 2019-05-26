@@ -14,10 +14,10 @@
 #include "game.h"
 #include "parser.h"
 
-int main() {
-	int seed = 11;
-	int isGameOver = 0;
+int main(int argc, char *argv[]) {
 	Board* board;
+	int seed = atoi(argv[0]);
+
 	SP_BUFF_SET();
 	setbuf(stdout, NULL);
 
