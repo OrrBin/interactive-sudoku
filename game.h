@@ -30,3 +30,4 @@ Board* restart(Board *board);
 
 void exitGame(Board *board);
 
+int isGameOver(Board *board);

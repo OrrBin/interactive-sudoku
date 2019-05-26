@@ -87,6 +87,7 @@ void clearCell(Board *board, int row, int col) {
 	}
 
 	board->cells[cellNum(board, row, col)].value = 0;
+	board->numOfEmptyCells++;
 }
 
 void hint(Board *board, int row, int col) {
@@ -113,7 +114,6 @@ void playTurn(Board **boardP) {
 	char cmd[MAX_CHARS_IN_COMMAND];
 	getStringFromUser(cmd);
 	parseCommand(boardP, cmd);
-
 }
 
 void exitGame(Board *board) {
@@ -213,4 +213,8 @@ Board* restart(Board *board) {
 	int rows = board->rows, blockHeight = board->blockHeight, blockWidth = board->blockWidth;
 	freeBoard(board);
 	return initGame(rows, blockHeight, blockWidth);
+}
+
+int isGameOver(Board *board) {
+	return board->numOfEmptyCells == 0;
 }

@@ -16,6 +16,7 @@
 
 int main() {
 	int seed = 11;
+	int isGameOver = 0;
 	Board* board;
 	SP_BUFF_SET();
 	setbuf(stdout, NULL);

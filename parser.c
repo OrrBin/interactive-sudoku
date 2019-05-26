@@ -12,55 +12,84 @@
 #include "util.h"
 #include "game.h"
 
-void parseCommand(Board **boardP, char* command)
-{
+void printInvalidCmd() {
+	printf("Error: invalid command\n");
+}
 
-	int col, row, val;
+void printGameOver() {
+	printf("Puzzle solved successfully\n");
+}
+
+void parseCommand(Board **boardP, char* command) {
+
+	char *rowStr, *colStr, *valStr;
+	int col, row, val, isGameOverFlag;
 	Board *board = *boardP;
+
+	isGameOverFlag = isGameOver(board);
 
 	char *token = strtok(command, " \t\r\n");
 
-	printf("token : %s", token);
-
-	if(token == NULL) {
+	if (token == NULL) {
 		return;
 	}
 
-	if(isStringsEqual(token, "set"))
-	{
-		row = atoi (strtok(NULL, " \t\r\n"));
-		col = atoi (strtok(NULL, " \t\r\n"));
-		val = atoi (strtok(NULL, " \t\r\n"));
-		setValueOfCell(board, row, col, val);
-		printBoard(board);
+	rowStr = strtok(NULL, " \t\r\n");
+	colStr = strtok(NULL, " \t\r\n");
+	valStr = strtok(NULL, " \t\r\n");
+
+	row = atoi(rowStr);
+	col = atoi(colStr);
+	val = atoi(valStr);
+
+	if (isStringsEqual(token, "set") && !isGameOverFlag) {
+		printf("strings: %s, %s, %s\n", rowStr, colStr, valStr);
+
+		if (rowStr == NULL || colStr == NULL || valStr == NULL) {
+			printInvalidCmd();
+			return;
+		}
+
+		if (val == 0)
+			clearCell(board, row - 1, col - 1);
+		else {
+			setValueOfCell(board, row - 1, col - 1, val);
+			isGameOverFlag = isGameOver(board);
+			if(isGameOverFlag) {
+				printGameOver();
+			}
+		}
+
+		if(!isGameOverFlag)
+			printBoard(board);
 	}
 
-	else if(isStringsEqual(token, "hint"))
-	{
-		row = atoi (strtok(NULL, " \t\r\n"));
-		col = atoi (strtok(NULL, " \t\r\n"));
-		hint(board, row, col);
+	else if (isStringsEqual(token, "hint") && !isGameOverFlag) {
+
+		if (rowStr == NULL || colStr == NULL) {
+			printInvalidCmd();
+			return;
+		}
+
+		hint(board, row - 1, col - 1);
 	}
 
-	else if(isStringsEqual(token, "validate"))
-	{
+	else if (isStringsEqual(token, "validate") && !isGameOverFlag) {
 		validate(board);
 	}
 
-	else if(isStringsEqual(token, "restart"))
-	{
+	else if (isStringsEqual(token, "restart")) {
 		*boardP = restart(board);
 	}
 
-
-	else if(isStringsEqual(token, "exit"))
-	{
+	else if (isStringsEqual(token, "exit")) {
 		exitGame(board);
 	}
 
-	else
-	{
-		printf("Error: invalid command\n");
+	else {
+		printInvalidCmd();
 	}
 
 }
+
+
