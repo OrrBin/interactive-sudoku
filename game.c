@@ -123,7 +123,7 @@ void exitGame(Board *board) {
 
 Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight, int blockWidth, int numberOfCellsToFill)
 {
-	int i=0, randX, randY;
+	int i=0, randCol, randRow;
 	Cell *cells1, *cells2;
 	Board *solution = (Board *) malloc(sizeof(Board));
 	Board *board = (Board *) malloc(sizeof(Board));
@@ -156,13 +156,13 @@ Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight, int block
 
 	while(i<numberOfCellsToFill)
 	{
-		randX=rand()%dimension;
-		randY=rand()%dimension;
-		if (!board->cells[cellNum(board, randX, randY)].isFixed)
+		randCol=rand()%dimension;
+		randRow=rand()%dimension;
+		if (!board->cells[cellNum(board, randRow, randCol)].isFixed)
 		{
-			board->cells[cellNum(board, randX, randY)]=
-					solution->cells[cellNum(board, randX, randY)];
-			board->cells[cellNum(board, randX, randY)].isFixed=1;
+			board->cells[cellNum(board, randRow, randCol)]=
+					solution->cells[cellNum(board, randRow, randCol)];
+			board->cells[cellNum(board, randRow, randCol)].isFixed=1;
 			board->numOfEmptyCells--;
 			i++;
 		}

@@ -28,7 +28,8 @@ int recursiveBackTrackingStep(Board *board, int row, int col) {
 	int idx, result;
 
 	if (isCellFixed(board, row, col)) {
-		if(!validateValue(board, row, col, board->cells[cellNum(board, row, col)].value))
+		if (!validateValue(board, row, col,
+				board->cells[cellNum(board, row, col)].value))
 			return 0;
 		if (isLastCell(board, row, col)) {
 			return 1;
@@ -90,28 +91,12 @@ int *checkValidValues(Board *board, int row, int col, int *validValues) {
 
 }
 
-
 int randomizeBackTrackingStep(Board *board, int row, int col) {
 	int idx, result, currentValueIdx, currentIdx, currentValue = 0;
 	int *validValues = NULL, numOfValidValues = 0, *validIndexes = NULL;
 
-	/*
-	if (isCellFixed(board, row, col)) {
-		if (isLastCell(board, row, col)) {
-			return 1;
-		}
-		if (isLastCellInRow(board, col))
-			return randomizeBackTrackingStep(board, row + 1, 0);
-
-		return randomizeBackTrackingStep(board, row, col + 1);
-	}
-	 */
-
-	printBoard(board);
-
 	numOfValidValues = checkValidValuesNum(board, row, col);
 	validValues = checkValidValues(board, row, col, validValues);
-	printf("row, col : %d, %d   valid values: %d\n", row, col, numOfValidValues);
 
 
 	if (numOfValidValues == 1) {
@@ -121,13 +106,22 @@ int randomizeBackTrackingStep(Board *board, int row, int col) {
 		if (result)
 			return 1;
 
-	} else if(numOfValidValues > 1) {
+	} else if (numOfValidValues > 1) {
 		validIndexes = createRange(numOfValidValues, validIndexes);
 
 		for (idx = 0; idx < numOfValidValues; idx++) {
+			if ((numOfValidValues - idx) == 1) {
+				currentValue = validValues[validIndexes[0]];
+				result = handleCell(board, row, col, currentValue,
+						randomizeBackTrackingStep);
+				if (result)
+					return 1;
+
+				break;
+			}
+
 			currentIdx = rand() % (numOfValidValues - idx);
 			currentValueIdx = validIndexes[currentIdx];
-			printf("in loop row, col: %d, %d, loop idx : %d,   currentIdx : %d\n", row, col, idx, currentValueIdx);
 			currentValue = validValues[currentValueIdx];
 			validIndexes = removeAtIndex(validIndexes, (numOfValidValues - idx),
 					currentIdx);
