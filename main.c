@@ -15,7 +15,7 @@
 
 int main(int argc, char *argv[]) {
 	Board* board;
-	int seed = atoi(argv[0]);
+	int seed = atoi(argv[1]);
 
 	SP_BUFF_SET();
 	setbuf(stdout, NULL);

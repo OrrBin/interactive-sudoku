@@ -43,7 +43,6 @@ void parseCommand(Board **boardP, char* command) {
 	val = atoi(valStr);
 
 	if (isStringsEqual(token, "set") && !isGameOverFlag) {
-		printf("strings: %s, %s, %s\n", rowStr, colStr, valStr);
 
 		if (rowStr == NULL || colStr == NULL || valStr == NULL) {
 			printInvalidCmd();
