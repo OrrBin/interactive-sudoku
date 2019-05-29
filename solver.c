@@ -70,10 +70,10 @@ int checkValidValuesNum(Board *board, int row, int col) {
 }
 
 int *checkValidValues(Board *board, int row, int col, int *validValues) {
-	int idx, counter, values[9] = { 0 }, numOfValidValues = 0;
+	int idx, counter, flags[9] = { 0 }, numOfValidValues = 0;
 	for (idx = 1; idx <= board->rows; idx++) {
 		if (validateValue(board, row, col, idx)) {
-			values[idx - 1] = 1;
+			flags[idx - 1] = 1;
 			numOfValidValues++;
 		}
 	}
@@ -81,8 +81,8 @@ int *checkValidValues(Board *board, int row, int col, int *validValues) {
 	validValues = (int *) malloc(numOfValidValues * sizeof(int));
 
 	counter = 0;
-	for (idx = 0; idx <= 9; idx++) {
-		if (values[idx] == 1)
+	for (idx = 0; idx < 9; idx++) {
+		if (flags[idx] == 1)
 			validValues[counter++] = idx + 1;
 	}
 
@@ -92,9 +92,10 @@ int *checkValidValues(Board *board, int row, int col, int *validValues) {
 
 
 int randomizeBackTrackingStep(Board *board, int row, int col) {
-	int idx, result, currentIdx, currentValue = 0;
+	int idx, result, currentValueIdx, currentIdx, currentValue = 0;
 	int *validValues = NULL, numOfValidValues = 0, *validIndexes = NULL;
 
+	/*
 	if (isCellFixed(board, row, col)) {
 		if (isLastCell(board, row, col)) {
 			return 1;
@@ -104,9 +105,13 @@ int randomizeBackTrackingStep(Board *board, int row, int col) {
 
 		return randomizeBackTrackingStep(board, row, col + 1);
 	}
+	 */
+
+	printBoard(board);
 
 	numOfValidValues = checkValidValuesNum(board, row, col);
 	validValues = checkValidValues(board, row, col, validValues);
+	printf("row, col : %d, %d   valid values: %d\n", row, col, numOfValidValues);
 
 
 	if (numOfValidValues == 1) {
@@ -121,13 +126,16 @@ int randomizeBackTrackingStep(Board *board, int row, int col) {
 
 		for (idx = 0; idx < numOfValidValues; idx++) {
 			currentIdx = rand() % (numOfValidValues - idx);
-			currentValue = validValues[currentIdx];
+			currentValueIdx = validIndexes[currentIdx];
+			printf("in loop row, col: %d, %d, loop idx : %d,   currentIdx : %d\n", row, col, idx, currentValueIdx);
+			currentValue = validValues[currentValueIdx];
 			validIndexes = removeAtIndex(validIndexes, (numOfValidValues - idx),
 					currentIdx);
 			result = handleCell(board, row, col, currentValue,
 					randomizeBackTrackingStep);
 			if (result)
 				return 1;
+
 		}
 	}
 

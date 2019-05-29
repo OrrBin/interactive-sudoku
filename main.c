@@ -16,14 +16,16 @@
 int main(int argc, char *argv[]) {
 	Board* board;
 	int seed = atoi(argv[1]);
+	srand(seed);
 
-	SP_BUFF_SET();
+	SP_BUFF_SET()
+	;
+
 	setbuf(stdout, NULL);
 
 	if (argc < 1) {
 		exit(-1);
 	}
-	srand(seed);
 
 	board = initGame(9, 3, 3);
 

@@ -34,7 +34,6 @@ int *createRange(int numOfValidValues, int *validIndexes) {
 
 int *removeAtIndex(int *array, int size, int idx) {
 	int* temp = malloc((size - 1) * sizeof(int));
-
 	if (idx != 0)
 		memcpy(temp, array, idx * sizeof(int));
 
@@ -44,6 +43,7 @@ int *removeAtIndex(int *array, int size, int idx) {
 	free(array);
 	return temp;
 }
+
 
 int isCellFixed(Board* board, int row, int col) {
 	return board->cells[cellNum(board, row, col)].isFixed;
