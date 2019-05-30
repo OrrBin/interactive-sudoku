@@ -22,8 +22,8 @@ void printGameOver() {
 
 void parseCommand(Board **boardP, char* command) {
 
-	char *rowStr, *colStr, *valStr;
-	int col, row, val, isGameOverFlag;
+	char *colStr, *rowStr, *valStr;
+	int col, row, val, isGameOverFlag, setCellResult;
 	char *token;
 	Board *board = *boardP;
 	isGameOverFlag = isGameOver(board);
@@ -34,41 +34,42 @@ void parseCommand(Board **boardP, char* command) {
 		return;
 	}
 
-	rowStr = strtok(NULL, " \t\r\n");
 	colStr = strtok(NULL, " \t\r\n");
+	rowStr = strtok(NULL, " \t\r\n");
 	valStr = strtok(NULL, " \t\r\n");
 
-	if(rowStr != NULL)
-		row = atoi(rowStr);
 	if(colStr != NULL)
 		col = atoi(colStr);
+	if(rowStr != NULL)
+		row = atoi(rowStr);
 	if(valStr != NULL)
 		val = atoi(valStr);
 
 	if (isStringsEqual(token, "set") && !isGameOverFlag) {
 
-		if (rowStr == NULL || colStr == NULL || valStr == NULL) {
+		if (colStr == NULL || rowStr == NULL || valStr == NULL) {
 			printInvalidCmd();
 			return;
 		}
 
 		if (val == 0)
-			clearCell(board, row - 1, col - 1);
+			setCellResult = clearCell(board, row - 1, col - 1);
 		else {
-			setValueOfCell(board, row - 1, col - 1, val);
+			setCellResult = setValueOfCell(board, row - 1, col - 1, val);
+
 			isGameOverFlag = isGameOver(board);
 			if(isGameOverFlag) {
 				printGameOver();
 			}
 		}
 
-		if(!isGameOverFlag)
+		if(!isGameOverFlag && setCellResult)
 			printBoard(board);
 	}
 
 	else if (isStringsEqual(token, "hint") && !isGameOverFlag) {
 
-		if (rowStr == NULL || colStr == NULL) {
+		if (colStr == NULL || rowStr == NULL) {
 			printInvalidCmd();
 			return;
 		}

@@ -65,7 +65,7 @@ int validateValue(Board *board, int row, int col, int value) {
 	return valid;
 }
 
-void setValueOfCell(Board *board, int row, int col, int value) {
+int setValueOfCell(Board *board, int row, int col, int value) {
 
 	if (board->cells[cellNum(board, row, col)].isFixed) {
 		printf("Error: cell is fixed\n");
@@ -74,20 +74,26 @@ void setValueOfCell(Board *board, int row, int col, int value) {
 	else if (validateValue(board, row, col, value)) {
 		board->cells[cellNum(board, row, col)].value = value;
 		board->numOfEmptyCells--;
+		return 1;
 	}
 
 	else {
 		printf("Error: value is invalid\n");
 	}
+
+	return 0;
 }
 
-void clearCell(Board *board, int row, int col) {
+int  clearCell(Board *board, int row, int col) {
 	if (board->cells[cellNum(board, row, col)].isFixed) {
 		printf("Error: cell is fixed\n");
+		return 0;
 	}
 
 	board->cells[cellNum(board, row, col)].value = 0;
 	board->numOfEmptyCells++;
+
+	return 1;
 }
 
 void hint(Board *board, int row, int col) {
@@ -117,7 +123,7 @@ void playTurn(Board **boardP) {
 
 void exitGame(Board *board) {
 	freeBoard(board);
-	printf("Exiting…\n");
+	printf("Exiting...\n");
 	exit(0);
 }
 

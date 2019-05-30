@@ -12,9 +12,9 @@
 
 int validateValue(Board *board, int row, int col, int value);
 
-void setValueOfCell(Board *board, int row, int col, int value);
+int setValueOfCell(Board *board, int row, int col, int value);
 
-void clearCell(Board *board, int row, int col);
+int clearCell(Board *board, int row, int col);
 
 Board initBoard(int rows, int cols, int numOfFixedCells);
 
