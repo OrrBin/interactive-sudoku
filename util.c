@@ -137,8 +137,12 @@ void printBoard(Board *board) {
 				else
 					printf(" %d ", board->cells[cellNum(board, i, j)].value);
 			}
-			if ((j + 1) % (board->blockWidth) == 0)
-				printf("| ");
+			if ((j + 1) % (board->blockWidth) == 0) {
+				printf("|");
+				if(j < board->rows - 1)
+					printf(" ");
+			}
+
 		}
 		printf("\n");
 		if ((i + 1) % (board->blockHeight) == 0)
