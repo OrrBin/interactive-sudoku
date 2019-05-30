@@ -38,9 +38,12 @@ void parseCommand(Board **boardP, char* command) {
 	colStr = strtok(NULL, " \t\r\n");
 	valStr = strtok(NULL, " \t\r\n");
 
-	row = atoi(rowStr);
-	col = atoi(colStr);
-	val = atoi(valStr);
+	if(rowStr != NULL)
+		row = atoi(rowStr);
+	if(colStr != NULL)
+		col = atoi(colStr);
+	if(valStr != NULL)
+		val = atoi(valStr);
 
 	if (isStringsEqual(token, "set") && !isGameOverFlag) {
 
