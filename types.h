@@ -14,12 +14,20 @@
 
 #define MAX_CHARS_IN_COMMAND 1024
 
+/**
+ * struct the describes board cell
+ */
 typedef struct Cells
 {
 	int value;
 	int isFixed;
 }Cell;
 
+/**
+ * struct the describes game board
+ * cells holds current state of the board
+ * solution holds valid solution if the board
+ */
 typedef struct Boards
 {
 	int rows;

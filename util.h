@@ -25,7 +25,9 @@ void printBoard(Board* board);
  */
 int *createRange(int numOfValidValues, int *validIndexes);
 
-
+/**
+ * Remove element in index idx from the given array
+ */
 int *removeAtIndex(int *array, int size, int idx);
 
 /*
@@ -53,13 +55,16 @@ int cellCol(Board* board, int cellNum);
 Board* cpyBoard(Board* board, Board* destination);
 
 /*
+ * Copies board, and each value that exists on the board is copied as fixed vlaue
+ */
+Board *cpyBoardAsFixed(Board* board, Board* destination);
+
+/*
  * copy the content of *src and returns
  * a pointer to this content
  */
 Cell *cpyCellArray(Cell *src, int size);
 
-
-Board *cpyBoardAsFixed(Board* board, Board* destination);
 
 /*
  * checks whether or not cell fixed.
@@ -71,7 +76,9 @@ int isCellFixed(Board* board, int row, int col);
  */
 int isLastCell(Board* board, int row, int col);
 
-
+/**
+ * Checks if the given column is the last column
+ */
 int isLastCellInRow(Board* board, int col);
 
 /*
@@ -87,4 +94,4 @@ int isStringsEqual(char *string1, char *string2);
 /*
  * read input from user
  */
-void getStringFromUser();
+void getStringFromUser(char *cmd);
