@@ -184,8 +184,8 @@ Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight, int block
 
 Board* initGame(int dimension, int blockHeight, int blockWidth)
 {
-	int input;
-	int numberOfCellsToFill;
+	int input = -10;
+	int numberOfCellsToFill = -1;
 	printf("Please enter the number of cells to fill [0-80]:\n");
 
 	input = scanf("%d", &numberOfCellsToFill);
@@ -199,6 +199,7 @@ Board* initGame(int dimension, int blockHeight, int blockWidth)
 	while((numberOfCellsToFill<0 || numberOfCellsToFill>80) && input!=EOF)
 	{
 		printf("Error: invalid number of cells to fill (should be between 0 and 80)\n");
+		printf("Please enter the number of cells to fill [0-80]:\n");
 		input = scanf("%d", &numberOfCellsToFill);
 	}
 
