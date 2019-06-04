@@ -114,8 +114,8 @@ int isStringsEqual(char *string1, char *string2) {
 	return strcmp(string1, string2) == 0;
 }
 
-void getStringFromUser(char *cmd) {
-	fgets(cmd, MAX_CHARS_IN_COMMAND, stdin);
+char *getStringFromUser(char *cmd) {
+	return fgets(cmd, MAX_CHARS_IN_COMMAND, stdin);
 }
 
 void printBoard(Board *board) {

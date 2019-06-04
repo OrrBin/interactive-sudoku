@@ -84,7 +84,7 @@ int setValueOfCell(Board *board, int row, int col, int value) {
 	return 0;
 }
 
-int  clearCell(Board *board, int row, int col) {
+int clearCell(Board *board, int row, int col) {
 	if (board->cells[cellNum(board, row, col)].isFixed) {
 		printf("Error: cell is fixed\n");
 		return 0;
@@ -116,8 +116,14 @@ void validate(Board *board) {
 }
 
 void playTurn(Board **boardP) {
+	char *result;
 	char cmd[MAX_CHARS_IN_COMMAND];
-	getStringFromUser(cmd);
+	result = getStringFromUser(cmd);
+	if (!result) {
+		printf("Exiting...\n");
+		freeBoard(*boardP);
+		exit(1);
+	}
 	parseCommand(boardP, cmd);
 }
 
@@ -127,48 +133,45 @@ void exitGame(Board *board) {
 	exit(0);
 }
 
-Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight, int blockWidth, int numberOfCellsToFill)
-{
-	int i=0, randCol, randRow;
+Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight,
+		int blockWidth, int numberOfCellsToFill) {
+	int i = 0, randCol, randRow;
 	Cell *cells1, *cells2;
 	Board *solution = (Board *) malloc(sizeof(Board));
 	Board *board = (Board *) malloc(sizeof(Board));
 
-	cells1 = (Cell *) malloc((dimension*dimension) * sizeof(Cell));
-	cells2 = (Cell *) malloc((dimension*dimension) * sizeof(Cell));
+	cells1 = (Cell *) malloc((dimension * dimension) * sizeof(Cell));
+	cells2 = (Cell *) malloc((dimension * dimension) * sizeof(Cell));
 
-	for (i = 0; i < dimension*dimension; i++)
-	{
+	for (i = 0; i < dimension * dimension; i++) {
 		cells1[i].value = 0;
 		cells1[i].isFixed = 0;
 		cells2[i].value = 0;
 		cells2[i].isFixed = 0;
 	}
 
-	i=0;
+	i = 0;
 
-	board->rows=dimension;
-	board->cols=dimension;
-	board->cells=cells1;
-	board->numOfEmptyCells=dimension*dimension;
-	board->blockHeight=blockHeight;
-	board->blockWidth=blockWidth;
+	board->rows = dimension;
+	board->cols = dimension;
+	board->cells = cells1;
+	board->numOfEmptyCells = dimension * dimension;
+	board->blockHeight = blockHeight;
+	board->blockWidth = blockWidth;
 
 	solution = cpyBoard(board, solution);
 
 	randomizeBackTracking(solution, solution);
 
-	board->solution=cpyCellArray(solution->cells, dimension*dimension);
+	board->solution = cpyCellArray(solution->cells, dimension * dimension);
 
-	while(i<numberOfCellsToFill)
-	{
-		randCol=rand()%dimension;
-		randRow=rand()%dimension;
-		if (!board->cells[cellNum(board, randRow, randCol)].isFixed)
-		{
-			board->cells[cellNum(board, randRow, randCol)]=
+	while (i < numberOfCellsToFill) {
+		randCol = rand() % dimension;
+		randRow = rand() % dimension;
+		if (!board->cells[cellNum(board, randRow, randCol)].isFixed) {
+			board->cells[cellNum(board, randRow, randCol)] =
 					solution->cells[cellNum(board, randRow, randCol)];
-			board->cells[cellNum(board, randRow, randCol)].isFixed=1;
+			board->cells[cellNum(board, randRow, randCol)].isFixed = 1;
 			board->numOfEmptyCells--;
 			i++;
 		}
@@ -182,39 +185,38 @@ Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight, int block
 	return board;
 }
 
-Board* initGame(int dimension, int blockHeight, int blockWidth)
-{
+Board* initGame(int dimension, int blockHeight, int blockWidth) {
 	int input = -10;
 	int numberOfCellsToFill = -1;
 	printf("Please enter the number of cells to fill [0-80]:\n");
 
 	input = scanf("%d", &numberOfCellsToFill);
 
-	if(input == EOF)
-	{
+	if (input == EOF) {
 		printf("Exiting...\n");
 		exit(0);
 	}
 
-	while((numberOfCellsToFill<0 || numberOfCellsToFill>80) && input!=EOF)
-	{
-		printf("Error: invalid number of cells to fill (should be between 0 and 80)\n");
+	while ((numberOfCellsToFill < 0 || numberOfCellsToFill > 80) && input != EOF) {
+		printf(
+				"Error: invalid number of cells to fill (should be between 0 and 80)\n");
 		printf("Please enter the number of cells to fill [0-80]:\n");
 		input = scanf("%d", &numberOfCellsToFill);
 	}
 
-	if(input == EOF)
-	{
+	if (input == EOF) {
 		printf("Exiting...\n");
 		exit(0);
 	}
 
-	return initGameWithNumberOfCellsToFill(dimension, blockHeight, blockWidth,numberOfCellsToFill);
+	return initGameWithNumberOfCellsToFill(dimension, blockHeight, blockWidth,
+			numberOfCellsToFill);
 
 }
 
 Board* restart(Board *board) {
-	int rows = board->rows, blockHeight = board->blockHeight, blockWidth = board->blockWidth;
+	int rows = board->rows, blockHeight = board->blockHeight, blockWidth =
+			board->blockWidth;
 	freeBoard(board);
 	return initGame(rows, blockHeight, blockWidth);
 }

@@ -59,6 +59,7 @@ void parseCommand(Board **boardP, char* command) {
 
 			isGameOverFlag = isGameOver(board);
 			if(isGameOverFlag) {
+				printBoard(board);
 				printGameOver();
 			}
 		}

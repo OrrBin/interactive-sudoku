@@ -94,4 +94,4 @@ int isStringsEqual(char *string1, char *string2);
 /*
  * read input from user
  */
-void getStringFromUser(char *cmd);
+char *getStringFromUser(char *cmd);
