@@ -21,6 +21,7 @@ typedef struct Cells
 {
 	int value;
 	int isFixed;
+	int isError;
 }Cell;
 
 typedef struct StackCell
@@ -35,8 +36,7 @@ typedef struct StackCell
  */
 typedef struct Boards
 {
-	int rows;
-	int cols;
+	int dimension;
 	Cell* cells ;
 	Cell* solution;
 

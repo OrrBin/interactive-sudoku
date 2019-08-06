@@ -1,13 +1,15 @@
 /*
  * game.h
  *
- *  Created on: 22 боай 2019
+ *  Created on: 22 пїЅпїЅпїЅпїЅ 2019
  *      Author: yarden.flori
  */
 
 #ifndef GAME_H_
 #define GAME_H_
 #endif /* GAME_H_ */
+
+extern int mode;
 
 /*
  * validateValue gets a board, row, col, and value.
