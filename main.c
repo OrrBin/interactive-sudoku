@@ -14,8 +14,23 @@
 #include "parser.h"
 #include "stack.h"
 
+int testExhaustiveBackTracking() {
+	int result = 0;
+	Board *board;
+	SP_BUFF_SET()
+	;
+	board = initGame(4, 2, 2);
+	result = exhaustiveBackTracking(board);
+
+	printf("%d", result);
+	return 0;
+}
+
 int main() {
-	int i=5;
+
+	return testExhaustiveBackTracking();
+
+	/*int i=5;
 	int *x;
 
 	struct Stack *stack;
@@ -25,7 +40,7 @@ int main() {
 	printf("%d" ,isEmpty(stack));
 	x=(int*) pop(stack);
 	printf("%d", *x);
-	return 0;
+	return 0;*/
 
 /*	Board* board;
 	int seed = atoi(argv[1]);

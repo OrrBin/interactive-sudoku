@@ -29,4 +29,4 @@ void push(struct Stack *stack, void* data);
 
 void *pop (struct Stack *stack);
 
-void *peak(struct Stack *stack);
+void *peek(struct Stack *stack);

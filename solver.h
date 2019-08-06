@@ -27,3 +27,6 @@ int recursiveBackTracking(Board* board, Board* destination);
  * Return 1 if solution was found or 0 otherwise.
  */
 int randomizeBackTracking(Board* board, Board* destination);
+
+
+int exhaustiveBackTracking(Board *board);

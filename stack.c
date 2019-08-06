@@ -45,7 +45,7 @@ void *pop (struct Stack *stack)
 	return data;
 }
 
-void *peak(struct Stack *stack)
+void *peek(struct Stack *stack)
 {
-	return stack->top;
+	return stack->top->data;
 }

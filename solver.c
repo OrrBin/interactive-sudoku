@@ -9,6 +9,7 @@
 
 #include "util.h"
 #include "game.h"
+#include "stack.h"
 
 int handleCell(Board *board, int row, int col, int value,
 		int (*callback)(Board *, int, int)) {
@@ -62,14 +63,15 @@ int recursiveBackTracking(Board *board, Board *destination) {
 
 StackCell *nextNonFixedCell(Board *board, int cellNum) {
 	int foundFirstCell = 0;
-	int numOfCells = (board->cols)*(board->cols);
+	int numOfCells = (board->dimension)*(board->dimension);
 	StackCell *cell = (StackCell *) malloc(sizeof(StackCell));
 
-	while(!foundFirstCell || cellNum !=  numOfCells) {
+	while(!foundFirstCell && cellNum !=  numOfCells) {
 		if(!isCellFixed(board, cellRow(board, cellNum), cellCol(board, cellNum))){
 			foundFirstCell = 1;
+		} else {
+			cellNum += 1;
 		}
-		cellNum += 1;
 	}
 
 	if(!foundFirstCell) {
@@ -87,27 +89,31 @@ int exhaustiveBackTracking(Board *board) {
 	int counter = 0, newVal;
 	Board *cpy = (Board *) malloc(sizeof(Board));
 	StackCell *cell, *newCell;
-	/*Stack *stack = (Stack *) malloc(sizeof(Stack));*/
+	Stack *stack = createStack();
 
 	cpy = cpyBoardAsFixed(board, cpy);
 	cell = nextNonFixedCell(cpy, 0);
 	push(stack, cell);
 
-	while(1 /*!stack.isEmpty()*/) {
-		cell = peek(stack);
+	while(!isEmpty(stack)) {
+		cell = (StackCell *) pop(stack);
 		newVal = (cell-> value) + 1;
 
-		if(newVal > cpy->cols) {
-			pop(stack);
+		if(newVal > cpy->dimension) {
+			clearCell(cpy, cellRow(cpy, cell->cellNum), cellCol(cpy, cell->cellNum));
 			free(cell);
+			continue;
 		}
 
 		if(validateValue(cpy, cellRow(cpy, cell->cellNum), cellCol(cpy, cell->cellNum), newVal)) {
+			cell->value = newVal;
+			setValueOfCell(cpy, cellRow(cpy, cell->cellNum), cellCol(cpy, cell->cellNum), newVal);
 			newCell = nextNonFixedCell(cpy, (cell->cellNum)+1);
 			if(newCell == NULL) {
-				pop(stack);
+				clearCell(cpy, cellRow(cpy, cell->cellNum), cellCol(cpy, cell->cellNum));
 				counter++;
 			} else {
+				push(stack, cell);
 				push(stack, newCell);
 			}
 		}

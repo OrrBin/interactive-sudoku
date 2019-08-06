@@ -192,7 +192,7 @@ Board* initGame(int dimension, int blockHeight, int blockWidth) {
 
 	input = scanf("%d", &numberOfCellsToFill);
 
-	numberOfCellsToFill = 75;
+	numberOfCellsToFill = 6;
 
 	if (input == EOF) {
 		printf("Exiting...\n");
