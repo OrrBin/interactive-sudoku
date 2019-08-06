@@ -71,7 +71,8 @@ int checkValidValuesNum(Board *board, int row, int col) {
 }
 
 int *checkValidValues(Board *board, int row, int col, int *validValues) {
-	int idx, counter, flags[9] = { 0 }, numOfValidValues = 0;
+	int idx, counter, numOfValidValues = 0;
+	int *flags = calloc(board->cols, sizeof(int));
 	for (idx = 1; idx <= board->rows; idx++) {
 		if (validateValue(board, row, col, idx)) {
 			flags[idx - 1] = 1;
@@ -82,10 +83,12 @@ int *checkValidValues(Board *board, int row, int col, int *validValues) {
 	validValues = (int *) malloc(numOfValidValues * sizeof(int));
 
 	counter = 0;
-	for (idx = 0; idx < 9; idx++) {
+	for (idx = 0; idx < board->cols; idx++) {
 		if (flags[idx] == 1)
 			validValues[counter++] = idx + 1;
 	}
+
+	free(flags);
 
 	return validValues;
 

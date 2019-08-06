@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
 		exit(-1);
 	}
 
-	board = initGame(9, 3, 3);
+	board = initGame(10, 2, 5);
 
 	while (1) {
 		playTurn(&board);
