@@ -23,6 +23,11 @@ typedef struct Cells
 	int isFixed;
 }Cell;
 
+typedef struct StackCell
+{
+	int cellNum, value, isFixed;
+}StackCell;
+
 /**
  * struct the describes game board
  * cells holds current state of the board

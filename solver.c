@@ -60,6 +60,67 @@ int recursiveBackTracking(Board *board, Board *destination) {
 	return isSuccess;
 }
 
+StackCell *nextNonFixedCell(Board *board, int cellNum) {
+	int foundFirstCell = 0;
+	int numOfCells = (board->cols)*(board->cols);
+	StackCell *cell = (StackCell *) malloc(sizeof(StackCell));
+
+	while(!foundFirstCell || cellNum !=  numOfCells) {
+		if(!isCellFixed(board, cellRow(board, cellNum), cellCol(board, cellNum))){
+			foundFirstCell = 1;
+		}
+		cellNum += 1;
+	}
+
+	if(!foundFirstCell) {
+		return NULL;
+	}
+
+	cell->cellNum = cellNum;
+	cell->value = 0;
+	cell->isFixed = isCellFixed(board, cellRow(board, cellNum), cellCol(board, cellNum));
+
+	return cell;
+}
+
+int exhaustiveBackTracking(Board *board) {
+	int counter = 0, newVal;
+	Board *cpy = (Board *) malloc(sizeof(Board));
+	StackCell *cell, *newCell;
+	/*Stack *stack = (Stack *) malloc(sizeof(Stack));*/
+
+	cpy = cpyBoardAsFixed(board, cpy);
+	cell = nextNonFixedCell(cpy, 0);
+	push(stack, cell);
+
+	while(1 /*!stack.isEmpty()*/) {
+		cell = peek(stack);
+		newVal = (cell-> value) + 1;
+
+		if(newVal > cpy->cols) {
+			pop(stack);
+			free(cell);
+		}
+
+		if(validateValue(cpy, cellRow(cpy, cell->cellNum), cellCol(cpy, cell->cellNum), newVal)) {
+			newCell = nextNonFixedCell(cpy, (cell->cellNum)+1);
+			if(newCell == NULL) {
+				pop(stack);
+				counter++;
+			} else {
+				push(stack, newCell);
+			}
+		}
+		else {
+			cell->value = newVal;
+			push(stack, cell);
+		}
+	}
+
+	free(cpy);
+	return counter;
+}
+
 int checkValidValuesNum(Board *board, int row, int col) {
 	int idx, numOfValidValues = 0;
 	for (idx = 1; idx <= board->rows; idx++) {
