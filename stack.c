@@ -27,7 +27,7 @@ int isEmpty(struct Stack *stack)
 void push(struct Stack *stack, void* data)
 {
 	gll_pushBack(stack->list, data);
-	stack->top = gll_last(stack->list);
+	stack->top =stack->list->last;
 }
 
 void *pop (struct Stack *stack)
@@ -47,5 +47,5 @@ void *pop (struct Stack *stack)
 
 void *peak(struct Stack *stack)
 {
-	return stack->top;
+	return stack->top->data;
 }
