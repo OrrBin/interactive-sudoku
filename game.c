@@ -1,7 +1,7 @@
 /*
  * game.c
  *
- *  Created on: 22 боай 2019
+ *  Created on: 22 пїЅпїЅпїЅпїЅ 2019
  *      Author: yarden.flori
  */
 #include <stdio.h>
@@ -11,10 +11,11 @@
 #include "solver.h"
 #include "parser.h"
 
+
 int validateRow(Board *board, int row, int col, int value) {
 	int i, testCell;
 	int currentCell = cellNum(board, row, col);
-	for (i = 0; i < board->cols; i++) {
+	for (i = 0; i < board->dimension; i++) {
 		testCell = cellNum(board, row, i);
 		if (testCell != currentCell && board->cells[testCell].value == value) {
 			return 0;
@@ -26,7 +27,7 @@ int validateRow(Board *board, int row, int col, int value) {
 int validateCol(Board *board, int row, int col, int value) {
 	int i, testCell;
 	int currentCell = cellNum(board, row, col);
-	for (i = 0; i < board->rows; i++) {
+	for (i = 0; i < board->dimension; i++) {
 		testCell = cellNum(board, i, col);
 		if (testCell != currentCell && board->cells[testCell].value == value) {
 			return 0;
@@ -152,8 +153,7 @@ Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight,
 
 	i = 0;
 
-	board->rows = dimension;
-	board->cols = dimension;
+	board->dimension = dimension;
 	board->cells = cells1;
 	board->numOfEmptyCells = dimension * dimension;
 	board->blockHeight = blockHeight;
@@ -217,10 +217,10 @@ Board* initGame(int dimension, int blockHeight, int blockWidth) {
 }
 
 Board* restart(Board *board) {
-	int rows = board->rows, blockHeight = board->blockHeight, blockWidth =
+	int dimension = board->dimension, blockHeight = board->blockHeight, blockWidth =
 			board->blockWidth;
 	freeBoard(board);
-	return initGame(rows, blockHeight, blockWidth);
+	return initGame(dimension, blockHeight, blockWidth);
 }
 
 int isGameOver(Board *board) {

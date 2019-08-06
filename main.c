@@ -12,9 +12,22 @@
 #include "solver.h"
 #include "game.h"
 #include "parser.h"
+#include "stack.h"
 
-int main(int argc, char *argv[]) {
-	Board* board;
+int main() {
+	int i=5;
+	int *x;
+
+	struct Stack *stack;
+	stack = createStack();
+	printf("%d\n" ,isEmpty(stack));
+	push(stack, &i);
+	printf("%d" ,isEmpty(stack));
+	x=(int*) pop(stack);
+	printf("%d", *x);
+	return 0;
+
+/*	Board* board;
 	int seed = atoi(argv[1]);
 	srand(seed);
 
@@ -31,5 +44,5 @@ int main(int argc, char *argv[]) {
 
 	while (1) {
 		playTurn(&board);
-	}
+	}*/
 }

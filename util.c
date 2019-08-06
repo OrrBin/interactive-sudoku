@@ -11,15 +11,15 @@
 #include "types.h"
 
 int cellNum(Board* board, int row, int col) {
-	return row * (board->cols) + col;
+	return row * (board->dimension) + col;
 }
 
 int cellRow(Board* board, int cellNum) {
-	return cellNum / (board->cols);
+	return cellNum / (board->dimension);
 }
 
 int cellCol(Board* board, int cellNum) {
-	return cellNum % (board->cols);
+	return cellNum % (board->dimension);
 }
 
 int *createRange(int numOfValidValues, int *validIndexes) {
@@ -56,11 +56,11 @@ int isCellEmpty(Board* board, int row, int col) {
 Board *cpyBoardImpl(Board* board, Board* destination, int asFixed) {
 	int i;
 	Cell *cells;
-	cells = (Cell*) malloc((board->rows * board->cols) * sizeof(Cell));
+	cells = (Cell*) malloc((board->dimension * board->dimension) * sizeof(Cell));
 	if (cells == NULL) {
 		printf("ERROR in malloc cells\n");
 	}
-	for (i = 0; i < board->rows * board->cols; i++) {
+	for (i = 0; i < board->dimension * board->dimension; i++) {
 		cells[i].value = board->cells[i].value;
 
 		if (asFixed && cells[i].value != 0)
@@ -68,8 +68,7 @@ Board *cpyBoardImpl(Board* board, Board* destination, int asFixed) {
 		else
 			cells[i].isFixed = board->cells[i].isFixed;
 	}
-	destination->rows = board->rows;
-	destination->cols = board->cols;
+	destination->dimension = board->dimension;
 	destination->numOfEmptyCells = board->numOfEmptyCells;
 	destination->cells = cells;
 	destination->blockHeight = board->blockHeight;
@@ -93,11 +92,11 @@ Board *cpyBoardAsFixed(Board* board, Board* destination) {
 }
 
 int isLastCell(Board* board, int row, int col) {
-	return cellNum(board, row, col) == (board->cols) * (board->rows) - 1;
+	return cellNum(board, row, col) == (board->dimension) * (board->dimension) - 1;
 }
 
 int isLastCellInRow(Board* board, int col) {
-	return col == board->cols - 1;
+	return col == board->dimension - 1;
 }
 
 void freeBoard(Board *board) {
@@ -122,9 +121,9 @@ void printBoard(Board *board) {
 	int i, j;
 
 	printf("----------------------------------\n");
-	for (i = 0; i < board->rows; i++) {
+	for (i = 0; i < board->dimension; i++) {
 		printf("| ");
-		for (j = 0; j < board->cols; j++) {
+		for (j = 0; j < board->dimension; j++) {
 
 			if (isCellFixed(board, i, j)) {
 				if (isCellEmpty(board, i, j))
@@ -139,7 +138,7 @@ void printBoard(Board *board) {
 			}
 			if ((j + 1) % (board->blockWidth) == 0) {
 				printf("|");
-				if(j < board->rows - 1)
+				if(j < board->dimension - 1)
 					printf(" ");
 			}
 

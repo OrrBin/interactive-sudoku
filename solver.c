@@ -1,7 +1,7 @@
 /*
  * solver.c
  *
- *  Created on: 22 боай 2019
+ *  Created on: 22 пїЅпїЅпїЅпїЅ 2019
  *      Author: yarden.flori
  */
 #include <stdio.h>
@@ -40,7 +40,7 @@ int recursiveBackTrackingStep(Board *board, int row, int col) {
 		return recursiveBackTrackingStep(board, row, col + 1);
 	}
 
-	for (idx = 1; idx <= board->rows; idx++) {
+	for (idx = 1; idx <= board->dimension; idx++) {
 		if (validateValue(board, row, col, idx)) {
 			result = handleCell(board, row, col, idx,
 					recursiveBackTrackingStep);
@@ -62,7 +62,7 @@ int recursiveBackTracking(Board *board, Board *destination) {
 
 int checkValidValuesNum(Board *board, int row, int col) {
 	int idx, numOfValidValues = 0;
-	for (idx = 1; idx <= board->rows; idx++) {
+	for (idx = 1; idx <= board->dimension; idx++) {
 		if (validateValue(board, row, col, idx)) {
 			numOfValidValues++;
 		}
@@ -72,8 +72,8 @@ int checkValidValuesNum(Board *board, int row, int col) {
 
 int *checkValidValues(Board *board, int row, int col, int *validValues) {
 	int idx, counter, numOfValidValues = 0;
-	int *flags = calloc(board->cols, sizeof(int));
-	for (idx = 1; idx <= board->rows; idx++) {
+	int *flags = calloc(board->dimension, sizeof(int));
+	for (idx = 1; idx <= board->dimension; idx++) {
 		if (validateValue(board, row, col, idx)) {
 			flags[idx - 1] = 1;
 			numOfValidValues++;
@@ -83,7 +83,7 @@ int *checkValidValues(Board *board, int row, int col, int *validValues) {
 	validValues = (int *) malloc(numOfValidValues * sizeof(int));
 
 	counter = 0;
-	for (idx = 0; idx < board->cols; idx++) {
+	for (idx = 0; idx < board->dimension; idx++) {
 		if (flags[idx] == 1)
 			validValues[counter++] = idx + 1;
 	}
