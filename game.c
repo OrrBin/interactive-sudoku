@@ -185,28 +185,54 @@ Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight,
 	return board;
 }
 
-Board* initGame(int dimension, int blockHeight, int blockWidth) {
-	int input = -10;
-	int numberOfCellsToFill = -1;
-	printf("Please enter the number of cells to fill [0-80]:\n");
+Board* initGame() {
+	int inputBlockHeight=-10, inputBlockWidth = -10, inputNumberOfCellsToFill=-10;
+	int numberOfCellsToFill = -1,blockHeight=-1, blockWidth=-1;
+	int dimension;
 
-	input = scanf("%d", &numberOfCellsToFill);
+	printf("Please enter the block height:\n");
+	inputBlockHeight = scanf("%d", &blockHeight);
 
-	numberOfCellsToFill = 0;
+	while((inputBlockHeight!=1 && inputBlockHeight!=EOF)
+			|| (blockHeight<1 && inputBlockHeight!=EOF))
+	{
+		printf("Please enter valid block height:\n");
+		while ((getchar()) != '\n');
+		inputBlockHeight = scanf("%d", &blockHeight);
+	}
 
-	if (input == EOF) {
+	while ((getchar()) != '\n');
+	printf("Please enter the block width:\n");
+	inputBlockWidth = scanf("%d", &blockWidth);
+
+	while((inputBlockWidth!=1 && inputBlockWidth!=EOF)
+				|| (blockWidth<1 && inputBlockWidth!=EOF))
+		{
+			printf("Please enter valid block width:\n");
+			while ((getchar()) != '\n');
+			inputBlockWidth = scanf("%d", &blockWidth);
+		}
+
+	dimension=blockHeight*blockWidth;
+
+	while ((getchar()) != '\n');
+	printf("Please enter the number of cells to fill [0-%d]:\n", dimension*dimension-1);
+	inputNumberOfCellsToFill = scanf("%d", &numberOfCellsToFill);
+
+	if (inputNumberOfCellsToFill == EOF || inputBlockHeight==EOF || inputBlockWidth == EOF) {
 		printf("Exiting...\n");
 		exit(0);
 	}
 
-	while ((numberOfCellsToFill < 0 || numberOfCellsToFill > dimension*dimension - 1) && input != EOF) {
+	while ((numberOfCellsToFill < 0 || numberOfCellsToFill > dimension*dimension - 1) && inputNumberOfCellsToFill != EOF) {
 		printf(
 				"Error: invalid number of cells to fill (should be between 0 and 80)\n");
-		printf("Please enter the number of cells to fill [0-80]:\n");
-		input = scanf("%d", &numberOfCellsToFill);
+		printf("Please enter the number of cells to fill [0-%d]:\n", dimension*dimension-1);
+		while ((getchar()) != '\n');
+		inputNumberOfCellsToFill = scanf("%d", &numberOfCellsToFill);
 	}
 
-	if (input == EOF) {
+	if (inputNumberOfCellsToFill == EOF) {
 		printf("Exiting...\n");
 		exit(0);
 	}

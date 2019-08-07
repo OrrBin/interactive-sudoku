@@ -14,6 +14,7 @@
 #include "parser.h"
 #include "stack.h"
 
+/*
 int testExhaustiveBackTracking() {
 	int result = 0;
 	Board *board;
@@ -30,7 +31,7 @@ int main() {
 
 	return testExhaustiveBackTracking();
 
-	/*int i=5;
+	int i=5;
 	int *x;
 
 	struct Stack *stack;
@@ -42,22 +43,23 @@ int main() {
 	printf("%d", *x);
 	return 0;*/
 
-/*	Board* board;
+/*	Board* board; */
+int main(int argc, char* argv[]) {
+
+	Board* board;
 	int seed = atoi(argv[1]);
 	srand(seed);
 
-	SP_BUFF_SET()
-	;
-
+	SP_BUFF_SET();
 	setbuf(stdout, NULL);
 
 	if (argc < 1) {
 		exit(-1);
 	}
 
-	board = initGame(10, 2, 5);
+	board = initGame();
 
 	while (1) {
 		playTurn(&board);
-	}*/
+	}
 }

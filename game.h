@@ -38,7 +38,7 @@ int clearCell(Board *board, int row, int col);
  * initGame asks the user for numberOfCellsToFill input
  * and return a pointer to a board with the desired parameters
  */
-Board* initGame(int dimension, int blockHeight, int blockWidth);
+Board* initGame();
 
 /*
  * playTurn asks the user for command input,
