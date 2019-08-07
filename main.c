@@ -19,7 +19,7 @@ int testExhaustiveBackTracking() {
 	Board *board;
 	SP_BUFF_SET()
 	;
-	board = initGame(4, 2, 2);
+	board = initGame(3, 3, 1);
 	result = exhaustiveBackTracking(board);
 
 	printf("%d", result);
