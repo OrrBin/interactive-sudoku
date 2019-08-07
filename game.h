@@ -76,3 +76,8 @@ void exitGame(Board *board);
  * checks whether or not game completed.
  */
 int isGameOver(Board *board);
+
+/*
+ * finds the number of solutions to the given board
+ */
+int findNumberOFSolutions(Board *board);

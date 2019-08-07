@@ -242,6 +242,10 @@ Board* initGame() {
 
 }
 
+int findNumberOFSolutions(Board *board) {
+	return exhaustiveBackTracking(board);
+}
+
 Board* restart(Board *board) {
 	int dimension = board->dimension, blockHeight = board->blockHeight, blockWidth =
 			board->blockWidth;
