@@ -4,21 +4,22 @@
  *  Created on: May 23, 2019
  *      Author: orrbo
  */
+#include "types.h"
 
 #ifndef UTIL_H_
 #define UTIL_H_
 
 
-
 #endif /* UTIL_H_ */
-
-#include "types.h"
 
 /*
  * printing a board
  */
 void printBoard(Board* board);
 
+void printRow(Board* board, int row);
+
+void printCell(Board* board, int i, int j);
 /*
  * returns a pointer to array in length numOfValidValues,
  * where array[i]=i;

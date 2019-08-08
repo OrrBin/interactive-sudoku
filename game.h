@@ -4,12 +4,11 @@
  *  Created on: 22 ���� 2019
  *      Author: yarden.flori
  */
-
+#include "util.h"
 #ifndef GAME_H_
 #define GAME_H_
 #endif /* GAME_H_ */
 
-extern int mode;
 
 /*
  * validateValue gets a board, row, col, and value.
@@ -38,7 +37,7 @@ int clearCell(Board *board, int row, int col);
  * initGame asks the user for numberOfCellsToFill input
  * and return a pointer to a board with the desired parameters
  */
-Board* initGame();
+Board* initGame(int test);
 
 /*
  * playTurn asks the user for command input,
@@ -76,8 +75,3 @@ void exitGame(Board *board);
  * checks whether or not game completed.
  */
 int isGameOver(Board *board);
-
-/*
- * finds the number of solutions to the given board
- */
-int findNumberOFSolutions(Board *board);

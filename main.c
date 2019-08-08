@@ -57,7 +57,9 @@ int main(int argc, char* argv[]) {
 		exit(-1);
 	}
 
-	board = initGame();
+	board = initGame(1);
+
+	return 0;
 
 	while (1) {
 		playTurn(&board);

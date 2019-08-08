@@ -10,7 +10,7 @@
 
 
 
-#endif /* TYPES_H_ */
+
 
 #define MAX_CHARS_IN_COMMAND 1024
 
@@ -44,3 +44,5 @@ typedef struct Boards
 	int blockHeight;
 	int blockWidth;
 }Board;
+
+#endif /* TYPES_H_ */

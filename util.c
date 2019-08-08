@@ -8,7 +8,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "types.h"
+#include "game.h"
+#include "util.h"
+
 
 int cellNum(Board* board, int row, int col) {
 	return row * (board->dimension) + col;
@@ -119,33 +121,59 @@ char *getStringFromUser(char *cmd) {
 
 void printBoard(Board *board) {
 	int i, j;
+	int dimension=board->dimension;
+	int blockHeight = board->blockHeight;
+	for(i=0 ; i< 4*dimension+blockHeight+1; i++)
+	{
+		printf("-");
+	}
+	printf("\n");
 
-	printf("----------------------------------\n");
 	for (i = 0; i < board->dimension; i++) {
-		printf("| ");
-		for (j = 0; j < board->dimension; j++) {
-
-			if (isCellFixed(board, i, j)) {
-				if (isCellEmpty(board, i, j))
-					printf(".  ");
-				else
-					printf(".%d ", board->cells[cellNum(board, i, j)].value);
-			} else {
-				if (isCellEmpty(board, i, j))
-					printf("   ");
-				else
-					printf(" %d ", board->cells[cellNum(board, i, j)].value);
-			}
-			if ((j + 1) % (board->blockWidth) == 0) {
-				printf("|");
-				if(j < board->dimension - 1)
-					printf(" ");
-			}
-
-		}
+		printRow(board, i);
 		printf("\n");
-		if ((i + 1) % (board->blockHeight) == 0)
-			printf("----------------------------------\n");
+		if((i+1)%blockHeight==0)
+		{
+			for(j=0 ; j< 4*dimension+blockHeight+1; j++)
+				{
+					printf("-");
+				}
+				printf("\n");
+		}
+
 
 	}
+}
+
+void printCell(Board* board, int i, int j)
+{
+	int mode=1, markErrors=0;
+	if(board->cells[cellNum(board, i, j)].value==0)
+		printf("   ");
+	else
+		printf(" %2d", board->cells[cellNum(board, i, j)].value);
+
+	if(board->cells[cellNum(board, i, j)].isFixed)
+		printf(".");
+	else if((board->cells[cellNum(board, i, j)].isError) && (markErrors==1 || mode==0))
+			printf("*");
+	else
+		printf(" ");
+}
+
+void printRow(Board* board, int row)
+{
+	int i,j,col=0;
+	int blockHeight= board->blockHeight;
+	int blockWidth = board->blockWidth;
+
+	printf("|");
+
+	for (i = 0; i < blockHeight; i++) {
+			for(j=0; j<blockWidth;j++)
+			{
+				printCell(board, row, col++);
+			}
+			printf("|");
+		}
 }
