@@ -9,11 +9,6 @@
 #define TYPES_H_
 
 
-
-#endif /* TYPES_H_ */
-
-#define MAX_CHARS_IN_COMMAND 1024
-
 /**
  * struct the describes board cell
  */
@@ -44,3 +39,8 @@ typedef struct Boards
 	int blockHeight;
 	int blockWidth;
 }Board;
+#endif /* TYPES_H_ */
+
+#define MAX_CHARS_IN_COMMAND 1024
+
+
