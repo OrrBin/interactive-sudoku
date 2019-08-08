@@ -61,6 +61,11 @@ void hint(Board *board, int row, int col);
 void validate(Board *board);
 
 /*
+ * Finds the number of existing solution to the given board
+ */
+int findNumberOFSolutions(Board *board);
+
+/*
  * restart free the memory used for the current board
  * and initialize new board.
  */

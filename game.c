@@ -275,6 +275,10 @@ Board* initGame(int test) {
 
 }
 
+int findNumberOFSolutions(Board *board) {
+	return exhaustiveBackTracking(board);
+}
+
 Board* restart(Board *board) {
 	freeBoard(board);
 	return initGame(0);
