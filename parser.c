@@ -8,7 +8,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-
+#include "board_writer.h"
+#include "board_reader.h"
 #include "util.h"
 #include "game.h"
 
@@ -120,21 +121,43 @@ void printGameOver() {
 	printf("Puzzle solved successfully\n");
 }
 
-void handleCommandSolve(char *filePath) {
-	printf("handle solve file path: %s\n", filePath);
+void handleCommandSolve(Board **board, char *filePath) {
+	Board *newBoard = readBoardFromfile(filePath);
+	if(newBoard == NULL) {
+		printf("Error: could not load game from file: %s\n", filePath);
+		return;
+	}
+	free(*board);
+	*board = newBoard;
+	currentGameMode = SOLVE;
+	printf("Loaded game from file: %s\n", filePath);
 
 }
 
-void handleCommandEdit(char *filePath) {
-	printf("handle edit file path: %s\n", filePath);
+void handleCommandEdit(Board **board, char *filePath) {
+	Board *newBoard;
+	if(filePath == NULL) {
+		free(*board);
+		*board = initGameWithNumberOfCellsToFill(9, 3, 3, 0);
+		currentGameMode = EDIT;
+	} else {
+		newBoard = readBoardFromfile(filePath);
+		if(newBoard == NULL) {
+			printf("Error: could not load game from file: %s\n", filePath);
+			return;
+		}
+		free(*board);
+		*board = newBoard;
+		currentGameMode = EDIT;
+	}
 }
 
-void handleCommandmarkErrors(int value) {
+void handleCommandMarkErrors(int value) {
 	printf("handle mark errors value: %d\n", value);
 }
 
-void handleCommandPrintBoard() {
-
+void handleCommandPrintBoard(Board *board) {
+	printBoard(board);
 }
 
 void handleCommandSet(Board *board, int row, int col, int val) {
@@ -176,8 +199,12 @@ void handleCommandRedo() {
 
 }
 
-void handleCommandSave(char *filePath) {
-	printf("handle save file path: %s\n", filePath);
+void handleCommandSave(Board *board, char *filePath) {
+	if(writeBoardToFile(board, filePath) != 0) {
+		printf("Error: there was an error saving your game to file: %s\n", filePath);
+	} else {
+		printf("Your game was saved to file: %s\n", filePath);
+	}
 }
 
 void handleCommandHint(Board *board, int row, int col) {
@@ -239,7 +266,7 @@ void parseCommand(Board **boardP, char* command) {
 			return;
 		}
 
-		handleCommandSolve(firstArg);
+		handleCommandSolve(boardP, firstArg);
 	}
 
 	else if (isStringsEqual(token, "edit")) {
@@ -248,7 +275,7 @@ void parseCommand(Board **boardP, char* command) {
 			return;
 		}
 
-		handleCommandEdit(firstArg);
+		handleCommandEdit(boardP, firstArg);
 	}
 
 	else if (isStringsEqual(token, "mark_errors")) {
@@ -278,7 +305,7 @@ void parseCommand(Board **boardP, char* command) {
 
 		firstIntArg = atoi(firstArg);
 
-		handleCommandmarkErrors(firstIntArg);
+		handleCommandMarkErrors(firstIntArg);
 	}
 
 	else if (isStringsEqual(token, "print_board")) {
@@ -294,7 +321,7 @@ void parseCommand(Board **boardP, char* command) {
 			return;
 		}
 
-		handleCommandPrintBoard();
+		handleCommandPrintBoard(board);
 	}
 
 	else if (isStringsEqual(token, "set") && !isGameOverFlag) {
@@ -437,7 +464,7 @@ void parseCommand(Board **boardP, char* command) {
 			return;
 		}
 
-		handleCommandSave(firstArg);
+		handleCommandSave(board, firstArg);
 	}
 
 	else if (isStringsEqual(token, "hint") && !isGameOverFlag) {

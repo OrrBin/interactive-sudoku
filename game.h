@@ -9,7 +9,6 @@
 #define GAME_H_
 #endif /* GAME_H_ */
 
-
 /*
  * validateValue gets a board, row, col, and value.
  * it checks whether or not value might be set to
@@ -38,6 +37,12 @@ int clearCell(Board *board, int row, int col);
  * and return a pointer to a board with the desired parameters
  */
 Board* initGame(int test);
+
+/*
+ * initiates game with specified parameters
+ */
+Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight,
+		int blockWidth, int numberOfCellsToFill);
 
 /*
  * playTurn asks the user for command input,
