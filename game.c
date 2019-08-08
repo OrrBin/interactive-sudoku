@@ -147,8 +147,10 @@ Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight,
 	for (i = 0; i < dimension * dimension; i++) {
 		cells1[i].value = 0;
 		cells1[i].isFixed = 0;
+		cells1[i].isError = 0;
 		cells2[i].value = 0;
 		cells2[i].isFixed = 0;
+		cells2[i].isError = 0;
 	}
 
 	i = 0;
@@ -185,13 +187,22 @@ Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight,
 	return board;
 }
 
-Board* initGame() {
+Board* initGame(int test) {
 	int inputBlockHeight=-10, inputBlockWidth = -10, inputNumberOfCellsToFill=-10;
 	int numberOfCellsToFill = -1,blockHeight=-1, blockWidth=-1;
 	int dimension;
 
 	printf("Please enter the block height:\n");
-	inputBlockHeight = scanf("%d", &blockHeight);
+	if(test==1)
+	{
+		blockHeight=3;
+		inputBlockHeight=1;
+		printf("block height is 3:\n");
+	}
+	else
+		inputBlockHeight = scanf("%d", &blockHeight);
+
+
 
 	while((inputBlockHeight!=1 && inputBlockHeight!=EOF)
 			|| (blockHeight<1 && inputBlockHeight!=EOF))
@@ -201,9 +212,21 @@ Board* initGame() {
 		inputBlockHeight = scanf("%d", &blockHeight);
 	}
 
-	while ((getchar()) != '\n');
+
+	if(test==0)
+		while ((getchar()) != '\n');
+
 	printf("Please enter the block width:\n");
-	inputBlockWidth = scanf("%d", &blockWidth);
+
+	if(test==1)
+		{
+
+		blockWidth=4;
+			inputBlockWidth=1;
+			printf("block width is 4:\n");
+		}
+	else
+		inputBlockWidth = scanf("%d", &blockWidth);
 
 	while((inputBlockWidth!=1 && inputBlockWidth!=EOF)
 				|| (blockWidth<1 && inputBlockWidth!=EOF))
@@ -215,9 +238,19 @@ Board* initGame() {
 
 	dimension=blockHeight*blockWidth;
 
-	while ((getchar()) != '\n');
+	if(test==0)
+		while ((getchar()) != '\n');
+
 	printf("Please enter the number of cells to fill [0-%d]:\n", dimension*dimension-1);
-	inputNumberOfCellsToFill = scanf("%d", &numberOfCellsToFill);
+	if(test==1)
+			{
+		numberOfCellsToFill=20;
+		inputNumberOfCellsToFill=1;
+				printf("number of cells is 20:\n");
+			}
+		else
+			inputNumberOfCellsToFill = scanf("%d", &numberOfCellsToFill);
+
 
 	if (inputNumberOfCellsToFill == EOF || inputBlockHeight==EOF || inputBlockWidth == EOF) {
 		printf("Exiting...\n");
@@ -226,7 +259,7 @@ Board* initGame() {
 
 	while ((numberOfCellsToFill < 0 || numberOfCellsToFill > dimension*dimension - 1) && inputNumberOfCellsToFill != EOF) {
 		printf(
-				"Error: invalid number of cells to fill (should be between 0 and 80)\n");
+				"Error: invalid number of cells to fill (should be between 0 and %d)\n",dimension*dimension-1);
 		printf("Please enter the number of cells to fill [0-%d]:\n", dimension*dimension-1);
 		while ((getchar()) != '\n');
 		inputNumberOfCellsToFill = scanf("%d", &numberOfCellsToFill);
@@ -242,15 +275,9 @@ Board* initGame() {
 
 }
 
-int findNumberOFSolutions(Board *board) {
-	return exhaustiveBackTracking(board);
-}
-
 Board* restart(Board *board) {
-	int dimension = board->dimension, blockHeight = board->blockHeight, blockWidth =
-			board->blockWidth;
 	freeBoard(board);
-	return initGame(dimension, blockHeight, blockWidth);
+	return initGame(0);
 }
 
 int isGameOver(Board *board) {
