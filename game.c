@@ -60,8 +60,8 @@ int validateValue(Board *board, int row, int col, int value) {
 	int valid;
 
 	valid = validateBlock(board, row, col, value)
-			&& validateRow(board, row, col, value)
-			&& validateCol(board, row, col, value);
+					&& validateRow(board, row, col, value)
+					&& validateCol(board, row, col, value);
 
 	return valid;
 }
@@ -195,9 +195,9 @@ Board* initGame(int test) {
 	printf("Please enter the block height:\n");
 	if(test==1)
 	{
-		blockHeight=3;
+		blockHeight=2;
 		inputBlockHeight=1;
-		printf("block height is 3:\n");
+		printf("block height is %d:\n", blockHeight);
 	}
 	else
 		inputBlockHeight = scanf("%d", &blockHeight);
@@ -219,22 +219,22 @@ Board* initGame(int test) {
 	printf("Please enter the block width:\n");
 
 	if(test==1)
-		{
+	{
 
-		blockWidth=4;
-			inputBlockWidth=1;
-			printf("block width is 4:\n");
-		}
+		blockWidth=2;
+		inputBlockWidth=1;
+		printf("block width is %d:\n", inputBlockWidth);
+	}
 	else
 		inputBlockWidth = scanf("%d", &blockWidth);
 
 	while((inputBlockWidth!=1 && inputBlockWidth!=EOF)
-				|| (blockWidth<1 && inputBlockWidth!=EOF))
-		{
-			printf("Please enter valid block width:\n");
-			while ((getchar()) != '\n');
-			inputBlockWidth = scanf("%d", &blockWidth);
-		}
+			|| (blockWidth<1 && inputBlockWidth!=EOF))
+	{
+		printf("Please enter valid block width:\n");
+		while ((getchar()) != '\n');
+		inputBlockWidth = scanf("%d", &blockWidth);
+	}
 
 	dimension=blockHeight*blockWidth;
 
@@ -243,13 +243,13 @@ Board* initGame(int test) {
 
 	printf("Please enter the number of cells to fill [0-%d]:\n", dimension*dimension-1);
 	if(test==1)
-			{
-		numberOfCellsToFill=20;
+	{
+		numberOfCellsToFill=5;
 		inputNumberOfCellsToFill=1;
-				printf("number of cells is 20:\n");
-			}
-		else
-			inputNumberOfCellsToFill = scanf("%d", &numberOfCellsToFill);
+		printf("number of cells is %d:\n", numberOfCellsToFill);
+	}
+	else
+		inputNumberOfCellsToFill = scanf("%d", &numberOfCellsToFill);
 
 
 	if (inputNumberOfCellsToFill == EOF || inputBlockHeight==EOF || inputBlockWidth == EOF) {
@@ -277,6 +277,27 @@ Board* initGame(int test) {
 
 int findNumberOFSolutions(Board *board) {
 	return exhaustiveBackTracking(board);
+}
+
+void autoFillBoard(Board *board, enum boolean doPrint) {
+	int i, *validValue, row, col;
+
+	Board *tmp = (Board *) malloc(sizeof(Board));
+	cpyBoardAsFixed(board, tmp);
+	for(i = 0; i < (board-> dimension) * (board-> dimension); i++) {
+		row = cellRow(board, i);
+		col = cellCol(board, i);
+		if(checkValidValuesNum(tmp,row, col) == 1 && !isCellFixed(tmp, row, col)) {
+			validValue = checkValidValues(tmp,row , col);
+			setValueOfCell(board, row, col, validValue[0]);
+			if(doPrint) {
+				printf("Auto filled cell (%d,%d) to %d\n", col+1, row+1, validValue[0]);
+			}
+		}
+	}
+
+	freeBoard(tmp);
+	free(validValue);
 }
 
 Board* restart(Board *board) {

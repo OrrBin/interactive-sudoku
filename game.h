@@ -71,6 +71,12 @@ void validate(Board *board);
 int findNumberOFSolutions(Board *board);
 
 /*
+ * Fills cells with only one legal value.
+ * If doPrint is not 0, then prints every change
+ */
+void autoFillBoard(Board *board, enum boolean);
+
+/*
  * restart free the memory used for the current board
  * and initialize new board.
  */

@@ -11,6 +11,8 @@
 
 #define MAX_CHARS_IN_COMMAND 1024
 
+enum boolean {false, true};
+
 /**
  * struct the describes board cell
  */

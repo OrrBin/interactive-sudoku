@@ -16,6 +16,7 @@
 enum mode { INIT, SOLVE, EDIT  };
 
 enum mode currentGameMode = SOLVE;
+int markErrors = 1;
 
 char *modeToName(enum mode aMode) {
 	switch(aMode) {
@@ -58,7 +59,7 @@ void printFormatEditTooManyArg() {
 }
 
 void printFormatMarkErrorsNoArg() {
-	printf("mark_erros command requires one argument: 0 or 1\n. missing argument");
+	printf("mark_erros command requires one argument: 0 or 1. missing argument\n");
 }
 
 void printFormatMarkErrorsTooManyArg() {
@@ -94,7 +95,7 @@ void printFormatGenerateTooLittleArg() {
 }
 
 void printFormatCommandGetsNoArgs(char *command) {
-	printf("%s command gets no arguments", command);
+	printf("%s command gets no arguments\n", command);
 }
 
 void printInvalidMode(char *command, enum mode *validModes, int numOfValidModes) {
@@ -149,11 +150,22 @@ void handleCommandEdit(Board **board, char *filePath) {
 		free(*board);
 		*board = newBoard;
 		currentGameMode = EDIT;
+
+		printBoard(*board);
 	}
 }
 
 void handleCommandMarkErrors(int value) {
-	printf("handle mark errors value: %d\n", value);
+	if(value == 0) {
+		markErrors = value;
+		printf("mark errors is now off\n");
+	} else if(value == 1) {
+		markErrors = value;
+		printf("mark errors is now on\n");
+	}
+	else {
+		printFormatMarkErrorsWrongArg();
+	}
 }
 
 void handleCommandPrintBoard(Board *board) {
@@ -177,6 +189,8 @@ void handleCommandSet(Board *board, int row, int col, int val) {
 
 	if(!isGameOverFlag && setCellResult)
 		printBoard(board);
+
+	return;
 }
 
 void handleCommandValidate(Board *board) {
@@ -222,8 +236,8 @@ void handleCommandNumSolutions(Board *board) {
 	printf("Current board has %d solutions\n", numOfSolutions);
 }
 
-void handleCommandAutoFill() {
-
+void handleCommandAutoFill(Board *board) {
+	autoFillBoard(board, true);
 }
 
 void handleCommandReset() {
@@ -276,6 +290,7 @@ void parseCommand(Board **boardP, char* command) {
 		}
 
 		handleCommandEdit(boardP, firstArg);
+		return;
 	}
 
 	else if (isStringsEqual(token, "mark_errors")) {
@@ -289,17 +304,15 @@ void parseCommand(Board **boardP, char* command) {
 			return;
 		}
 
-		firstIntArg = atoi(firstArg);
-
-		if(firstIntArg != 0 && firstIntArg != 1) {
-			printFormatMarkErrorsWrongArg();
+		if(currentGameMode != SOLVE) {
+			validModes[0] = SOLVE ;
+			printInvalidMode(token, validModes, 1);
 			return;
 		}
 
 
-		if(currentGameMode != SOLVE) {
-			validModes[0] = SOLVE ;
-			printInvalidMode(token, validModes, 1);
+		if(!isStringsEqual(firstArg, "0") && !isStringsEqual(firstArg, "1")) {
+			printFormatMarkErrorsWrongArg();
 			return;
 		}
 
@@ -322,6 +335,7 @@ void parseCommand(Board **boardP, char* command) {
 		}
 
 		handleCommandPrintBoard(board);
+		return;
 	}
 
 	else if (isStringsEqual(token, "set") && !isGameOverFlag) {
@@ -543,7 +557,7 @@ void parseCommand(Board **boardP, char* command) {
 
 		/* handle command */
 
-		handleCommandAutoFill();
+		handleCommandAutoFill(board);
 	}
 
 
@@ -581,12 +595,15 @@ void parseCommand(Board **boardP, char* command) {
 
 
 		handleCommandExit(board);
+		return;
 	}
 
 	else {
 		printInvalidCmd();
+		return;
 	}
 
+	printBoard(*boardP);
 }
 
 

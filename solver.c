@@ -137,8 +137,8 @@ int checkValidValuesNum(Board *board, int row, int col) {
 	return numOfValidValues;
 }
 
-int *checkValidValues(Board *board, int row, int col, int *validValues) {
-	int idx, counter, numOfValidValues = 0;
+int *checkValidValues(Board *board, int row, int col) {
+	int idx, counter, numOfValidValues = 0, *validValues;
 	int *flags = calloc(board->dimension, sizeof(int));
 	for (idx = 1; idx <= board->dimension; idx++) {
 		if (validateValue(board, row, col, idx)) {
@@ -166,7 +166,7 @@ int randomizeBackTrackingStep(Board *board, int row, int col) {
 	int *validValues = NULL, numOfValidValues = 0, *validIndexes = NULL;
 
 	numOfValidValues = checkValidValuesNum(board, row, col);
-	validValues = checkValidValues(board, row, col, validValues);
+	validValues = checkValidValues(board, row, col);
 
 
 	if (numOfValidValues == 1) {

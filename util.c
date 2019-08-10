@@ -145,6 +145,16 @@ void printBoard(Board *board) {
 	}
 }
 
+int isBoardErroneous(Board *board) {
+	int i;
+	for(i = 0; i < (board->dimension)*(board->dimension); i++) {
+		if(board->cells[i].isError) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void printCell(Board* board, int i, int j)
 {
 	int mode=1, markErrors=0;

@@ -59,9 +59,11 @@ int main(int argc, char* argv[]) {
 
 	board = initGame(1);
 
-	return 0;
-
+	/*parseCommand(&board, "solve 123");*/
 	while (1) {
 		playTurn(&board);
 	}
+
+
+	return 0;
 }
