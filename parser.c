@@ -1,7 +1,7 @@
 /*
  * parser.c
  *
- *  Created on: 22 боай 2019
+ *  Created on: 22 пїЅпїЅпїЅпїЅ 2019
  *      Author: yarden.flori
  */
 
@@ -185,7 +185,7 @@ void handleCommandHint(Board *board, int row, int col) {
 }
 
 void handleCommandGuessHint(Board *board, int row, int col) {
-	printf("handle guess hint board: %s, row: %d, col: %d\n", board, row, col);
+	printf("handle guess hint board: %d, row: %d, col: %d\n", board->blockHeight, row, col);
 }
 
 void handleCommandNumSolutions(Board *board) {
