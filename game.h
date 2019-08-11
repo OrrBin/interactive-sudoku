@@ -9,7 +9,6 @@
 #define GAME_H_
 #endif /* GAME_H_ */
 
-
 /*
  * validateValue gets a board, row, col, and value.
  * it checks whether or not value might be set to
@@ -40,6 +39,12 @@ int clearCell(Board *board, int row, int col);
 Board* initGame(int test);
 
 /*
+ * initiates game with specified parameters
+ */
+Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight,
+		int blockWidth, int numberOfCellsToFill);
+
+/*
  * playTurn asks the user for command input,
  * and call for the relevant function to
  * execute it.
@@ -64,6 +69,12 @@ void validate(Board *board);
  * Finds the number of existing solution to the given board
  */
 int findNumberOFSolutions(Board *board);
+
+/*
+ * Fills cells with only one legal value.
+ * If doPrint is not 0, then prints every change
+ */
+void autoFillBoard(Board *board, enum boolean);
 
 /*
  * restart free the memory used for the current board

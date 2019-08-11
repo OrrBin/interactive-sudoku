@@ -83,6 +83,11 @@ int isLastCell(Board* board, int row, int col);
 int isLastCellInRow(Board* board, int col);
 
 /*
+ * Checks if given board contains errors
+ */
+int isBoardErroneous(Board *board);
+
+/*
  * free the memoery of *board
  */
 void freeBoard(Board *board);

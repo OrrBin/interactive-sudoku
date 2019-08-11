@@ -8,13 +8,15 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-
+#include "board_writer.h"
+#include "board_reader.h"
 #include "util.h"
 #include "game.h"
 
 enum mode { INIT, SOLVE, EDIT  };
 
 enum mode currentGameMode = SOLVE;
+int markErrors = 1;
 
 char *modeToName(enum mode aMode) {
 	switch(aMode) {
@@ -57,7 +59,7 @@ void printFormatEditTooManyArg() {
 }
 
 void printFormatMarkErrorsNoArg() {
-	printf("mark_erros command requires one argument: 0 or 1\n. missing argument");
+	printf("mark_erros command requires one argument: 0 or 1. missing argument\n");
 }
 
 void printFormatMarkErrorsTooManyArg() {
@@ -93,7 +95,7 @@ void printFormatGenerateTooLittleArg() {
 }
 
 void printFormatCommandGetsNoArgs(char *command) {
-	printf("%s command gets no arguments", command);
+	printf("%s command gets no arguments\n", command);
 }
 
 void printInvalidMode(char *command, enum mode *validModes, int numOfValidModes) {
@@ -120,21 +122,54 @@ void printGameOver() {
 	printf("Puzzle solved successfully\n");
 }
 
-void handleCommandSolve(char *filePath) {
-	printf("handle solve file path: %s\n", filePath);
+void handleCommandSolve(Board **board, char *filePath) {
+	Board *newBoard = readBoardFromfile(filePath);
+	if(newBoard == NULL) {
+		printf("Error: could not load game from file: %s\n", filePath);
+		return;
+	}
+	free(*board);
+	*board = newBoard;
+	currentGameMode = SOLVE;
+	printf("Loaded game from file: %s\n", filePath);
 
 }
 
-void handleCommandEdit(char *filePath) {
-	printf("handle edit file path: %s\n", filePath);
+void handleCommandEdit(Board **board, char *filePath) {
+	Board *newBoard;
+	if(filePath == NULL) {
+		free(*board);
+		*board = initGameWithNumberOfCellsToFill(9, 3, 3, 0);
+		currentGameMode = EDIT;
+	} else {
+		newBoard = readBoardFromfile(filePath);
+		if(newBoard == NULL) {
+			printf("Error: could not load game from file: %s\n", filePath);
+			return;
+		}
+		free(*board);
+		*board = newBoard;
+		currentGameMode = EDIT;
+
+		printBoard(*board);
+	}
 }
 
-void handleCommandmarkErrors(int value) {
-	printf("handle mark errors value: %d\n", value);
+void handleCommandMarkErrors(int value) {
+	if(value == 0) {
+		markErrors = value;
+		printf("mark errors is now off\n");
+	} else if(value == 1) {
+		markErrors = value;
+		printf("mark errors is now on\n");
+	}
+	else {
+		printFormatMarkErrorsWrongArg();
+	}
 }
 
-void handleCommandPrintBoard() {
-
+void handleCommandPrintBoard(Board *board) {
+	printBoard(board);
 }
 
 void handleCommandSet(Board *board, int row, int col, int val) {
@@ -154,6 +189,8 @@ void handleCommandSet(Board *board, int row, int col, int val) {
 
 	if(!isGameOverFlag && setCellResult)
 		printBoard(board);
+
+	return;
 }
 
 void handleCommandValidate(Board *board) {
@@ -176,8 +213,12 @@ void handleCommandRedo() {
 
 }
 
-void handleCommandSave(char *filePath) {
-	printf("handle save file path: %s\n", filePath);
+void handleCommandSave(Board *board, char *filePath) {
+	if(writeBoardToFile(board, filePath) != 0) {
+		printf("Error: there was an error saving your game to file: %s\n", filePath);
+	} else {
+		printf("Your game was saved to file: %s\n", filePath);
+	}
 }
 
 void handleCommandHint(Board *board, int row, int col) {
@@ -195,8 +236,8 @@ void handleCommandNumSolutions(Board *board) {
 	printf("Current board has %d solutions\n", numOfSolutions);
 }
 
-void handleCommandAutoFill() {
-
+void handleCommandAutoFill(Board *board) {
+	autoFillBoard(board, true);
 }
 
 void handleCommandReset() {
@@ -239,7 +280,7 @@ void parseCommand(Board **boardP, char* command) {
 			return;
 		}
 
-		handleCommandSolve(firstArg);
+		handleCommandSolve(boardP, firstArg);
 	}
 
 	else if (isStringsEqual(token, "edit")) {
@@ -248,7 +289,8 @@ void parseCommand(Board **boardP, char* command) {
 			return;
 		}
 
-		handleCommandEdit(firstArg);
+		handleCommandEdit(boardP, firstArg);
+		return;
 	}
 
 	else if (isStringsEqual(token, "mark_errors")) {
@@ -262,23 +304,21 @@ void parseCommand(Board **boardP, char* command) {
 			return;
 		}
 
-		firstIntArg = atoi(firstArg);
-
-		if(firstIntArg != 0 && firstIntArg != 1) {
-			printFormatMarkErrorsWrongArg();
-			return;
-		}
-
-
 		if(currentGameMode != SOLVE) {
 			validModes[0] = SOLVE ;
 			printInvalidMode(token, validModes, 1);
 			return;
 		}
 
+
+		if(!isStringsEqual(firstArg, "0") && !isStringsEqual(firstArg, "1")) {
+			printFormatMarkErrorsWrongArg();
+			return;
+		}
+
 		firstIntArg = atoi(firstArg);
 
-		handleCommandmarkErrors(firstIntArg);
+		handleCommandMarkErrors(firstIntArg);
 	}
 
 	else if (isStringsEqual(token, "print_board")) {
@@ -294,7 +334,8 @@ void parseCommand(Board **boardP, char* command) {
 			return;
 		}
 
-		handleCommandPrintBoard();
+		handleCommandPrintBoard(board);
+		return;
 	}
 
 	else if (isStringsEqual(token, "set") && !isGameOverFlag) {
@@ -437,7 +478,7 @@ void parseCommand(Board **boardP, char* command) {
 			return;
 		}
 
-		handleCommandSave(firstArg);
+		handleCommandSave(board, firstArg);
 	}
 
 	else if (isStringsEqual(token, "hint") && !isGameOverFlag) {
@@ -516,7 +557,7 @@ void parseCommand(Board **boardP, char* command) {
 
 		/* handle command */
 
-		handleCommandAutoFill();
+		handleCommandAutoFill(board);
 	}
 
 
@@ -554,12 +595,15 @@ void parseCommand(Board **boardP, char* command) {
 
 
 		handleCommandExit(board);
+		return;
 	}
 
 	else {
 		printInvalidCmd();
+		return;
 	}
 
+	printBoard(*boardP);
 }
 
 
