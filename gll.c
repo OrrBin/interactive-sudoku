@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "gll.h"
+#include "types.h"
 
 #define C_OK 0
 #define C_NOK -1
@@ -297,6 +298,31 @@ void *gll_pop(gll_t *list)
   return data;
 }
 
+void *gll_remove_by_node(gll_t *list, gll_node_t *node)
+{
+  gll_node_t *currNode = node;
+  void *data = NULL;
+
+  if(currNode == NULL)
+    return NULL;
+
+  data = currNode->data;
+
+  if(currNode->prev == NULL)
+    list->first = currNode->next;
+  else
+    currNode->prev->next = currNode->next;
+
+  if(currNode->next == NULL)
+    list->last = currNode->prev;
+  else
+    currNode->next->prev = currNode->prev;
+
+  list->size--;
+  free(currNode);
+  return data;
+}
+
 /*
  * remove the tail of the list and return its value
  * in:        pointer to list
@@ -390,4 +416,30 @@ void gll_destroy(gll_t *list)
     currNode = nextNode;
   }
   free(list);
+}
+
+int remove_all_from_curr(gll_t *list, gll_node_t *current)
+{
+	gll_node_t *currNode;
+	gll_node_t *nextNode;
+
+	currNode=current;
+
+	if(current->next==NULL)
+	{
+		return 1;
+	}
+
+
+	currNode = currNode->next;
+	nextNode = currNode->next;
+
+	while(nextNode!=NULL)
+	{
+		gll_remove_by_node(list, currNode);
+		currNode=nextNode;
+		nextNode=nextNode->next;
+	}
+	gll_remove_by_node(list, currNode);
+	return 1;
 }

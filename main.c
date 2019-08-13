@@ -13,6 +13,7 @@
 #include "game.h"
 #include "parser.h"
 #include "stack.h"
+#include "move.h"
 
 /*
 int testExhaustiveBackTracking() {
@@ -47,8 +48,44 @@ int main() {
 int main(int argc, char* argv[]) {
 
 	Board* board;
-	int seed = atoi(argv[1]);
+		int seed = atoi(argv[1]);
+
+
+	gll_node_t *node;
+
+	Move *m1 = (Move*) malloc(sizeof(Move));
+	Move *m2 = (Move*) malloc(sizeof(Move));
+	Move *m3 = (Move*) malloc(sizeof(Move));
+	Move *m4 = (Move*) malloc(sizeof(Move));
+	Move *m5 = (Move*) malloc(sizeof(Move));
+	Move *m6 = (Move*) malloc(sizeof(Move));
+	gll_t *list;
+	m1->col=1;
+	m2->col=2;
+	m3->col=3;
+	m4->col=4;
+	m5->col=5;
+	m6->col=6;
+
+	list = gll_init();
+	gll_add(list, m1, 0);
+	gll_add(list, m2, 1);
+	gll_add(list, m3, 2);
+	gll_add(list, m4, 3);
+	gll_add(list, m5, 4);
+	gll_add(list, m6, 5);
+
+	node = list->first->next->next;
+
+
+	remove_all_from_curr(list, node);
+
+	printf("%d", ((Move*) list->first->data)->col);
+
+
 	srand(seed);
+
+
 
 	SP_BUFF_SET();
 	setbuf(stdout, NULL);
@@ -59,7 +96,7 @@ int main(int argc, char* argv[]) {
 
 	board = initGame(1);
 
-	/*parseCommand(&board, "solve 123");*/
+	parseCommand(&board, "solve 123");
 	while (1) {
 		playTurn(&board);
 	}

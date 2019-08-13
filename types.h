@@ -43,4 +43,8 @@ typedef struct Boards
 	int blockHeight;
 	int blockWidth;
 }Board;
+
+
+
+
 #endif /* TYPES_H_ */

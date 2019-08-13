@@ -10,7 +10,7 @@
 
 
 
-#endif /* GLL_H_ */
+
 typedef struct node_t {
   void *data;
   struct node_t *prev;
@@ -43,6 +43,7 @@ int gll_pushBack(gll_t *, void *);
 
 /*  remove functions */
 void *gll_remove(gll_t *, int);
+void *gll_remove_by_node(gll_t *list, gll_node_t *node);
 void *gll_pop(gll_t *);
 void *gll_popBack(gll_t *);
 
@@ -53,3 +54,7 @@ void gll_eachReverse(gll_t *, void (*f)(void *));
 /*  destructive functions */
 void gll_clear(gll_t *);
 void gll_destroy(gll_t *);
+int remove_all_from_curr(gll_t *list, gll_node_t *currNode);
+
+
+#endif /* GLL_H_ */

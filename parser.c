@@ -12,8 +12,10 @@
 #include "board_reader.h"
 #include "util.h"
 #include "game.h"
+#include "gll.h"
 
 enum mode { INIT, SOLVE, EDIT  };
+gll_t *list;
 
 enum mode currentGameMode = SOLVE;
 int markErrors = 1;

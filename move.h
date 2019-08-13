@@ -5,18 +5,27 @@
  *      Author: Yarden
  */
 
+#include "types.h"
+#include "gll.h"
+
 #ifndef MOVE_H_
 #define MOVE_H_
 
+typedef struct Moves
+{
+	int isFirstMoveOfCommand;
+	int isLastMoveOfCommand;
+	int col;
+	int row;
+	int previousValue;
+	int newValue;
+}Move;
+
+int undo(Board *board, gll_t* list, gll_node_t **currentMove);
+int redo(Board *board, gll_t* list, gll_node_t **currentMove);
+void cancelSingleMove(Board *board, Move *move);
+void redoSingleMove(Board *board, Move *move);
 
 
 #endif /* MOVE_H_ */
 
-struct Move {
-    enum command{set, autofill, generate, guess};
-    int row;
-    int col;
-    int val;
-    int previousVal;
-    Board* previousBoard;
-}Move;
