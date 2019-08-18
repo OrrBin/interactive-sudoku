@@ -48,8 +48,13 @@ int main() {
 int main(int argc, char* argv[]) {
 
 	Board* board;
-	Move *m1, *m2, *m3, *m4, *m5;
+
 	int seed = atoi(argv[1]);
+	/*
+	Move *m1, *m2, *m3, *m4, *m5;
+
+
+
 	gll_t *list;
 	gll_node_t *node;
 
@@ -138,6 +143,8 @@ int main(int argc, char* argv[]) {
 
 
 	printf("%d %d %d %d %d %d %d", list->size, m1->col, m2->col, m3->col, m4->col, m5->col, (int) sizeof(node));
+
+*/
 	srand(seed);
 
 
@@ -152,7 +159,7 @@ int main(int argc, char* argv[]) {
 
 	board = initGame(1);
 
-	parseCommand(&board, "solve 123");
+
 	while (1) {
 		playTurn(&board);
 	}

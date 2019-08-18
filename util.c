@@ -119,7 +119,39 @@ char *getStringFromUser(char *cmd) {
 	return fgets(cmd, MAX_CHARS_IN_COMMAND, stdin);
 }
 
-void printBoard(Board *board) {
+void printCell(Board* board, int i, int j, enum boolean markErros, enum mode currentMode)
+{
+	if(board->cells[cellNum(board, i, j)].value==0)
+		printf("   ");
+	else
+		printf(" %2d", board->cells[cellNum(board, i, j)].value);
+
+	if(board->cells[cellNum(board, i, j)].isFixed)
+		printf(".");
+	else if((board->cells[cellNum(board, i, j)].isError) && (markErros==1 || currentMode==EDIT))
+			printf("*");
+	else
+		printf(" ");
+}
+
+void printRow(Board* board, int row, enum boolean markErrors, enum mode currentMode)
+{
+	int i,j,col=0;
+	int blockHeight= board->blockHeight;
+	int blockWidth = board->blockWidth;
+
+	printf("|");
+
+	for (i = 0; i < blockHeight; i++) {
+			for(j=0; j<blockWidth;j++)
+			{
+				printCell(board, row, col++, markErrors, currentMode);
+			}
+			printf("|");
+		}
+}
+
+void printBoard(Board *board, enum boolean markErrors, enum mode currentMode) {
 	int i, j;
 	int dimension=board->dimension;
 	int blockHeight = board->blockHeight;
@@ -130,7 +162,7 @@ void printBoard(Board *board) {
 	printf("\n");
 
 	for (i = 0; i < board->dimension; i++) {
-		printRow(board, i);
+		printRow(board, i, markErrors, currentMode);
 		printf("\n");
 		if((i+1)%blockHeight==0)
 		{
@@ -153,37 +185,4 @@ int isBoardErroneous(Board *board) {
 		}
 	}
 	return false;
-}
-
-void printCell(Board* board, int i, int j)
-{
-	int mode=1, markErrors=0;
-	if(board->cells[cellNum(board, i, j)].value==0)
-		printf("   ");
-	else
-		printf(" %2d", board->cells[cellNum(board, i, j)].value);
-
-	if(board->cells[cellNum(board, i, j)].isFixed)
-		printf(".");
-	else if((board->cells[cellNum(board, i, j)].isError) && (markErrors==1 || mode==0))
-			printf("*");
-	else
-		printf(" ");
-}
-
-void printRow(Board* board, int row)
-{
-	int i,j,col=0;
-	int blockHeight= board->blockHeight;
-	int blockWidth = board->blockWidth;
-
-	printf("|");
-
-	for (i = 0; i < blockHeight; i++) {
-			for(j=0; j<blockWidth;j++)
-			{
-				printCell(board, row, col++);
-			}
-			printf("|");
-		}
 }

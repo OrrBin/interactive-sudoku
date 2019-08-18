@@ -35,7 +35,6 @@ int validateCol(Board *board, int row, int col, int value) {
 	}
 	return 1;
 }
-
 int validateBlock(Board *board, int row, int col, int value) {
 	int i, j, testCell;
 	int blocRow = row / (board->blockHeight);
@@ -56,33 +55,53 @@ int validateBlock(Board *board, int row, int col, int value) {
 	return 1;
 }
 
+
 int validateValue(Board *board, int row, int col, int value) {
 	int valid;
 
+	if(value == 0) {
+		return true;
+	}
 	valid = validateBlock(board, row, col, value)
-					&& validateRow(board, row, col, value)
-					&& validateCol(board, row, col, value);
+									&& validateRow(board, row, col, value)
+									&& validateCol(board, row, col, value);
 
 	return valid;
+}
+
+
+int findErrors(Board *board) {
+	int i;
+	enum boolean result = false;
+	for(i = 0; i < (board->dimension)*(board->dimension); i++) {
+		if(!validateValue(board, cellRow(board, i), cellCol(board, i), board->cells[i].value)) {
+			board->cells[i].isError = true;
+			result = true;
+		}
+	}
+
+	return result;
 }
 
 int setValueOfCell(Board *board, int row, int col, int value) {
 
 	if (board->cells[cellNum(board, row, col)].isFixed) {
 		printf("Error: cell is fixed\n");
+		return 0;
 	}
 
-	else if (validateValue(board, row, col, value)) {
-		board->cells[cellNum(board, row, col)].value = value;
-		board->numOfEmptyCells--;
-		return 1;
+	board->cells[cellNum(board, row, col)].value = value;
+	board->cells[cellNum(board, row, col)].isFixed = false;
+	board->numOfEmptyCells--;
+
+	if (validateValue(board, row, col, value)) {
+		board->cells[cellNum(board, row, col)].isError = false;
+	} else {
+		board->cells[cellNum(board, row, col)].isError = true;
+		findErrors(board);
 	}
 
-	else {
-		printf("Error: value is invalid\n");
-	}
-
-	return 0;
+	return 1;
 }
 
 int clearCell(Board *board, int row, int col) {
@@ -92,6 +111,7 @@ int clearCell(Board *board, int row, int col) {
 	}
 
 	board->cells[cellNum(board, row, col)].value = 0;
+	board->cells[cellNum(board, row, col)].isError = false;
 	board->numOfEmptyCells++;
 
 	return 1;
@@ -182,7 +202,7 @@ Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight,
 	free(solution->cells);
 	free(solution);
 
-	printBoard(board);
+	printBoard(board, 1, EDIT);
 
 	return board;
 }

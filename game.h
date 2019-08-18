@@ -87,6 +87,8 @@ Board* restart(Board *board);
  */
 void exitGame(Board *board);
 
+int findErrors(Board *board);
+
 /*
  * checks whether or not game completed.
  */

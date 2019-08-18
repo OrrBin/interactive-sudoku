@@ -14,11 +14,8 @@
 #include "game.h"
 #include "gll.h"
 
-enum mode { INIT, SOLVE, EDIT  };
-
-
 enum mode currentGameMode = SOLVE;
-int markErrors = 1;
+int markErrors = true;
 
 char *modeToName(enum mode aMode) {
 	switch(aMode) {
@@ -133,6 +130,7 @@ void handleCommandSolve(Board **board, char *filePath) {
 	free(*board);
 	*board = newBoard;
 	currentGameMode = SOLVE;
+	findErrors(*board);
 	printf("Loaded game from file: %s\n", filePath);
 
 }
@@ -153,7 +151,8 @@ void handleCommandEdit(Board **board, char *filePath) {
 		*board = newBoard;
 		currentGameMode = EDIT;
 
-		printBoard(*board);
+		findErrors(*board);
+		printBoard(*board, markErrors, currentGameMode);
 	}
 }
 
@@ -171,7 +170,7 @@ void handleCommandMarkErrors(int value) {
 }
 
 void handleCommandPrintBoard(Board *board) {
-	printBoard(board);
+	printBoard(board, markErrors, currentGameMode);
 }
 
 void handleCommandSet(Board *board, int row, int col, int val) {
@@ -184,13 +183,13 @@ void handleCommandSet(Board *board, int row, int col, int val) {
 
 		isGameOverFlag = isGameOver(board);
 		if(isGameOverFlag) {
-			printBoard(board);
+			printBoard(board, markErrors, currentGameMode);
 			printGameOver();
 		}
 	}
 
 	if(!isGameOverFlag && setCellResult)
-		printBoard(board);
+		printBoard(board, markErrors, currentGameMode);
 
 	return;
 }
@@ -216,6 +215,10 @@ void handleCommandRedo() {
 }
 
 void handleCommandSave(Board *board, char *filePath) {
+	if(currentGameMode == EDIT && findErrors(board) == true){
+		printf("Error: There are errors, please fix them before saving the board: %s\n", filePath);
+		return;
+	}
 	if(writeBoardToFile(board, filePath) != 0) {
 		printf("Error: there was an error saving your game to file: %s\n", filePath);
 	} else {
@@ -605,7 +608,7 @@ void parseCommand(Board **boardP, char* command) {
 		return;
 	}
 
-	printBoard(*boardP);
+	printBoard(*boardP, markErrors, currentGameMode);
 }
 
 

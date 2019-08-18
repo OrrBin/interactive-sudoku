@@ -15,11 +15,8 @@
 /*
  * printing a board
  */
-void printBoard(Board* board);
+void printBoard(Board* board, enum boolean markErros, enum mode currentMode);
 
-void printRow(Board* board, int row);
-
-void printCell(Board* board, int i, int j);
 /*
  * returns a pointer to array in length numOfValidValues,
  * where array[i]=i;
