@@ -195,7 +195,7 @@ Board* initGame(int test) {
 	printf("Please enter the block height:\n");
 	if(test==1)
 	{
-		blockHeight=2;
+		blockHeight=3;
 		inputBlockHeight=1;
 		printf("block height is %d:\n", blockHeight);
 	}
@@ -221,7 +221,7 @@ Board* initGame(int test) {
 	if(test==1)
 	{
 
-		blockWidth=2;
+		blockWidth=4;
 		inputBlockWidth=1;
 		printf("block width is %d:\n", inputBlockWidth);
 	}
@@ -244,7 +244,7 @@ Board* initGame(int test) {
 	printf("Please enter the number of cells to fill [0-%d]:\n", dimension*dimension-1);
 	if(test==1)
 	{
-		numberOfCellsToFill=5;
+		numberOfCellsToFill=0;
 		inputNumberOfCellsToFill=1;
 		printf("number of cells is %d:\n", numberOfCellsToFill);
 	}

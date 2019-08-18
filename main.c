@@ -48,42 +48,98 @@ int main() {
 int main(int argc, char* argv[]) {
 
 	Board* board;
-		int seed = atoi(argv[1]);
-
-
+	Move *m1, *m2, *m3, *m4, *m5;
+	int seed = atoi(argv[1]);
+	gll_t *list;
 	gll_node_t *node;
 
-	Move *m1 = (Move*) malloc(sizeof(Move));
-	Move *m2 = (Move*) malloc(sizeof(Move));
-	Move *m3 = (Move*) malloc(sizeof(Move));
-	Move *m4 = (Move*) malloc(sizeof(Move));
-	Move *m5 = (Move*) malloc(sizeof(Move));
-	Move *m6 = (Move*) malloc(sizeof(Move));
-	gll_t *list;
-	m1->col=1;
-	m2->col=2;
-	m3->col=3;
-	m4->col=4;
-	m5->col=5;
-	m6->col=6;
-
 	list = gll_init();
-	gll_add(list, m1, 0);
-	gll_add(list, m2, 1);
-	gll_add(list, m3, 2);
-	gll_add(list, m4, 3);
-	gll_add(list, m5, 4);
-	gll_add(list, m6, 5);
 
-	node = list->first->next->next;
+	board = initGame(1);
+
+	m1 = malloc(sizeof(Move));
+	m2 = malloc(sizeof(Move));
+	m3 = malloc(sizeof(Move));
+	m4 = malloc(sizeof(Move));
+	m5 = malloc(sizeof(Move));
+
+	setValueOfCell(board, 2, 1, 1);
+	setValueOfCell(board, 3, 1, 2);
+	setValueOfCell(board, 2, 4, 3);
+	setValueOfCell(board, 3, 4, 4);
+	setValueOfCell(board, 5, 5, 5);
+	setValueOfCell(board, 2, 1, 6);
+	setValueOfCell(board, 3, 1, 7);
+	setValueOfCell(board, 2, 4, 8);
+	setValueOfCell(board, 3, 4, 9);
+	setValueOfCell(board, 5, 5, 10);
+
+	m1->col=1;
+	m1->row=2;
+	m1->isFirstMoveOfCommand=1;
+	m1->isLastMoveOfCommand=1;
+	m1->previousValue=1;
+	m1->newValue=6;
+
+	m2->col=1;
+	m2->row=3;
+	m2->isFirstMoveOfCommand=1;
+	m2->isLastMoveOfCommand=1;
+	m2->previousValue=2;
+	m2->newValue=7;
+
+	m3->col=4;
+	m3->row=2;
+	m3->isFirstMoveOfCommand=1;
+	m3->isLastMoveOfCommand=0;
+	m3->previousValue=3;
+	m3->newValue=8;
+
+	m4->col=4;
+	m4->row=3;
+	m4->isFirstMoveOfCommand=0;
+	m4->isLastMoveOfCommand=1;
+	m4->previousValue=4;
+	m4->newValue=9;
+
+	m5->col=5;
+	m5->row=5;
+	m5->isFirstMoveOfCommand=1;
+	m5->isLastMoveOfCommand=1;
+	m5->previousValue=5;
+	m5->newValue=10;
+
+	gll_pushBack(list, m1);
+	gll_pushBack(list, m2);
+	gll_pushBack(list, m3);
+	gll_pushBack(list, m4);
+	gll_pushBack(list, m5);
 
 
-	remove_all_from_curr(list, node);
+	printf("zzzzzzzzzzzzzzzzzzzzzzzzzz\n");
+	printBoard(board);
+	printf("zzzzzzzzzzzzzzzzzzzzzzzzzz\n");
 
-	printf("%d", ((Move*) list->first->data)->col);
+	node = list->first->next->next->next->next;
+
+	undo(board, list, &node);
+	printf("undo\n");
+	printBoard(board);
+
+	undo(board, list, &node);
+	printf("undo\n");
+	printBoard(board);
+
+	printf("redo\n");
+	redo(board, list, &node);
+	printBoard(board);
 
 
+
+
+	printf("%d %d %d %d %d %d %d", list->size, m1->col, m2->col, m3->col, m4->col, m5->col, (int) sizeof(node));
 	srand(seed);
+
 
 
 

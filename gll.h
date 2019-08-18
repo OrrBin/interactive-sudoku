@@ -54,7 +54,7 @@ void gll_eachReverse(gll_t *, void (*f)(void *));
 /*  destructive functions */
 void gll_clear(gll_t *);
 void gll_destroy(gll_t *);
-int remove_all_from_curr(gll_t *list, gll_node_t *currNode);
+int gll_remove_all_from_curr(gll_t *list, gll_node_t *currNode);
 
 
 #endif /* GLL_H_ */

@@ -39,11 +39,16 @@ int redo(Board *board, gll_t* list, gll_node_t **currentMove)
 	Move *move;
 	if(list->size==0)
 	{
+		printf("invalid redo. no moves");
+		return 0;
+	}
+	if((*currentMove)->next==NULL)
+	{
 		printf("invalid redo. last move");
 		return 0;
 	}
 
-	move = (Move*) (*currentMove)->data;
+	move = (Move*) (*currentMove)->next->data;
 
 	while(move->isLastMoveOfCommand==0)
 	{
@@ -58,10 +63,16 @@ int redo(Board *board, gll_t* list, gll_node_t **currentMove)
 
 void cancelSingleMove(Board *board, Move *move)
 {
-	setValueOfCell(board, move->col, move->row, move->previousValue);
+	setValueOfCell(board, move->row, move->col, move->previousValue);
 }
 
 void redoSingleMove(Board *board, Move *move)
 {
-	setValueOfCell(board, move->col, move->row, move->newValue);
+	setValueOfCell(board, move->row, move->col, move->newValue);
+}
+
+void addMoveToCurrentAndCleanNextMoves (gll_t* list, gll_node_t **currentMove, Move *move)
+{
+	gll_remove_all_from_curr(list, *currentMove);
+	gll_pushBack(list, move);
 }
