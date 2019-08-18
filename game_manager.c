@@ -16,6 +16,7 @@
 
 enum mode currentGameMode = SOLVE;
 int markErrors = true;
+gll_t *moveList;
 
 char *modeToName(enum mode aMode) {
 	switch(aMode) {
@@ -129,6 +130,9 @@ void handleCommandSolve(Board **board, char *filePath) {
 	}
 	free(*board);
 	*board = newBoard;
+
+	free(moveList);
+	moveList = gll_init();
 	currentGameMode = SOLVE;
 	findErrors(*board);
 	printf("Loaded game from file: %s\n", filePath);
@@ -149,8 +153,11 @@ void handleCommandEdit(Board **board, char *filePath) {
 		}
 		free(*board);
 		*board = newBoard;
-		currentGameMode = EDIT;
 
+		free(moveList);
+		moveList = gll_init();
+
+		currentGameMode = EDIT;
 		findErrors(*board);
 		printBoard(*board, markErrors, currentGameMode);
 	}
