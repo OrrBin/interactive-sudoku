@@ -186,3 +186,12 @@ int isBoardErroneous(Board *board) {
 	}
 	return false;
 }
+
+void convertArrToZeros(int *arr, int length)
+{
+	int i;
+	for(i=0; i<length; i++)
+	{
+		arr[i]=0;
+	}
+}

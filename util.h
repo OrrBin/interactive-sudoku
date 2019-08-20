@@ -98,3 +98,5 @@ int isStringsEqual(char *string1, char *string2);
  * read input from user
  */
 char *getStringFromUser(char *cmd);
+
+void convertArrToZeros(int *arr, int length);

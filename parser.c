@@ -14,7 +14,7 @@
 #include "game.h"
 #include "gll.h"
 
-enum mode currentGameMode = SOLVE;
+enum mode currentGameMode = INIT;
 int markErrors = true;
 
 char *modeToName(enum mode aMode) {
@@ -111,6 +111,7 @@ void printInvalidMode(char *command, enum mode *validModes, int numOfValidModes)
 		strcat(validModesString, tmpString);
 	}
 	printf("the command %s is only valid in %s modes. current game mode is %s\n", command, validModesString, currentModeString);
+	fflush(stdout);
 }
 
 void printInvalidCmd() {
@@ -132,6 +133,7 @@ void handleCommandSolve(Board **board, char *filePath) {
 	currentGameMode = SOLVE;
 	findErrors(*board);
 	printf("Loaded game from file: %s\n", filePath);
+	fflush(stdout);
 
 }
 
@@ -254,15 +256,17 @@ void handleCommandExit(Board *board) {
 }
 
 void parseCommand(Board **boardP, char* command) {
+
 	char *firstArg, *secondArg, *thirdArg, *forthArg;
 	int firstIntArg, secondIntArg, thirdIntArg, isGameOverFlag;
 	float threshold;
 	char *token;
 	Board *board = *boardP;
 	enum mode validModes[3];
-
-	isGameOverFlag = isGameOver(board);
+	/*isGameOverFlag = isGameOver(board);*/
+	isGameOverFlag=0;
 	token = strtok(command, " \t\r\n");
+
 
 	if (token == NULL) {
 		return;
@@ -275,6 +279,7 @@ void parseCommand(Board **boardP, char* command) {
 
 
 	if (isStringsEqual(token, "solve")) {
+
 		if(firstArg == NULL) {
 			printFormatSolveFileRequired(0);
 			return;

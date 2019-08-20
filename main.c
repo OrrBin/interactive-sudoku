@@ -14,6 +14,7 @@
 #include "parser.h"
 #include "stack.h"
 #include "move.h"
+#include "board_writer.h"
 
 /*
 int testExhaustiveBackTracking() {
@@ -48,8 +49,21 @@ int main() {
 int main(int argc, char* argv[]) {
 
 	Board* board;
+	int seed;
 
-	int seed = atoi(argv[1]);
+	board = initGame(1);
+
+	printBoard(board,1 , 1);
+	printf("%d\n", isGameOver(board));
+	SP_BUFF_SET()
+	printf("%d", cellNum(board, 1, 1));
+
+	seed = atoi(argv[1]);
+	while (1)
+	{
+		playTurn(&board);
+	}
+
 	/*
 	Move *m1, *m2, *m3, *m4, *m5;
 
