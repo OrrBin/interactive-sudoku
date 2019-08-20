@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
 	int seed;
 
 	board = initGame(1);
-
+	setValueOfCell(board, 10, 7, 2);
 	printBoard(board,1 , 1);
 	printf("%d\n", isGameOver(board));
 	SP_BUFF_SET()

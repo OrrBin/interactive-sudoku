@@ -326,64 +326,17 @@ Board* restart(Board *board) {
 }
 
 int isGameOver(Board *board) {
-	int i,j,m,k,index, row, col;
-	int *arr;
-	int dimension;
-	arr = (int*) calloc(board->dimension, sizeof(int));
+
+	int i,dimension;
 	dimension=board->dimension;
 
-	if (board->numOfEmptyCells!=0)
+	if(board->numOfEmptyCells!=0)
 		return 0;
-	for (i=0; i<dimension; i++)
+
+	for(i=0; i<dimension*dimension; i++)
 	{
-		for(j=0; j<dimension; j++)
-		{
-			index = ((board->cells)[cellNum(board, i, j)].value)-1;
-			arr[index]++;
-		}
-
-		for(m=0; m<dimension ; m++)
-		{
-			if(arr[m]!=1)
-				return 0;
-		}
-
-		convertArrToZeros(arr, dimension);
-
-		for(j=0; j<dimension; j++)
-		{
-			index = ((board->cells)[cellNum(board, j, i)].value)-1;
-			arr[index]++;
-		}
-
-		for(m=0; m<dimension ; m++)
-		{
-			if(arr[m]!=1)
-				return 0;
-		}
-
-		convertArrToZeros(arr, dimension);
-	}
-
-	for(i=0; i<board->blockWidth; i++)
-	{
-		for(j=0; j< board->blockHeight; j++)
-		{
-			for(k=0; k<dimension;k++)
-			{
-				row = k/board->blockWidth+(board->blockHeight*i);
-				col = k%board->blockWidth+(board->blockWidth*j);
-				index = ((board->cells)[cellNum(board, row, col)].value)-1;
-				arr[index]++;
-			}
-
-			for(m=0; m<dimension ; m++)
-			{
-				if(arr[m]!=1)
-					return 0;
-			}
-			convertArrToZeros(arr, dimension);
-		}
+		if(board->cells[i].isError==1)
+			return 0;
 	}
 
 	return 1;
