@@ -423,6 +423,9 @@ int gll_remove_all_from_curr(gll_t *list, gll_node_t *current)
 	gll_node_t *currNode;
 	gll_node_t *nextNode;
 
+	if(list->first==NULL)
+		return 1;
+
 	currNode=current;
 
 	if(current->next==NULL)

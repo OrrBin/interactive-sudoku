@@ -50,18 +50,22 @@ int main(int argc, char* argv[]) {
 
 	Board* board;
 	int seed;
+	gll_t *moveList;
+	gll_node_t *curr;
 
-	board = initGame(1);
-	setValueOfCell(board, 10, 7, 2);
-	printBoard(board,1 , 1);
-	printf("%d\n", isGameOver(board));
 	SP_BUFF_SET()
-	printf("%d", cellNum(board, 1, 1));
+	printf("%d", argc);
+	board=NULL;
 
+	moveList = gll_init();
+	curr=moveList->first;
 	seed = atoi(argv[1]);
+
+
+
 	while (1)
 	{
-		playTurn(&board);
+		playTurn(&board, moveList, &curr);
 	}
 
 	/*
@@ -164,19 +168,7 @@ int main(int argc, char* argv[]) {
 
 
 
-	SP_BUFF_SET();
-	setbuf(stdout, NULL);
 
-	if (argc < 1) {
-		exit(-1);
-	}
-
-	board = initGame(1);
-
-
-	while (1) {
-		playTurn(&board);
-	}
 
 
 	return 0;

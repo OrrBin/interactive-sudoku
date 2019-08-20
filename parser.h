@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "gll.h"
 
 
 /*
@@ -21,6 +22,7 @@
  * to execute the command, or print error of invalid
  * command.
  */
-void parseCommand(Board **boardP, char *command);
+void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **curr);
+void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList, gll_node_t **curr);
 
 #endif /* PARSER_H_ */

@@ -4,11 +4,12 @@
  *  Created on: 22 ���� 2019
  *      Author: yarden.flori
  */
-#include "util.h"
+
 #ifndef GAME_H_
 #define GAME_H_
-#endif /* GAME_H_ */
 
+#include "util.h"
+#include "gll.h"
 /*
  * validateValue gets a board, row, col, and value.
  * it checks whether or not value might be set to
@@ -49,7 +50,7 @@ Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight,
  * and call for the relevant function to
  * execute it.
  */
-void playTurn(Board **boardP);
+void playTurn(Board **boardP, gll_t *moveList, gll_node_t **curr);
 
 /*
  * hint gets from user board, row and col.
@@ -93,3 +94,5 @@ int findErrors(Board *board);
  * checks whether or not game completed.
  */
 int isGameOver(Board *board);
+
+#endif /* GAME_H_ */

@@ -13,6 +13,7 @@
 #include "util.h"
 #include "game.h"
 #include "gll.h"
+#include "move.h"
 
 enum mode currentGameMode = INIT;
 int markErrors = true;
@@ -124,15 +125,19 @@ void printGameOver() {
 
 void handleCommandSolve(Board **board, char *filePath) {
 	Board *newBoard = readBoardFromfile(filePath);
+
 	if(newBoard == NULL) {
 		printf("Error: could not load game from file: %s\n", filePath);
 		return;
 	}
+
 	free(*board);
 	*board = newBoard;
 	currentGameMode = SOLVE;
+
 	findErrors(*board);
 	printf("Loaded game from file: %s\n", filePath);
+
 	fflush(stdout);
 
 }
@@ -175,9 +180,11 @@ void handleCommandPrintBoard(Board *board) {
 	printBoard(board, markErrors, currentGameMode);
 }
 
-void handleCommandSet(Board *board, int row, int col, int val) {
+void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList, gll_node_t **curr) {
 
-	int isGameOverFlag, setCellResult;
+	int isGameOverFlag, setCellResult, previousValue;
+	Move *move;
+	previousValue=board->cells[cellNum(board, row,col)].value;
 	if (val == 0)
 		setCellResult = clearCell(board, row - 1, col - 1);
 	else {
@@ -192,6 +199,16 @@ void handleCommandSet(Board *board, int row, int col, int val) {
 
 	if(!isGameOverFlag && setCellResult)
 		printBoard(board, markErrors, currentGameMode);
+
+	if (setCellResult==1)
+	{
+		move = malloc(sizeof(Move));
+		move->col=col, move->row=row, move->isFirstMoveOfCommand=1, move->isLastMoveOfCommand=1,move->previousValue=previousValue, move->newValue=val;
+		gll_remove_all_from_curr(moveList, *curr);
+		gll_pushBack(moveList, move);
+		*curr = moveList->last;
+	}
+
 
 	return;
 }
@@ -255,7 +272,7 @@ void handleCommandExit(Board *board) {
 	exitGame(board);
 }
 
-void parseCommand(Board **boardP, char* command) {
+void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **curr) {
 
 	char *firstArg, *secondArg, *thirdArg, *forthArg;
 	int firstIntArg, secondIntArg, thirdIntArg, isGameOverFlag;
@@ -271,6 +288,7 @@ void parseCommand(Board **boardP, char* command) {
 	if (token == NULL) {
 		return;
 	}
+
 
 	firstArg = strtok(NULL, " \t\r\n");
 	secondArg = strtok(NULL, " \t\r\n");
@@ -348,7 +366,7 @@ void parseCommand(Board **boardP, char* command) {
 		return;
 	}
 
-	else if (isStringsEqual(token, "set") && !isGameOverFlag) {
+	else if (isStringsEqual(token, "set")) {
 		if(firstArg == NULL || secondArg == NULL || thirdArg == NULL) {
 			printFormatSetTooLittleArg();
 			return;
@@ -371,7 +389,7 @@ void parseCommand(Board **boardP, char* command) {
 		secondIntArg = atoi(secondArg);
 		thirdIntArg = atoi(thirdArg);
 
-		handleCommandSet(board, secondIntArg, firstIntArg, thirdIntArg);
+		handleCommandSet(board, secondIntArg, firstIntArg, thirdIntArg, moveList, curr);
 	}
 
 	else if (isStringsEqual(token, "validate") && !isGameOverFlag) {

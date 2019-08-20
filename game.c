@@ -10,6 +10,7 @@
 #include "util.h"
 #include "solver.h"
 #include "parser.h"
+#include "gll.h"
 
 
 int validateRow(Board *board, int row, int col, int value) {
@@ -136,7 +137,7 @@ void validate(Board *board) {
 	}
 }
 
-void playTurn(Board **boardP) {
+void playTurn(Board **boardP, gll_t *moveList, gll_node_t **curr) {
 	char *result;
 	char cmd[MAX_CHARS_IN_COMMAND];
 	result = getStringFromUser(cmd);
@@ -145,7 +146,7 @@ void playTurn(Board **boardP) {
 		freeBoard(*boardP);
 		exit(1);
 	}
-	parseCommand(boardP, cmd);
+	parseCommand(boardP, cmd, moveList, curr);
 }
 
 void exitGame(Board *board) {
