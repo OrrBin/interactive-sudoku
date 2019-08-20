@@ -21,6 +21,7 @@ int undo(Board *board, gll_t* list, gll_node_t **currentMove)
 		return 0;
 	}
 
+
 	move = (Move*) (*currentMove)->data;
 
 	while(move->isFirstMoveOfCommand==0)
@@ -29,6 +30,7 @@ int undo(Board *board, gll_t* list, gll_node_t **currentMove)
 		*currentMove=(*currentMove)->prev;
 		move = (Move*) (*currentMove)->data;
 	}
+
 	cancelSingleMove(board, move);
 	*currentMove=(*currentMove)->prev;
 	return 1;
@@ -63,7 +65,7 @@ int redo(Board *board, gll_t* list, gll_node_t **currentMove)
 
 void cancelSingleMove(Board *board, Move *move)
 {
-	setValueOfCell(board, move->row, move->col, move->previousValue);
+	setValueOfCell(board, move->row-1, move->col-1, move->previousValue);
 }
 
 void redoSingleMove(Board *board, Move *move)

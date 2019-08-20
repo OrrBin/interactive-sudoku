@@ -225,7 +225,8 @@ void handleCommandGenerate(int x, int y) {
 	printf("handle generate x: %d, y: %d\n", x, y);
 }
 
-void handleCommandUndo() {
+void handleCommandUndo(Board *board, gll_t* moveList, gll_node_t **curr) {
+	undo(board, moveList, curr);
 
 }
 
@@ -467,8 +468,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 			return;
 		}
 
-
-		handleCommandUndo();
+		handleCommandUndo(board, moveList, curr);
 	}
 
 	else if (isStringsEqual(token, "redo")) {
