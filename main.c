@@ -52,14 +52,40 @@ int main(int argc, char* argv[]) {
 	int seed;
 	gll_t *moveList;
 	gll_node_t *curr;
+	Move *first = NULL;
+
+
 
 	SP_BUFF_SET()
 	printf("%d", argc);
 	board=NULL;
-
 	moveList = gll_init();
+
+
+
+	gll_pushBack(moveList, first);
 	curr=moveList->first;
 	seed = atoi(argv[1]);
+	handleCommandSolve(&board, "C:\\1.txt");
+	printBoard(board, 1, SOLVE);
+	handleCommandSet(board,1,1,1,moveList,&curr);
+	handleCommandSet(board,2,1,3,moveList,&curr);
+	handleCommandSet(board,1,3,5,moveList,&curr);
+	handleCommandUndo(board, moveList, &curr);
+	printBoard(board, 1, SOLVE);
+	handleCommandUndo(board, moveList, &curr);
+	printBoard(board, 1, SOLVE);
+	handleCommandUndo(board, moveList, &curr);
+	printBoard(board, 1, SOLVE);
+	handleCommandRedo(board, moveList, &curr);
+	printBoard(board, 1, SOLVE);
+	handleCommandRedo(board, moveList, &curr);
+	printBoard(board, 1, SOLVE);
+	handleCommandRedo(board, moveList, &curr);
+
+
+	printBoard(board, 1, SOLVE);
+
 
 
 

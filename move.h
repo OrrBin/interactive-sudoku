@@ -26,7 +26,7 @@ int redo(Board *board, gll_t* list, gll_node_t **currentMove);
 void cancelSingleMove(Board *board, Move *move);
 void redoSingleMove(Board *board, Move *move);
 void addMoveToCurrentAndCleanNextMoves (gll_t* list, gll_node_t **currentMove, Move *move);
-
+void printMove(gll_node_t *currentMove);
 
 #endif /* MOVE_H_ */
 

@@ -230,8 +230,8 @@ void handleCommandUndo(Board *board, gll_t* moveList, gll_node_t **curr) {
 
 }
 
-void handleCommandRedo() {
-
+void handleCommandRedo(Board *board, gll_t* moveList, gll_node_t **curr) {
+	redo(board, moveList, curr);
 }
 
 void handleCommandSave(Board *board, char *filePath) {
@@ -485,7 +485,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 		}
 
 
-		handleCommandRedo();
+		handleCommandRedo(board, moveList, curr);
 	}
 
 	else if (isStringsEqual(token, "save")) {
