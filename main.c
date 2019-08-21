@@ -159,10 +159,16 @@ int main(int argc, char* argv[]) {
 
 	board = initGame(1);
 
+	printBoard(board);
 
-	while (1) {
-		playTurn(&board);
-	}
+	solve(board);
+
+	print('after solving');
+	printBoard(board);
+
+//	while (1) {
+//		playTurn(&board);
+//	}
 
 
 	return 0;
