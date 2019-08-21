@@ -18,16 +18,18 @@ void solve(Board *board) {
 
 	solution = LPsolve(board, true);
 
-	if(! solution->solutionFound) {
-		printf("Failed to find solution to the given board");
+	if( !solution->solutionFound ) {
+		printf("Failed to find solution to the given board\n");
+		return;
 	}
+
 
 	for (val = 1; val <= board->dimension; val++) {
 		for (row = 0; row < board->dimension; row++) {
 			for (col = 0; col < board->dimension; col++) {
-				index = getVarIndex(solution, row, col, val);
 
-				if(index != -1 && solution->foundSolution[index] == 1.0) {
+				index = getVarIndex(solution, row, col, val);
+				if(index != -1 && (solution->foundSolution)[index] == 1.0) {
 					setValueOfCell(board, row, col, val);
 					break;
 				}
@@ -191,7 +193,7 @@ int *checkValidValues(Board *board, int row, int col) {
 }
 
 int randomizeBackTrackingStep(Board *board, int row, int col) {
-	int idx, result, currentValueIdx, currentIdx, currentValue = 0;
+	int idx, result = 0, currentValueIdx, currentIdx, currentValue = 0;
 	int *validValues = NULL, numOfValidValues = 0, *validIndexes = NULL;
 
 	numOfValidValues = checkValidValuesNum(board, row, col);

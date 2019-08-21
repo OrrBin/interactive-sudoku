@@ -10,8 +10,9 @@
 #include "SPBufferset.h"
 #include  "util.h"
 #include "solver.h"
+#include "board_reader.h"
 #include "game.h"
-#include "parser.h"
+#include "game_manager.h"
 #include "stack.h"
 #include "move.h"
 
@@ -48,7 +49,7 @@ int main() {
 int main(int argc, char* argv[]) {
 
 	Board* board;
-
+	char *filePath = "./test.txt";
 	int seed = atoi(argv[1]);
 	/*
 	Move *m1, *m2, *m3, *m4, *m5;
@@ -157,18 +158,19 @@ int main(int argc, char* argv[]) {
 		exit(-1);
 	}
 
-	board = initGame(1);
 
-	printBoard(board);
+	board = readBoardFromfile(filePath);
+
+	printBoard(board, 0, EDIT);
 
 	solve(board);
 
-	print('after solving');
-	printBoard(board);
+	printf("after solving with LP\n");
+	printBoard(board, 0, EDIT);
 
-//	while (1) {
-//		playTurn(&board);
-//	}
+/*	while (1) {
+		playTurn(&board);
+	}*/
 
 
 	return 0;

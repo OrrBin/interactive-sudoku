@@ -51,9 +51,9 @@ typedef struct Boards
 
 typedef struct LPSol {
 	int dimension;
+	enum boolean solutionFound;
 	gll_t **varIndexes;
 	double *foundSolution;
-	enum boolean solutionFound;
 } LPSol;
 
 typedef struct intTuple2 {

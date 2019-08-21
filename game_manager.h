@@ -5,14 +5,14 @@
  *      Author: yarden.flori
  */
 
-#ifndef PARSER_H_
-#define PARSER_H_
+#ifndef GAME_MANAGER_H_
+#define GAME_MANAGER_H_
 
 
 
 #include <stdio.h>
 #include <string.h>
-
+#include "util.h"
 
 /*
  * parseCommand gets from user command, and
@@ -23,4 +23,4 @@
  */
 void parseCommand(Board **boardP, char *command);
 
-#endif /* PARSER_H_ */
+#endif /* GAME_MANAGER_H_ */

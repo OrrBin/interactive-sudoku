@@ -7,9 +7,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
+#include "game_manager.h"
 #include "util.h"
 #include "solver.h"
-#include "parser.h"
 
 
 int validateRow(Board *board, int row, int col, int value) {

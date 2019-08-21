@@ -37,18 +37,18 @@ void destroy(GRBenv *env, GRBmodel *model, int *ind, double *val,
 
 void addVar(LPSol *solution, int i, int j, int v, int index) {
 	intTuple2 *tuple = malloc(sizeof(intTuple2));
-	int N = solution->dimension;
-	if (solution->varIndexes[i * N + j] == NULL) {
-		solution->varIndexes[i * N + j] = gll_init();
+	int dimension = solution->dimension;
+	if (solution->varIndexes[i * dimension + j] == NULL) {
+		solution->varIndexes[i * dimension + j] = gll_init();
 	}
 
 	tuple->item1 = v;
 	tuple->item2 = index;
-	gll_pushBack(solution->varIndexes[i * N + j], tuple);
+	gll_pushBack(solution->varIndexes[i * dimension + j], tuple);
 }
 
 int addVariables(Board *board, LPSol *solution) {
-	int i, j, counter = 0, row, col;
+	int i, val, counter = 0, row, col;
 	enum boolean valueFound;
 	for(i = 0; i < (board->dimension)*(board->dimension); i++) {
 		row = cellRow(board, i);
@@ -58,15 +58,16 @@ int addVariables(Board *board, LPSol *solution) {
 		}
 
 		valueFound = false;
-		for(j = 0; j < board->dimension; j++) {
-			if(validateValue(board, row, col, j)) {
+		for(val = 1; val <= board->dimension; val++) {
+			if(validateValue(board, row, col, val)) {
 				valueFound = true;
-				addVar(solution, row, col, j, counter);
+				addVar(solution, row, col, val, counter);
 				counter++;
 			}
 		}
 
-		if (!valueFound) { /* An empty cell without any legal values */
+		if (!valueFound) { /* An empty cell without legal values */
+			printf("cell (%d, %d) has no legal values", row, col);
 			addVar(solution, row, col, -1, -1);
 		}
 	}
@@ -86,14 +87,15 @@ int getVarIndex(LPSol *solution, int row, int col, int value) {
 
 	int size, idx;
 	intTuple2 *tuple;
-	if(solution->varIndexes[row*(solution->dimension) + col] == NULL) {
+	gll_t *list = solution->varIndexes[row*(solution->dimension) + col];
+	if(list == NULL) {
 		return -1;
 	}
 
-	size = solution->varIndexes[row*(solution->dimension) + col]->size;
+	size = list->size;
 
-	for(idx = 0; idx < size; row++) {
-		tuple = (intTuple2 *) gll_get(solution->varIndexes[row*(solution->dimension) + col], idx);
+	for(idx = 0; idx < size; idx++) {
+		tuple = (intTuple2 *) gll_get(list, idx);
 		if(tuple->item1 == value) {
 			return tuple->item2;
 		}
@@ -104,6 +106,7 @@ int getVarIndex(LPSol *solution, int row, int col, int value) {
 
 int addCellConstraints(Board *board, LPSol *solution, int *ind, double *val, GRBmodel *model, GRBenv *env, double *obj, char *vtype) {
 	int i, v, constraints = 0, varNum = 0, row, col, error;
+
 	for(i = 0; i < (board->dimension)*(board->dimension); i++) {
 		row = cellRow(board, i);
 		col = cellCol(board, i);
@@ -117,12 +120,13 @@ int addCellConstraints(Board *board, LPSol *solution, int *ind, double *val, GRB
 			if (getVarIndex(solution, row, col, v) == -1) { /* value v is not available for this cell (e.g. doesn't have a variable) */
 				continue;
 			}
-			ind[varNum] = getVarIndex(solution, i, v, v);
+			ind[varNum] = getVarIndex(solution, row, col, v);
 			val[varNum] = 1.0;
 			varNum++;
 		}
 
 		if (varNum == 0) {
+			printf("cell (%d, %d) has no legal values", row, col);
 			destroy(env, model, ind, val, obj, vtype);
 			solution->solutionFound = false;
 			return -1;
@@ -186,8 +190,9 @@ int addRowConstraints(Board *board, LPSol *solution, int *ind, double *val, GRBm
 
 
 enum boolean addColConstraints(Board *board, LPSol *solution, int *ind, double *val, GRBmodel *model, GRBenv *env, double *obj, char *vtype) {
-	int v, row, col, index, varNum, constraints = 0, error;
+	int v, row, col, index, varNum, constraints = 0, error = 0;
 	enum boolean valueFound = false;
+
 	for (v = 1; v <= board->dimension; v++) {
 		for (col = 0; col < (board->dimension); col++) {
 
@@ -228,9 +233,8 @@ enum boolean addColConstraints(Board *board, LPSol *solution, int *ind, double *
 }
 
 int addBlockConstraints(Board *board, LPSol *solution, int *ind, double *val, GRBmodel *model, GRBenv *env, double *obj, char *vtype) {
-	int i, j, v, row, col, index, varNum = 0, constraints, error;
+	int i, j, v, row, col, index, varNum = 0, constraints = 0, error;
 	enum boolean valueFound = false;
-
 	/* iterate over the blocks */
 	for (i = 0; i < board->blockWidth; i++) {
 		for (j = 0; j < board->blockHeight; j++) {
@@ -293,7 +297,7 @@ LPSol *LPsolve(Board *board, enum boolean isInteger) {
 
 
 	/* Create environment - log file is interactive_sudoku.log */
-	error = GRBloadenv(&env, "interactive_sudoku.log ");
+	error = GRBloadenv(&env, "interactive_sudoku.log");
 	if (error) {
 		printf("ERROR %d GRBloadenv(): %s\n", error, GRBgeterrormsg(env));
 		destroy(env, model, ind, val, obj, vtype);
@@ -315,7 +319,7 @@ LPSol *LPsolve(Board *board, enum boolean isInteger) {
 		return solution;
 	}
 
-	/* Add variables */
+	/* Add variables  */
 
 	numVars = addVariables(board, solution);
 
@@ -411,6 +415,7 @@ LPSol *LPsolve(Board *board, enum boolean isInteger) {
 	/* get the objective -- the optimal result of the function */
 	error = GRBgetdblattr(model, GRB_DBL_ATTR_OBJVAL, &objval);
 	if (error) {
+		printf("ERROR %d GRBgettdblattr(): %s\n", error, GRBgeterrormsg(env));
 		destroy(env, model, ind, val, obj, vtype);
 		solution->solutionFound = false;
 		return solution;
@@ -445,5 +450,5 @@ LPSol *LPsolve(Board *board, enum boolean isInteger) {
 
 	destroy(env, model, ind, val, obj, vtype);
 
-	return 0;
+	return solution;
 }
