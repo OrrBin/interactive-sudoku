@@ -10,6 +10,35 @@
 #include "util.h"
 #include "game.h"
 #include "stack.h"
+#include "linear_programming_solver.h"
+
+void solve(Board *board) {
+	int row, col, val, index;
+	LPSol *solution;
+
+	solution = LPsolve(board, true);
+
+	if(! solution->solutionFound) {
+		printf("Failed to find solution to the given board");
+	}
+
+	for (val = 1; val <= board->dimension; val++) {
+		for (row = 0; row < board->dimension; row++) {
+			for (col = 0; col < board->dimension; col++) {
+				index = getVarIndex(solution, row, col, val);
+
+				if(index != -1 && solution->foundSolution[index] == 1.0) {
+					setValueOfCell(board, row, col, val);
+					break;
+				}
+			}
+		}
+	}
+
+	freeLPSol(solution);
+}
+
+
 
 int handleCell(Board *board, int row, int col, int value,
 		int (*callback)(Board *, int, int)) {

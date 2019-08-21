@@ -129,7 +129,7 @@ void printCell(Board* board, int i, int j, enum boolean markErros, enum mode cur
 	if(board->cells[cellNum(board, i, j)].isFixed)
 		printf(".");
 	else if((board->cells[cellNum(board, i, j)].isError) && (markErros==1 || currentMode==EDIT))
-			printf("*");
+		printf("*");
 	else
 		printf(" ");
 }
@@ -143,12 +143,12 @@ void printRow(Board* board, int row, enum boolean markErrors, enum mode currentM
 	printf("|");
 
 	for (i = 0; i < blockHeight; i++) {
-			for(j=0; j<blockWidth;j++)
-			{
-				printCell(board, row, col++, markErrors, currentMode);
-			}
-			printf("|");
+		for(j=0; j<blockWidth;j++)
+		{
+			printCell(board, row, col++, markErrors, currentMode);
 		}
+		printf("|");
+	}
 }
 
 void printBoard(Board *board, enum boolean markErrors, enum mode currentMode) {
@@ -167,10 +167,10 @@ void printBoard(Board *board, enum boolean markErrors, enum mode currentMode) {
 		if((i+1)%blockHeight==0)
 		{
 			for(j=0 ; j< 4*dimension+blockHeight+1; j++)
-				{
-					printf("-");
-				}
-				printf("\n");
+			{
+				printf("-");
+			}
+			printf("\n");
 		}
 
 
@@ -186,3 +186,47 @@ int isBoardErroneous(Board *board) {
 	}
 	return false;
 }
+
+LPSol *initLPSol(int dimension) {
+	int i, j;
+	LPSol *solution = malloc(sizeof(LPSol));
+
+	solution->dimension = dimension;
+	solution->varIndexes = malloc(dimension * dimension * sizeof(gll_t *));
+
+	for (i = 0; i < dimension; i++) {
+		for (j = 0; j < dimension; j++) {
+			solution->varIndexes[i * dimension + j] = NULL;
+		}
+	}
+	solution->foundSolution = NULL;
+	solution->solutionFound = false;
+	return solution;
+}
+
+void freeLPSol(LPSol *solution) {
+	int i, j, t, dimension = solution->dimension;
+	gll_t *list;
+	gll_t **varIndexes = solution->varIndexes;
+
+	for (i = 0; i < dimension; i++) {
+		for (j = 0; j < dimension; j++) {
+			if (varIndexes[i * dimension + j] != NULL) {
+				list = varIndexes[i * dimension + j];
+				for(t = 0; t < list->size; t++) {
+					free(gll_get(list, t));
+				}
+				gll_destroy(list);
+			}
+		}
+	}
+
+	free(varIndexes);
+
+	if (solution->foundSolution != NULL) {
+		free(solution->foundSolution);
+	}
+
+	free(solution);
+}
+

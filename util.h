@@ -98,3 +98,13 @@ int isStringsEqual(char *string1, char *string2);
  * read input from user
  */
 char *getStringFromUser(char *cmd);
+
+/*
+ * initiates linear programming solution object
+ */
+LPSol *initLPSol(int dimension);
+
+/*
+ * free linear programming solution object
+ */
+void freeLPSol(LPSol *solution);
