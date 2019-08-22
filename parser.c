@@ -180,7 +180,7 @@ void handleCommandPrintBoard(Board *board) {
 	printBoard(board, markErrors, currentGameMode);
 }
 
-void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList, gll_node_t **curr) {
+void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList, gll_node_t **curr, int isFirstMoveOfCommand, int isLastMoveOfCommand) {
 
 	int isGameOverFlag, setCellResult, previousValue;
 	Move *move;
@@ -203,7 +203,7 @@ void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList, 
 	if (setCellResult==1)
 	{
 		move = malloc(sizeof(Move));
-		move->col=col, move->row=row, move->isFirstMoveOfCommand=1, move->isLastMoveOfCommand=1,move->previousValue=previousValue, move->newValue=val;
+		move->col=col, move->row=row, move->isFirstMoveOfCommand=isFirstMoveOfCommand, move->isLastMoveOfCommand=isLastMoveOfCommand,move->previousValue=previousValue, move->newValue=val;
 		gll_remove_all_from_curr(moveList, *curr);
 		gll_pushBack(moveList, move);
 		*curr = moveList->last;
@@ -261,8 +261,8 @@ void handleCommandNumSolutions(Board *board) {
 	printf("Current board has %d solutions\n", numOfSolutions);
 }
 
-void handleCommandAutoFill(Board *board) {
-	autoFillBoard(board, true);
+void handleCommandAutoFill(Board *board, gll_t *moveList, gll_node_t **curr) {
+	autoFillBoard(board, moveList, curr, true);
 }
 
 void handleCommandReset() {
@@ -390,7 +390,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 		secondIntArg = atoi(secondArg);
 		thirdIntArg = atoi(thirdArg);
 
-		handleCommandSet(board, secondIntArg, firstIntArg, thirdIntArg, moveList, curr);
+		handleCommandSet(board, secondIntArg, firstIntArg, thirdIntArg, moveList, curr, 1, 1);
 	}
 
 	else if (isStringsEqual(token, "validate") && !isGameOverFlag) {
@@ -585,7 +585,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 
 		/* handle command */
 
-		handleCommandAutoFill(board);
+		handleCommandAutoFill(board, moveList, curr);
 	}
 
 

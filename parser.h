@@ -23,10 +23,11 @@
  * command.
  */
 void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **curr);
-void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList, gll_node_t **curr);
+void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList, gll_node_t **curr, int isFirstMoveOfCommand, int isLastMoveOfCommand);
 void handleCommandSolve(Board **board, char *filePath);
 void handleCommandUndo(Board *board, gll_t* moveList, gll_node_t **curr);
 void handleCommandRedo(Board *board, gll_t* moveList, gll_node_t **curr);
+void handleCommandAutoFill(Board *board, gll_t *moveList, gll_node_t **curr);
 
 
 #endif /* PARSER_H_ */

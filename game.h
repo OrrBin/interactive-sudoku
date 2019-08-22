@@ -75,7 +75,7 @@ int findNumberOFSolutions(Board *board);
  * Fills cells with only one legal value.
  * If doPrint is not 0, then prints every change
  */
-void autoFillBoard(Board *board, enum boolean);
+void autoFillBoard(Board *board, gll_t *moveList, gll_node_t **curr, enum boolean doPrint);
 
 /*
  * restart free the memory used for the current board

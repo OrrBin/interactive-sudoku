@@ -68,9 +68,9 @@ int main(int argc, char* argv[]) {
 	seed = atoi(argv[1]);
 	handleCommandSolve(&board, "C:\\1.txt");
 	printBoard(board, 1, SOLVE);
-	handleCommandSet(board,1,1,1,moveList,&curr);
-	handleCommandSet(board,2,1,3,moveList,&curr);
-	handleCommandSet(board,1,3,5,moveList,&curr);
+	handleCommandSet(board,1,1,1,moveList,&curr,1,1);
+	handleCommandSet(board,2,1,3,moveList,&curr,1,1);
+	handleCommandSet(board,1,3,5,moveList,&curr,1,1);
 	handleCommandUndo(board, moveList, &curr);
 	printBoard(board, 1, SOLVE);
 	handleCommandUndo(board, moveList, &curr);
@@ -79,10 +79,8 @@ int main(int argc, char* argv[]) {
 	printBoard(board, 1, SOLVE);
 	handleCommandRedo(board, moveList, &curr);
 	printBoard(board, 1, SOLVE);
+	handleCommandSet(board,3,3,11,moveList,&curr,1,1);
 	handleCommandRedo(board, moveList, &curr);
-	printBoard(board, 1, SOLVE);
-	handleCommandRedo(board, moveList, &curr);
-
 
 	printBoard(board, 1, SOLVE);
 
