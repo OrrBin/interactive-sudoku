@@ -66,20 +66,12 @@ int main(int argc, char* argv[]) {
 	gll_pushBack(moveList, first);
 	curr=moveList->first;
 	seed = atoi(argv[1]);
-	handleCommandSolve(&board, "C:\\1.txt");
-	printBoard(board, 1, SOLVE);
-	handleCommandSet(board,1,1,1,moveList,&curr,1,1);
-	handleCommandSet(board,2,1,3,moveList,&curr,1,1);
-	handleCommandSet(board,1,3,5,moveList,&curr,1,1);
-	handleCommandUndo(board, moveList, &curr);
+	board=initGame(1);
+
+	handleCommandAutoFill(board, moveList, &curr);
 	printBoard(board, 1, SOLVE);
 	handleCommandUndo(board, moveList, &curr);
 	printBoard(board, 1, SOLVE);
-	handleCommandUndo(board, moveList, &curr);
-	printBoard(board, 1, SOLVE);
-	handleCommandRedo(board, moveList, &curr);
-	printBoard(board, 1, SOLVE);
-	handleCommandSet(board,3,3,11,moveList,&curr,1,1);
 	handleCommandRedo(board, moveList, &curr);
 
 	printBoard(board, 1, SOLVE);

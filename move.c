@@ -15,7 +15,7 @@
 int undo(Board *board, gll_t* list, gll_node_t **currentMove)
 {
 	Move *move;
-	if(list->size==1)
+	if(list->size==1 || list->first==*currentMove)
 	{
 		printf("invalid undo. first move");
 		return 0;
@@ -65,12 +65,12 @@ int redo(Board *board, gll_t* list, gll_node_t **currentMove)
 
 void cancelSingleMove(Board *board, Move *move)
 {
-	setValueOfCell(board, move->row-1, move->col-1, move->previousValue);
+	setValueOfCell(board, move->row, move->col, move->previousValue);
 }
 
 void redoSingleMove(Board *board, Move *move)
 {
-	setValueOfCell(board, move->row-1, move->col-1, move->newValue);
+	setValueOfCell(board, move->row, move->col, move->newValue);
 }
 
 void addMoveToCurrentAndCleanNextMoves (gll_t* list, gll_node_t **currentMove, Move *move)

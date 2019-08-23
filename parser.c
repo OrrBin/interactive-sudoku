@@ -182,13 +182,14 @@ void handleCommandPrintBoard(Board *board) {
 
 void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList, gll_node_t **curr, int isFirstMoveOfCommand, int isLastMoveOfCommand) {
 
-	int isGameOverFlag, setCellResult, previousValue;
+	int isGameOverFlag, setCellResult, previousValue, index;
 	Move *move;
-	previousValue=board->cells[cellNum(board, row,col)].value;
+	index = cellNum(board, row,col);
+	previousValue=board->cells[index].value;
 	if (val == 0)
 		setCellResult = clearCell(board, row - 1, col - 1);
 	else {
-		setCellResult = setValueOfCell(board, row - 1, col - 1, val);
+		setCellResult = setValueOfCell(board, row , col, val);
 
 		isGameOverFlag = isGameOver(board);
 		if(isGameOverFlag) {
