@@ -46,11 +46,10 @@ int main() {
 	return 0;*/
 
 /*	Board* board; */
-int main(int argc, char* argv[]) {
+int main() {
 
 	Board* board;
-	char *filePath = "./test.txt";
-	int seed = atoi(argv[1]);
+	/*char *filePath = "./test.txt";*/
 	/*
 	Move *m1, *m2, *m3, *m4, *m5;
 
@@ -146,19 +145,12 @@ int main(int argc, char* argv[]) {
 	printf("%d %d %d %d %d %d %d", list->size, m1->col, m2->col, m3->col, m4->col, m5->col, (int) sizeof(node));
 
 */
-	srand(seed);
-
-
-
 
 	SP_BUFF_SET();
 	setbuf(stdout, NULL);
 
-	if (argc < 1) {
-		exit(-1);
-	}
 
-
+/*
 	board = readBoardFromfile(filePath);
 
 	printBoard(board, 0, EDIT);
@@ -167,10 +159,13 @@ int main(int argc, char* argv[]) {
 
 	printf("after solving with LP\n");
 	printBoard(board, 0, EDIT);
+*/
 
-/*	while (1) {
+	board = initEmptyBoard(9, 3, 3);
+	printf("start game by entering solve command or edit command\n");
+	while (1) {
 		playTurn(&board);
-	}*/
+	}
 
 
 	return 0;

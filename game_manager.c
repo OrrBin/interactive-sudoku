@@ -182,27 +182,35 @@ void handleCommandPrintBoard(Board *board) {
 
 void handleCommandSet(Board *board, int row, int col, int val) {
 
-	int isGameOverFlag, setCellResult;
-	if (val == 0)
-		setCellResult = clearCell(board, row - 1, col - 1);
-	else {
-		setCellResult = setValueOfCell(board, row - 1, col - 1, val);
+	int setCellResult;
 
-		isGameOverFlag = isGameOver(board);
+	if(board->cells[cellNum(board, row, col)].isFixed) {
+		printf("Can't set value of cell (%d,%d) because it is fixed\n", row+1, col+1);
+		return;
+	}
+
+	if (val == 0)
+		setCellResult = clearCell(board, row, col);
+	else {
+		setCellResult = setValueOfCell(board, row, col, val);
+
+		findErrors(board);
+
+		/*isGameOverFlag = isGameOver(board);
 		if(isGameOverFlag) {
 			printBoard(board, markErrors, currentGameMode);
 			printGameOver();
-		}
+		}*/
 	}
 
-	if(!isGameOverFlag && setCellResult)
-		printBoard(board, markErrors, currentGameMode);
+	/*if(setCellResult)
+		printBoard(board, markErrors, currentGameMode);*/
 
 	return;
 }
 
 void handleCommandValidate(Board *board) {
-	validate(board);
+	validate(board, true);
 }
 
 void handleCommandGuess(float threshold) {
@@ -226,6 +234,12 @@ void handleCommandSave(Board *board, char *filePath) {
 		printf("Error: There are errors, please fix them before saving the board: %s\n", filePath);
 		return;
 	}
+
+	if(!validate(board, false)) {
+		printf("Error: can't save because the board is not solvable: %s\n", filePath);
+		return;
+	}
+
 	if(writeBoardToFile(board, filePath) != 0) {
 		printf("Error: there was an error saving your game to file: %s\n", filePath);
 	} else {
@@ -373,7 +387,7 @@ void parseCommand(Board **boardP, char* command) {
 		secondIntArg = atoi(secondArg);
 		thirdIntArg = atoi(thirdArg);
 
-		handleCommandSet(board, secondIntArg, firstIntArg, thirdIntArg);
+		handleCommandSet(board, secondIntArg-1, firstIntArg-1, thirdIntArg);
 	}
 
 	else if (isStringsEqual(token, "validate") && !isGameOverFlag) {

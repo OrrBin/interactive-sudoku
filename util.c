@@ -199,7 +199,7 @@ LPSol *initLPSol(int dimension) {
 			solution->varIndexes[i * dimension + j] = NULL;
 		}
 	}
-	solution->foundSolution = NULL;
+	solution->solution = NULL;
 	solution->solutionFound = false;
 	return solution;
 }
@@ -223,8 +223,8 @@ void freeLPSol(LPSol *solution) {
 
 	free(varIndexes);
 
-	if (solution->foundSolution != NULL) {
-		free(solution->foundSolution);
+	if (solution->solution != NULL) {
+		free(solution->solution);
 	}
 
 	free(solution);

@@ -53,7 +53,7 @@ typedef struct LPSol {
 	int dimension;
 	enum boolean solutionFound;
 	gll_t **varIndexes;
-	double *foundSolution;
+	double *solution;
 } LPSol;
 
 typedef struct intTuple2 {

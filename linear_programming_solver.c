@@ -328,7 +328,7 @@ LPSol *LPsolve(Board *board, enum boolean isInteger) {
 	obj = malloc(numVars * sizeof(double));
 
 	sol = malloc(numVars * sizeof(double));
-	solution->foundSolution = sol;
+	solution->solution = sol;
 
 	if (isInteger) {
 		for (i = 0; i < numVars; i++) {
@@ -432,7 +432,7 @@ LPSol *LPsolve(Board *board, enum boolean isInteger) {
 	}
 
 	/* print results */
-	printf("\nOptimization complete\n");
+	/*printf("\nOptimization complete\n");*/
 
 	/* solution found */
 	if (optimstatus == GRB_OPTIMAL) {
