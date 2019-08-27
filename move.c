@@ -17,7 +17,7 @@ int undo(Board *board, gll_t* list, gll_node_t **currentMove)
 	Move *move;
 	if(list->size==1 || list->first==*currentMove)
 	{
-		printf("invalid undo. first move");
+		printf("invalid undo. first move\n");
 		return 0;
 	}
 
