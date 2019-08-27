@@ -400,7 +400,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 		secondIntArg = atoi(secondArg);
 		thirdIntArg = atoi(thirdArg);
 
-		handleCommandSet(board, secondIntArg, firstIntArg, thirdIntArg, moveList, curr, 1, 1);
+		handleCommandSet(board, secondIntArg-1, firstIntArg-1, thirdIntArg, moveList, curr, 1, 1);
 
 	}
 

@@ -4,45 +4,11 @@
 #include "board_writer.h"
 #include "board_reader.h"
 #include "util.h"
+#include "solver.h"
 #include "gll.h"
 #include "move.h"
 #include "game_manager.h"
 
-void autoFillBoard(Board *board, gll_t *moveList, gll_node_t **curr, enum boolean doPrint) {
-	int i, *validValue, row, col;
-	int isFirstMoveOfCommand, isLastMoveOfCommand;
-	Board *tmp = (Board *) malloc(sizeof(Board));
-
-	if(isBoardErroneous(board))
-	{
-		printf("error in autofill command. board is erroneous\n");
-		return;
-	}
-
-	isFirstMoveOfCommand=1;
-	isLastMoveOfCommand=0;
-	cpyBoardAsFixed(board, tmp);
-	for(i = 0; i < (board-> dimension) * (board-> dimension); i++) {
-		row = cellRow(board, i);
-		col = cellCol(board, i);
-		if(checkValidValuesNum(tmp,row, col) == 1 && !isCellFixed(tmp, row, col)) {
-			validValue = checkValidValues(tmp,row , col);
-			handleCommandSet(board, row, col, validValue[0], moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand);
-			if (isFirstMoveOfCommand==1)
-			{
-				isFirstMoveOfCommand=0;
-			}
-			if(doPrint) {
-				printf("Auto filled cell (%d,%d) to %d\n", col+1, row+1, validValue[0]);
-			}
-		}
-	}
-
-	(((Move*) moveList->last->data)->isLastMoveOfCommand)=1;
-
-	freeBoard(tmp);
-	free(validValue);
-}
 /*
  * game.c
  *
