@@ -308,7 +308,7 @@ void autoFillBoard(Board *board, gll_t *moveList, gll_node_t **curr, enum boolea
 
 	if(isBoardErroneous(board))
 	{
-		printf("error in autofill command. board is erroneous");
+		printf("error in autofill command. board is erroneous\n");
 		return;
 	}
 
