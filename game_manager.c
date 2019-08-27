@@ -142,6 +142,8 @@ void handleCommandSolve(Board **board, char *filePath) {
 	findErrors(*board);
 	printf("Loaded game from file: %s\n", filePath);
 
+	printBoard(*board, markErrors, currentGameMode);
+
 	fflush(stdout);
 
 }
@@ -150,7 +152,10 @@ void handleCommandEdit(Board **board, char *filePath) {
 	Board *newBoard;
 	if(filePath == NULL) {
 		free(*board);
-		*board = initGameWithNumberOfCellsToFill(9, 3, 3, 0);
+		*board = initEmptyBoard(9, 3, 3);
+
+		free(moveList);
+		moveList = gll_init();
 		currentGameMode = EDIT;
 	} else {
 		newBoard = readBoardFromfile(filePath);
@@ -166,8 +171,10 @@ void handleCommandEdit(Board **board, char *filePath) {
 
 		currentGameMode = EDIT;
 		findErrors(*board);
-		printBoard(*board, markErrors, currentGameMode);
 	}
+
+	printBoard(*board, markErrors, currentGameMode);
+
 }
 
 void handleCommandMarkErrors(int value) {
@@ -261,7 +268,7 @@ void handleCommandHint(Board *board, int row, int col) {
 }
 
 void handleCommandGuessHint(Board *board, int row, int col) {
-	printf("handle guess hint board: %d, row: %d, col: %d\n", board->blockHeight, row, col);
+	guessHint(board, row, col);
 }
 
 void handleCommandNumSolutions(Board *board) {
@@ -320,6 +327,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 		}
 
 		handleCommandSolve(boardP, firstArg);
+		return;
 	}
 
 	else if (isStringsEqual(token, "edit")) {
@@ -563,7 +571,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 		firstIntArg = atoi(firstArg);
 		secondIntArg = atoi(secondArg);
 
-		handleCommandGuessHint(board, secondIntArg, firstIntArg);
+		handleCommandGuessHint(board, secondIntArg-1, firstIntArg-1);
 	}
 
 	else if (isStringsEqual(token, "num_solutions") && !isGameOverFlag) {

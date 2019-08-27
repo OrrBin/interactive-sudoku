@@ -117,7 +117,7 @@ int addCellConstraints(Board *board, LPSol *solution, int *ind, double *val, GRB
 
 		varNum = 0;
 		for (v = 1; v <= solution->dimension; v++) {
-			if (getVarIndex(solution, row, col, v) == -1) { /* value v is not available for this cell (e.g. doesn't have a variable) */
+			if (getVarIndex(solution, row, col, v) == -1) { /* value v is not available for this cell */
 				continue;
 			}
 			ind[varNum] = getVarIndex(solution, row, col, v);
