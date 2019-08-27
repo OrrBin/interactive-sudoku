@@ -304,8 +304,14 @@ int findNumberOFSolutions(Board *board) {
 void autoFillBoard(Board *board, gll_t *moveList, gll_node_t **curr, enum boolean doPrint) {
 	int i, *validValue, row, col;
 	int isFirstMoveOfCommand, isLastMoveOfCommand;
-
 	Board *tmp = (Board *) malloc(sizeof(Board));
+
+	if(isBoardErroneous(board))
+	{
+		printf("error in autofill command. board is erroneous");
+		return;
+	}
+
 	isFirstMoveOfCommand=1;
 	isLastMoveOfCommand=0;
 	cpyBoardAsFixed(board, tmp);

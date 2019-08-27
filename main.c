@@ -68,11 +68,12 @@ int main(int argc, char* argv[]) {
 	seed = atoi(argv[1]);
 	board=initGame(1);
 
+	handleCommandSet(board, 2, 1, 6, moveList, &curr, 1, 1);
 	handleCommandAutoFill(board, moveList, &curr);
 	printBoard(board, 1, SOLVE);
 	handleCommandUndo(board, moveList, &curr);
 	printBoard(board, 1, SOLVE);
-	handleCommandRedo(board, moveList, &curr);
+	handleCommandUndo(board, moveList, &curr);
 
 	printBoard(board, 1, SOLVE);
 
