@@ -6,7 +6,6 @@
  */
 
 #include "types.h"
-#include "gll.h"
 
 #ifndef MOVE_H_
 #define MOVE_H_
