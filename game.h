@@ -45,6 +45,8 @@ Board* initGame(int test);
 Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight,
 		int blockWidth, int numberOfCellsToFill);
 
+Board *initEmptyBoard(int dimension, int blockHeight, int blockWidth);
+
 /*
  * playTurn asks the user for command input,
  * and call for the relevant function to
@@ -64,7 +66,7 @@ void hint(Board *board, int row, int col);
  * saves it in board->solution and lets the user know.
  * Else, it's print relevant message.
  */
-void validate(Board *board);
+enum boolean validate(Board *board, enum boolean shouldPrint);
 
 /*
  * Finds the number of existing solution to the given board

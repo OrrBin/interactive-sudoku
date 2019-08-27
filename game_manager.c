@@ -17,6 +17,7 @@
 
 enum mode currentGameMode = INIT;
 int markErrors = true;
+gll_t *moveList;
 
 char *modeToName(enum mode aMode) {
 	switch(aMode) {
@@ -133,6 +134,9 @@ void handleCommandSolve(Board **board, char *filePath) {
 
 	free(*board);
 	*board = newBoard;
+
+	free(moveList);
+	moveList = gll_init();
 	currentGameMode = SOLVE;
 
 	findErrors(*board);
@@ -156,8 +160,11 @@ void handleCommandEdit(Board **board, char *filePath) {
 		}
 		free(*board);
 		*board = newBoard;
-		currentGameMode = EDIT;
 
+		free(moveList);
+		moveList = gll_init();
+
+		currentGameMode = EDIT;
 		findErrors(*board);
 		printBoard(*board, markErrors, currentGameMode);
 	}
@@ -182,24 +189,20 @@ void handleCommandPrintBoard(Board *board) {
 
 void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList, gll_node_t **curr, int isFirstMoveOfCommand, int isLastMoveOfCommand) {
 
-	int isGameOverFlag, setCellResult, previousValue, index;
+	int setCellResult, previousValue, index;
 	Move *move;
 	index = cellNum(board, row,col);
 	previousValue=board->cells[index].value;
-	if (val == 0)
-		setCellResult = clearCell(board, row - 1, col - 1);
-	else {
-		setCellResult = setValueOfCell(board, row , col, val);
 
-		isGameOverFlag = isGameOver(board);
-		if(isGameOverFlag) {
-			printBoard(board, markErrors, currentGameMode);
-			printGameOver();
-		}
+
+	if(board->cells[cellNum(board, row, col)].isFixed) {
+		printf("Can't set value of cell (%d,%d) because it is fixed\n", row+1, col+1);
+		return;
 	}
 
-	if(!isGameOverFlag && setCellResult)
-		printBoard(board, markErrors, currentGameMode);
+	setCellResult = setValueOfCell(board, row, col, val);
+
+	findErrors(board);
 
 	if (setCellResult==1)
 	{
@@ -215,7 +218,7 @@ void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList, 
 }
 
 void handleCommandValidate(Board *board) {
-	validate(board);
+	validate(board, true);
 }
 
 void handleCommandGuess(float threshold) {
@@ -240,6 +243,12 @@ void handleCommandSave(Board *board, char *filePath) {
 		printf("Error: There are errors, please fix them before saving the board: %s\n", filePath);
 		return;
 	}
+
+	if(!validate(board, false)) {
+		printf("Error: can't save because the board is not solvable: %s\n", filePath);
+		return;
+	}
+
 	if(writeBoardToFile(board, filePath) != 0) {
 		printf("Error: there was an error saving your game to file: %s\n", filePath);
 	} else {
@@ -392,6 +401,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 		thirdIntArg = atoi(thirdArg);
 
 		handleCommandSet(board, secondIntArg, firstIntArg, thirdIntArg, moveList, curr, 1, 1);
+
 	}
 
 	else if (isStringsEqual(token, "validate") && !isGameOverFlag) {

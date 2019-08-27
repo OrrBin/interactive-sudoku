@@ -40,3 +40,8 @@ int checkValidValuesNum(Board *board, int row, int col);
  * returns array of valid values in the given cell
  */
 int *checkValidValues(Board *board, int row, int col);
+
+/*
+ * solves the board if possible
+ */
+void solve(Board *board);

@@ -1,3 +1,48 @@
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include "board_writer.h"
+#include "board_reader.h"
+#include "util.h"
+#include "gll.h"
+#include "move.h"
+#include "game_manager.h"
+
+void autoFillBoard(Board *board, gll_t *moveList, gll_node_t **curr, enum boolean doPrint) {
+	int i, *validValue, row, col;
+	int isFirstMoveOfCommand, isLastMoveOfCommand;
+	Board *tmp = (Board *) malloc(sizeof(Board));
+
+	if(isBoardErroneous(board))
+	{
+		printf("error in autofill command. board is erroneous\n");
+		return;
+	}
+
+	isFirstMoveOfCommand=1;
+	isLastMoveOfCommand=0;
+	cpyBoardAsFixed(board, tmp);
+	for(i = 0; i < (board-> dimension) * (board-> dimension); i++) {
+		row = cellRow(board, i);
+		col = cellCol(board, i);
+		if(checkValidValuesNum(tmp,row, col) == 1 && !isCellFixed(tmp, row, col)) {
+			validValue = checkValidValues(tmp,row , col);
+			handleCommandSet(board, row, col, validValue[0], moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand);
+			if (isFirstMoveOfCommand==1)
+			{
+				isFirstMoveOfCommand=0;
+			}
+			if(doPrint) {
+				printf("Auto filled cell (%d,%d) to %d\n", col+1, row+1, validValue[0]);
+			}
+		}
+	}
+
+	(((Move*) moveList->last->data)->isLastMoveOfCommand)=1;
+
+	freeBoard(tmp);
+	free(validValue);
+}
 /*
  * game.c
  *
@@ -7,11 +52,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
+#include "game_manager.h"
 #include "util.h"
 #include "solver.h"
-#include "parser.h"
-#include "gll.h"
-#include "move.h"
+#include "linear_programming_solver.h"
 
 
 int validateRow(Board *board, int row, int col, int value) {
@@ -65,8 +110,8 @@ int validateValue(Board *board, int row, int col, int value) {
 		return true;
 	}
 	valid = validateBlock(board, row, col, value)
-									&& validateRow(board, row, col, value)
-									&& validateCol(board, row, col, value);
+															&& validateRow(board, row, col, value)
+															&& validateCol(board, row, col, value);
 
 	return valid;
 }
@@ -79,7 +124,10 @@ int findErrors(Board *board) {
 		if(!validateValue(board, cellRow(board, i), cellCol(board, i), board->cells[i].value)) {
 			board->cells[i].isError = true;
 			result = true;
+		} else {
+			board->cells[i].isError = false;
 		}
+
 	}
 
 	return result;
@@ -120,22 +168,60 @@ int clearCell(Board *board, int row, int col) {
 }
 
 void hint(Board *board, int row, int col) {
-	printf("Hint: set cell to %d\n",
-			board->solution[cellNum(board, row, col)].value);
+	int v, index, value;
+	LPSol *solution;
+
+	if(isBoardErroneous(board)) {
+		printf("Error: cannot show hint because the board is erroneous\n");
+		return;
+	} else if(board->cells[cellNum(board, row, col)].isFixed) {
+		printf("Error: cannot show hint because the cell (%d,%d) is fixed\n", row+1, col+1);
+		return;
+	} else if(board->cells[cellNum(board, row, col)].value != 0) {
+		printf("Error: cannot show hint because the cell (%d,%d) contains value\n", row+1, col+1);
+		return;
+	}
+
+	solution = LPsolve(board, true);
+	if(!solution->solutionFound) {
+		printf("Error: can't show hint because board is unsolvable\n");
+		return;
+	}
+
+	for (v = 1; v <= board->dimension; v++) {
+		index = getVarIndex(solution, row, col, v);
+		if(index == -1)
+			continue;
+		value = solution->solution[index];
+		if(value == 1.0) {
+			printf("Set value of (%d, %d) to %d\n", row+1, col+1, v);
+			break;
+		}
+	}
+
+	freeLPSol(solution);
 }
 
-void validate(Board *board) {
-	int isSuccess;
-	Board *resultBoard = (Board *) malloc(sizeof(Board));
-	Board *fixedBoard = cpyBoardAsFixed(board, resultBoard);
-	isSuccess = recursiveBackTracking(fixedBoard, resultBoard);
-	if (isSuccess) {
-		board->solution = resultBoard->cells;
-		printf("Validation passed: board is solvable\n");
-	} else {
-
-		printf("Validation failed: board is unsolvable\n");
+enum boolean validate(Board *board, enum boolean shouldPrint) {
+	LPSol *solution;
+	if(isBoardErroneous(board)) {
+		printf("Error: cannot validate because the board is erroneous\n");
+		return false;
 	}
+
+	solution = LPsolve(board, true);
+	if(solution->solution) {
+		if(shouldPrint)
+			printf("Validation passed: board is solvable\n");
+		freeLPSol(solution);
+		return true;
+	} else {
+		if(shouldPrint)
+			printf("Validation failed: board is unsolvable\n");
+		freeLPSol(solution);
+		return false;
+	}
+
 }
 
 void playTurn(Board **boardP, gll_t *moveList, gll_node_t **curr) {
@@ -154,6 +240,34 @@ void exitGame(Board *board) {
 	freeBoard(board);
 	printf("Exiting...\n");
 	exit(0);
+}
+
+Board *initEmptyBoard(int dimension, int blockHeight, int blockWidth) {
+	int i = 0;
+	Cell *cells1, *cells2;
+	Board *board = (Board *) malloc(sizeof(Board));
+
+	cells1 = (Cell *) malloc((dimension * dimension) * sizeof(Cell));
+	cells2 = (Cell *) malloc((dimension * dimension) * sizeof(Cell));
+
+	for (i = 0; i < dimension * dimension; i++) {
+		cells1[i].value = 0;
+		cells1[i].isFixed = 0;
+		cells1[i].isError = 0;
+		cells2[i].value = 0;
+		cells2[i].isFixed = 0;
+		cells2[i].isError = 0;
+	}
+
+	i = 0;
+
+	board->dimension = dimension;
+	board->cells = cells1;
+	board->numOfEmptyCells = dimension * dimension;
+	board->blockHeight = blockHeight;
+	board->blockWidth = blockWidth;
+
+	return board;
 }
 
 Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight,
@@ -243,9 +357,9 @@ Board* initGame(int test) {
 	if(test==1)
 	{
 
-		blockWidth=2;
+		blockWidth=4;
 		inputBlockWidth=1;
-		printf("block width is %d:\n", blockWidth);
+		printf("block width is %d:\n", inputBlockWidth);
 	}
 	else
 		inputBlockWidth = scanf("%d", &blockWidth);
@@ -266,7 +380,7 @@ Board* initGame(int test) {
 	printf("Please enter the number of cells to fill [0-%d]:\n", dimension*dimension-1);
 	if(test==1)
 	{
-		numberOfCellsToFill=20;
+		numberOfCellsToFill=0;
 		inputNumberOfCellsToFill=1;
 		printf("number of cells is %d:\n", numberOfCellsToFill);
 	}
@@ -343,18 +457,5 @@ Board* restart(Board *board) {
 }
 
 int isGameOver(Board *board) {
-
-	int i,dimension;
-	dimension=board->dimension;
-
-	if(board->numOfEmptyCells!=0)
-		return 0;
-
-	for(i=0; i<dimension*dimension; i++)
-	{
-		if(board->cells[i].isError==1)
-			return 0;
-	}
-
-	return 1;
+	return board->numOfEmptyCells == 0;
 }
