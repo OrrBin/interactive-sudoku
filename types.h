@@ -5,6 +5,8 @@
  *      Author: orrbo
  */
 
+#include "gll.h"
+
 #ifndef TYPES_H_
 #define TYPES_H_
 
@@ -47,6 +49,16 @@ typedef struct Boards
 }Board;
 
 
+typedef struct LPSol {
+	int dimension;
+	enum boolean solutionFound;
+	gll_t **varIndexes;
+	double *solution;
+} LPSol;
 
+typedef struct intTuple2 {
+	int item1;
+	int item2;
+} intTuple2;
 
 #endif /* TYPES_H_ */

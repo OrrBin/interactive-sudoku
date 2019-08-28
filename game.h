@@ -45,6 +45,8 @@ Board* initGame(int test);
 Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight,
 		int blockWidth, int numberOfCellsToFill);
 
+Board *initEmptyBoard(int dimension, int blockHeight, int blockWidth);
+
 /*
  * playTurn asks the user for command input,
  * and call for the relevant function to
@@ -59,12 +61,17 @@ void playTurn(Board **boardP, gll_t *moveList, gll_node_t **curr);
 void hint(Board *board, int row, int col);
 
 /*
+ * prints all legal values and their LP score
+ */
+void guessHint(Board *board, int row, int col);
+
+/*
  * checks whether or not there is a valid solution
  * to the current board. If there is a solution it
  * saves it in board->solution and lets the user know.
  * Else, it's print relevant message.
  */
-void validate(Board *board);
+enum boolean validate(Board *board, enum boolean shouldPrint);
 
 /*
  * Finds the number of existing solution to the given board

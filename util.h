@@ -100,3 +100,13 @@ int isStringsEqual(char *string1, char *string2);
 char *getStringFromUser(char *cmd);
 
 void convertArrToZeros(int *arr, int length);
+
+/*
+ * initiates linear programming solution object
+ */
+LPSol *initLPSol(int dimension);
+
+/*
+ * free linear programming solution object
+ */
+void freeLPSol(LPSol *solution);
