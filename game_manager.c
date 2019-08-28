@@ -282,8 +282,11 @@ void handleCommandAutoFill(Board *board, gll_t *moveList, gll_node_t **curr) {
 	autoFillBoard(board, moveList, curr, true);
 }
 
-void handleCommandReset() {
-
+void handleCommandReset(Board *board, gll_t *moveList, gll_node_t **curr) {
+	while (*curr!=moveList->first)
+	{
+		undo(board, moveList, curr);
+	}
 }
 
 void handleCommandExit(Board *board) {
@@ -621,7 +624,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 			return;
 		}
 
-		handleCommandReset();
+		handleCommandReset(board, moveList, curr);
 	}
 
 	/* there is reset instead */
