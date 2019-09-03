@@ -29,7 +29,7 @@ void solve(Board *board) {
 			for (col = 0; col < board->dimension; col++) {
 
 				index = getVarIndex(solution, row, col, val);
-				if(index != -1 && (solution->solution)[index] == 1.0) {
+				if(index != -1 && (solution->theSolution)[index] == 1.0) {
 					setValueOfCell(board, row, col, val);
 					break;
 				}

@@ -132,7 +132,7 @@ void handleCommandSolve(Board **board, char *filePath) {
 		return;
 	}
 
-	free(*board);
+	freeBoard(*board);
 	*board = newBoard;
 
 	free(moveList);
@@ -151,7 +151,7 @@ void handleCommandSolve(Board **board, char *filePath) {
 void handleCommandEdit(Board **board, char *filePath) {
 	Board *newBoard;
 	if(filePath == NULL) {
-		free(*board);
+		freeBoard(*board);
 		*board = initEmptyBoard(9, 3, 3);
 
 		free(moveList);

@@ -165,7 +165,7 @@ void hint(Board *board, int row, int col) {
 		index = getVarIndex(solution, row, col, v);
 		if(index == -1)
 			continue;
-		value = solution->solution[index];
+		value = solution->theSolution[index];
 		if(value == 1.0) {
 			printf("Set value of (%d, %d) to %d\n", row+1, col+1, v);
 			break;
@@ -203,7 +203,7 @@ void guessHint(Board *board, int row, int col) {
 		index = getVarIndex(solution, row, col, v);
 		if(index == -1)
 			continue;
-		value = solution->solution[index];
+		value = solution->theSolution[index];
 		if(value > 0) {
 			printf("%d with probability of %f\n", v, value);
 		}
@@ -255,28 +255,25 @@ void exitGame(Board *board) {
 
 Board *initEmptyBoard(int dimension, int blockHeight, int blockWidth) {
 	int i = 0;
-	Cell *cells1, *cells2;
+	Cell *cells;
 	Board *board = (Board *) malloc(sizeof(Board));
 
-	cells1 = (Cell *) malloc((dimension * dimension) * sizeof(Cell));
-	cells2 = (Cell *) malloc((dimension * dimension) * sizeof(Cell));
+	cells = (Cell *) malloc((dimension * dimension) * sizeof(Cell));
 
 	for (i = 0; i < dimension * dimension; i++) {
-		cells1[i].value = 0;
-		cells1[i].isFixed = 0;
-		cells1[i].isError = 0;
-		cells2[i].value = 0;
-		cells2[i].isFixed = 0;
-		cells2[i].isError = 0;
+		cells[i].value = 0;
+		cells[i].isFixed = 0;
+		cells[i].isError = 0;
 	}
 
 	i = 0;
 
 	board->dimension = dimension;
-	board->cells = cells1;
+	board->cells = cells;
 	board->numOfEmptyCells = dimension * dimension;
 	board->blockHeight = blockHeight;
 	board->blockWidth = blockWidth;
+	board->solution = (Cell *) malloc((dimension * dimension) * sizeof(Cell));
 
 	return board;
 }
@@ -434,6 +431,7 @@ void autoFillBoard(Board *board, gll_t *moveList, gll_node_t **curr, enum boolea
 	if(isBoardErroneous(board))
 	{
 		printf("error in autofill command. board is erroneous\n");
+		free(tmp);
 		return;
 	}
 
@@ -465,7 +463,8 @@ void autoFillBoard(Board *board, gll_t *moveList, gll_node_t **curr, enum boolea
 	}
 
 	freeBoard(tmp);
-	free(validValue);
+	if(validValue != NULL)
+		free(validValue);
 }
 
 Board* restart(Board *board) {

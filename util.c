@@ -75,6 +75,7 @@ Board *cpyBoardImpl(Board* board, Board* destination, int asFixed) {
 	destination->cells = cells;
 	destination->blockHeight = board->blockHeight;
 	destination->blockWidth = board->blockWidth;
+	destination->solution = (Cell*) malloc((board->dimension * board->dimension) * sizeof(Cell));;
 
 	return destination;
 }
@@ -208,7 +209,7 @@ LPSol *initLPSol(int dimension) {
 			solution->varIndexes[i * dimension + j] = NULL;
 		}
 	}
-	solution->solution = NULL;
+	solution->theSolution = NULL;
 	solution->solutionFound = false;
 	return solution;
 }
@@ -232,8 +233,8 @@ void freeLPSol(LPSol *solution) {
 
 	free(varIndexes);
 
-	if (solution->solution != NULL) {
-		free(solution->solution);
+	if (solution->theSolution != NULL) {
+		free(solution->theSolution);
 	}
 
 	free(solution);

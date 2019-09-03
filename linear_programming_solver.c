@@ -328,7 +328,7 @@ LPSol *LPsolve(Board *board, enum boolean isInteger) {
 	obj = malloc(numVars * sizeof(double));
 
 	sol = malloc(numVars * sizeof(double));
-	solution->solution = sol;
+	solution->theSolution = sol;
 
 	if (isInteger) {
 		for (i = 0; i < numVars; i++) {
