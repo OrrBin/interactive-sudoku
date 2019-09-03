@@ -424,7 +424,7 @@ int findNumberOFSolutions(Board *board) {
 }
 
 void autoFillBoard(Board *board, gll_t *moveList, gll_node_t **curr, enum boolean doPrint) {
-	int i, *validValue, row, col;
+	int i, *validValue = NULL, row, col;
 	int isFirstMoveOfCommand, isLastMoveOfCommand;
 	Board *tmp = (Board *) malloc(sizeof(Board));
 	enum boolean didChange = false;
