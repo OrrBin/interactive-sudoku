@@ -441,7 +441,7 @@ void autoFillBoard(Board *board, gll_t *moveList, gll_node_t **curr, enum boolea
 		if(checkValidValuesNum(tmp,row, col) == 1 && !isCellFixed(tmp, row, col)) {
 			didChange = true;
 			validValue = checkValidValues(tmp,row , col);
-			handleCommandSet(board, row, col, validValue[0], moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand);
+			handleCommandSet(board, row, col, validValue[0], moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand, false);
 			if (isFirstMoveOfCommand==1)
 			{
 				isFirstMoveOfCommand=0;

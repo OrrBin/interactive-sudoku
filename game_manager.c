@@ -20,75 +20,92 @@ int markErrors = true;
 gll_t *moveList;
 
 char *modeToName(enum mode aMode) {
-	switch(aMode) {
-	case INIT: return "Init";
-	case SOLVE: return "Solve";
-	case EDIT: return "Edit";
-	default: return "Init";
+	switch (aMode) {
+	case INIT:
+		return "Init";
+	case SOLVE:
+		return "Solve";
+	case EDIT:
+		return "Edit";
+	default:
+		return "Init";
 	}
 }
 
 void printFormatSolveFileRequired(int isArgSpecified) {
-	if(!isArgSpecified) {
-		printf("solve command requires one argument: file path. missing argument\n");
-	}
-	else {
-		printf("solve command requires only one argument: file path. too many arguments specified\n");
+	if (!isArgSpecified) {
+		printf(
+				"solve command requires one argument: file path. missing argument\n");
+	} else {
+		printf(
+				"solve command requires only one argument: file path. too many arguments specified\n");
 	}
 }
 
 void printFormatSaveFileRequired(int isArgSpecified) {
-	if(!isArgSpecified) {
-		printf("save command requires one argument: file path. missing argument\n");
-	}
-	else {
-		printf("save command requires only one argument: file path. too many arguments specified\n");
+	if (!isArgSpecified) {
+		printf(
+				"save command requires one argument: file path. missing argument\n");
+	} else {
+		printf(
+				"save command requires only one argument: file path. too many arguments specified\n");
 	}
 }
 
 void printFormatGuessThresholdRequired(int isArgSpecified) {
-	if(!isArgSpecified) {
-		printf("guess command requires one argument: threshold. missing argument\n");
-	}
-	else {
-		printf("guess command requires only one argument: threshold. too many arguments specified\n");
+	if (!isArgSpecified) {
+		printf(
+				"guess command requires one argument: threshold. missing argument\n");
+	} else {
+		printf(
+				"guess command requires only one argument: threshold. too many arguments specified\n");
 	}
 }
 
 void printFormatEditTooManyArg() {
-	printf("edit command requires only one optional argument: file path\n. too many arguments specified\n");
+	printf(
+			"edit command requires only one optional argument: file path\n. too many arguments specified\n");
 }
 
 void printFormatMarkErrorsNoArg() {
-	printf("mark_erros command requires one argument: 0 or 1. missing argument\n");
+	printf(
+			"mark_erros command requires one argument: 0 or 1. missing argument\n");
 }
 
 void printFormatMarkErrorsTooManyArg() {
-	printf("mark_erros command requires only one argument: 0 or 1. too many arguments specified\n");
+	printf(
+			"mark_erros command requires only one argument: 0 or 1. too many arguments specified\n");
 }
 
 void printFormatMarkErrorsWrongArg() {
-	printf("mark_erros command requires one argument: 0 or 1. got argument with wrong format\n");
+	printf(
+			"mark_erros command requires one argument: 0 or 1. got argument with wrong format\n");
 }
 
 void printFormatSetTooManyArg() {
-	printf("set command requires only 3 arguments: col row val. too many arguments specified\n");
+	printf(
+			"set command requires only 3 arguments: col row val. too many arguments specified\n");
 }
 
 void printFormatSetTooLittleArg() {
-	printf("set command requires 3 arguments: col row val. missing arguments\n");
+	printf(
+			"set command requires 3 arguments: col row val. missing arguments\n");
 }
 
 void printFormatRowColTooManyArg(char *command) {
-	printf("%s command requires only 2 arguments: col row. too many arguments specified\n", command);
+	printf(
+			"%s command requires only 2 arguments: col row. too many arguments specified\n",
+			command);
 }
 
 void printFormatRowColLittleArg(char *command) {
-	printf("%s command requires 2 arguments: col row. missing arguments\n", command);
+	printf("%s command requires 2 arguments: col row. missing arguments\n",
+			command);
 }
 
 void printFormatGenerateTooManyArg() {
-	printf("generate command requires only 2 arguments: X Y. too many arguments specified\n");
+	printf(
+			"generate command requires only 2 arguments: X Y. too many arguments specified\n");
 }
 
 void printFormatGenerateTooLittleArg() {
@@ -107,12 +124,14 @@ void printInvalidMode(char *command, enum mode *validModes, int numOfValidModes)
 
 	tmpString = modeToName(validModes[0]);
 	strcpy(validModesString, tmpString);
-	for(idx = 1; idx < numOfValidModes; idx++) {
+	for (idx = 1; idx < numOfValidModes; idx++) {
 		tmpString = modeToName(validModes[idx]);
 		strcat(validModesString, ", ");
 		strcat(validModesString, tmpString);
 	}
-	printf("the command %s is only valid in %s modes. current game mode is %s\n", command, validModesString, currentModeString);
+	printf(
+			"the command %s is only valid in %s modes. current game mode is %s\n",
+			command, validModesString, currentModeString);
 	fflush(stdout);
 }
 
@@ -127,7 +146,7 @@ void printGameOver() {
 void handleCommandSolve(Board **board, char *filePath) {
 	Board *newBoard = readBoardFromfile(filePath);
 
-	if(newBoard == NULL) {
+	if (newBoard == NULL) {
 		printf("Error: could not load game from file: %s\n", filePath);
 		return;
 	}
@@ -150,7 +169,7 @@ void handleCommandSolve(Board **board, char *filePath) {
 
 void handleCommandEdit(Board **board, char *filePath) {
 	Board *newBoard;
-	if(filePath == NULL) {
+	if (filePath == NULL) {
 		freeBoard(*board);
 		*board = initEmptyBoard(9, 3, 3);
 
@@ -159,11 +178,12 @@ void handleCommandEdit(Board **board, char *filePath) {
 		currentGameMode = EDIT;
 	} else {
 		newBoard = readBoardFromfile(filePath);
-		if(newBoard == NULL) {
+		if (newBoard == NULL) {
 			printf("Error: could not load game from file: %s\n", filePath);
 			return;
 		}
-		free(*board);
+
+		freeBoard(*board);
 		*board = newBoard;
 
 		free(moveList);
@@ -178,14 +198,13 @@ void handleCommandEdit(Board **board, char *filePath) {
 }
 
 void handleCommandMarkErrors(int value) {
-	if(value == 0) {
+	if (value == 0) {
 		markErrors = value;
 		printf("mark errors is now off\n");
-	} else if(value == 1) {
+	} else if (value == 1) {
 		markErrors = value;
 		printf("mark errors is now on\n");
-	}
-	else {
+	} else {
 		printFormatMarkErrorsWrongArg();
 	}
 }
@@ -194,32 +213,47 @@ void handleCommandPrintBoard(Board *board) {
 	printBoard(board, markErrors, currentGameMode);
 }
 
-void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList, gll_node_t **curr, int isFirstMoveOfCommand, int isLastMoveOfCommand) {
+void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList,
+		gll_node_t **curr, int isFirstMoveOfCommand, int isLastMoveOfCommand, enum boolean shouldPrint) {
 
 	int setCellResult, previousValue, index;
+	enum boolean isError = false;
 	Move *move;
-	index = cellNum(board, row,col);
-	previousValue=board->cells[index].value;
+	index = cellNum(board, row, col);
+	previousValue = board->cells[index].value;
 
-
-	if(board->cells[cellNum(board, row, col)].isFixed) {
-		printf("Can't set value of cell (%d,%d) because it is fixed\n", row+1, col+1);
+	if (board->cells[cellNum(board, row, col)].isFixed) {
+		printf("Can't set value of cell (%d,%d) because it is fixed\n", row + 1,
+				col + 1);
 		return;
 	}
 
 	setCellResult = setValueOfCell(board, row, col, val);
-
 	findErrors(board);
 
-	if (setCellResult==1)
-	{
+	if(shouldPrint)
+		printBoard(board, markErrors, currentGameMode);
+
+	if (setCellResult == 1) {
 		move = malloc(sizeof(Move));
-		move->col=col, move->row=row, move->isFirstMoveOfCommand=isFirstMoveOfCommand, move->isLastMoveOfCommand=isLastMoveOfCommand,move->previousValue=previousValue, move->newValue=val;
+		move->col = col, move->row = row, move->isFirstMoveOfCommand =
+				isFirstMoveOfCommand, move->isLastMoveOfCommand =
+				isLastMoveOfCommand, move->previousValue = previousValue, move->newValue =
+				val;
 		gll_remove_all_from_curr(moveList, *curr);
 		gll_pushBack(moveList, move);
 		*curr = moveList->last;
 	}
 
+	if (currentGameMode == SOLVE && board->numOfEmptyCells == 0) {
+		isError = isBoardErroneous(board);
+		if (isError) {
+			printf("The board is full but the solution is erroneous. keep trying\n");
+		} else {
+			printf("Good job !! Board solved !! you can start a new game by solve or edit commands or exit\n");
+			currentGameMode = INIT;
+		}
+	}
 
 	return;
 }
@@ -246,18 +280,22 @@ void handleCommandRedo(Board *board, gll_t* moveList, gll_node_t **curr) {
 }
 
 void handleCommandSave(Board *board, char *filePath) {
-	if(currentGameMode == EDIT && findErrors(board) == true){
-		printf("Error: There are errors, please fix them before saving the board: %s\n", filePath);
+	if (currentGameMode == EDIT && findErrors(board) == true) {
+		printf(
+				"Error: There are errors, please fix them before saving the board: %s\n",
+				filePath);
 		return;
 	}
 
-	if(!validate(board, false)) {
-		printf("Error: can't save because the board is not solvable: %s\n", filePath);
+	if (!validate(board, false)) {
+		printf("Error: can't save because the board is not solvable: %s\n",
+				filePath);
 		return;
 	}
 
-	if(writeBoardToFile(board, filePath) != 0) {
-		printf("Error: there was an error saving your game to file: %s\n", filePath);
+	if (writeBoardToFile(board, filePath) != 0) {
+		printf("Error: there was an error saving your game to file: %s\n",
+				filePath);
 	} else {
 		printf("Your game was saved to file: %s\n", filePath);
 	}
@@ -283,8 +321,7 @@ void handleCommandAutoFill(Board *board, gll_t *moveList, gll_node_t **curr) {
 }
 
 void handleCommandReset(Board *board, gll_t *moveList, gll_node_t **curr) {
-	while (*curr!=moveList->first)
-	{
+	while (*curr != moveList->first) {
 		undo(board, moveList, curr);
 	}
 }
@@ -293,7 +330,8 @@ void handleCommandExit(Board *board) {
 	exitGame(board);
 }
 
-void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **curr) {
+void parseCommand(Board **boardP, char* command, gll_t *moveList,
+		gll_node_t **curr) {
 
 	char *firstArg, *secondArg, *thirdArg, *forthArg;
 	int firstIntArg, secondIntArg, thirdIntArg, isGameOverFlag;
@@ -302,29 +340,26 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 	Board *board = *boardP;
 	enum mode validModes[3];
 	/*isGameOverFlag = isGameOver(board);*/
-	isGameOverFlag=0;
+	isGameOverFlag = 0;
 	token = strtok(command, " \t\r\n");
-
 
 	if (token == NULL) {
 		return;
 	}
-
 
 	firstArg = strtok(NULL, " \t\r\n");
 	secondArg = strtok(NULL, " \t\r\n");
 	thirdArg = strtok(NULL, " \t\r\n");
 	forthArg = strtok(NULL, " \t\r\n");
 
-
 	if (isStringsEqual(token, "solve")) {
 
-		if(firstArg == NULL) {
+		if (firstArg == NULL) {
 			printFormatSolveFileRequired(0);
 			return;
 		}
 
-		if(secondArg != NULL) {
+		if (secondArg != NULL) {
 			printFormatSolveFileRequired(1);
 			return;
 		}
@@ -334,7 +369,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 	}
 
 	else if (isStringsEqual(token, "edit")) {
-		if(secondArg != NULL) {
+		if (secondArg != NULL) {
 			printFormatEditTooManyArg();
 			return;
 		}
@@ -344,24 +379,23 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 	}
 
 	else if (isStringsEqual(token, "mark_errors")) {
-		if(firstArg == NULL) {
+		if (firstArg == NULL) {
 			printFormatMarkErrorsNoArg();
 			return;
 		}
 
-		if(secondArg != NULL) {
+		if (secondArg != NULL) {
 			printFormatMarkErrorsTooManyArg();
 			return;
 		}
 
-		if(currentGameMode != SOLVE) {
-			validModes[0] = SOLVE ;
+		if (currentGameMode != SOLVE) {
+			validModes[0] = SOLVE;
 			printInvalidMode(token, validModes, 1);
 			return;
 		}
 
-
-		if(!isStringsEqual(firstArg, "0") && !isStringsEqual(firstArg, "1")) {
+		if (!isStringsEqual(firstArg, "0") && !isStringsEqual(firstArg, "1")) {
 			printFormatMarkErrorsWrongArg();
 			return;
 		}
@@ -372,12 +406,12 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 	}
 
 	else if (isStringsEqual(token, "print_board")) {
-		if(firstArg != NULL) {
+		if (firstArg != NULL) {
 			printFormatCommandGetsNoArgs(token);
 			return;
 		}
 
-		if(currentGameMode != EDIT && currentGameMode != SOLVE) {
+		if (currentGameMode != EDIT && currentGameMode != SOLVE) {
 			validModes[0] = EDIT;
 			validModes[1] = SOLVE;
 			printInvalidMode(token, validModes, 2);
@@ -389,18 +423,17 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 	}
 
 	else if (isStringsEqual(token, "set")) {
-		if(firstArg == NULL || secondArg == NULL || thirdArg == NULL) {
+		if (firstArg == NULL || secondArg == NULL || thirdArg == NULL) {
 			printFormatSetTooLittleArg();
 			return;
 		}
 
-		if(forthArg != NULL) {
+		if (forthArg != NULL) {
 			printFormatSetTooManyArg();
 			return;
 		}
 
-
-		if(currentGameMode != EDIT && currentGameMode != SOLVE) {
+		if (currentGameMode != EDIT && currentGameMode != SOLVE) {
 			validModes[0] = EDIT;
 			validModes[1] = SOLVE;
 			printInvalidMode(token, validModes, 2);
@@ -411,17 +444,20 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 		secondIntArg = atoi(secondArg);
 		thirdIntArg = atoi(thirdArg);
 
-		handleCommandSet(board, secondIntArg-1, firstIntArg-1, thirdIntArg, moveList, curr, 1, 1);
+		handleCommandSet(board, secondIntArg - 1, firstIntArg - 1, thirdIntArg,
+				moveList, curr, 1, 1, true);
+
+		return;
 
 	}
 
 	else if (isStringsEqual(token, "validate") && !isGameOverFlag) {
-		if(firstArg != NULL) {
+		if (firstArg != NULL) {
 			printFormatCommandGetsNoArgs(token);
 			return;
 		}
 
-		if(currentGameMode != EDIT && currentGameMode != SOLVE) {
+		if (currentGameMode != EDIT && currentGameMode != SOLVE) {
 			validModes[0] = EDIT;
 			validModes[1] = SOLVE;
 			printInvalidMode(token, validModes, 2);
@@ -431,19 +467,18 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 		handleCommandValidate(board);
 	}
 
-
 	else if (isStringsEqual(token, "guess")) {
-		if(firstArg == NULL) {
+		if (firstArg == NULL) {
 			printFormatGuessThresholdRequired(0);
 			return;
 		}
 
-		if(secondArg != NULL) {
+		if (secondArg != NULL) {
 			printFormatGuessThresholdRequired(1);
 			return;
 		}
 
-		if(currentGameMode != SOLVE) {
+		if (currentGameMode != SOLVE) {
 			validModes[0] = SOLVE;
 			printInvalidMode(token, validModes, 1);
 			return;
@@ -455,17 +490,17 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 	}
 
 	else if (isStringsEqual(token, "generate")) {
-		if(firstArg == NULL || secondArg == NULL) {
+		if (firstArg == NULL || secondArg == NULL) {
 			printFormatGenerateTooLittleArg();
 			return;
 		}
 
-		if(thirdArg != NULL) {
+		if (thirdArg != NULL) {
 			printFormatGenerateTooManyArg();
 			return;
 		}
 
-		if(currentGameMode != EDIT) {
+		if (currentGameMode != EDIT) {
 			validModes[0] = EDIT;
 			printInvalidMode(token, validModes, 1);
 			return;
@@ -478,12 +513,12 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 	}
 
 	else if (isStringsEqual(token, "undo")) {
-		if(firstArg != NULL) {
+		if (firstArg != NULL) {
 			printFormatCommandGetsNoArgs(token);
 			return;
 		}
 
-		if(currentGameMode != EDIT && currentGameMode != SOLVE) {
+		if (currentGameMode != EDIT && currentGameMode != SOLVE) {
 			validModes[0] = EDIT;
 			validModes[1] = SOLVE;
 			printInvalidMode(token, validModes, 2);
@@ -494,34 +529,33 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 	}
 
 	else if (isStringsEqual(token, "redo")) {
-		if(firstArg != NULL) {
+		if (firstArg != NULL) {
 			printFormatCommandGetsNoArgs(token);
 			return;
 		}
 
-		if(currentGameMode != EDIT && currentGameMode != SOLVE) {
+		if (currentGameMode != EDIT && currentGameMode != SOLVE) {
 			validModes[0] = EDIT;
 			validModes[1] = SOLVE;
 			printInvalidMode(token, validModes, 2);
 			return;
 		}
 
-
 		handleCommandRedo(board, moveList, curr);
 	}
 
 	else if (isStringsEqual(token, "save")) {
-		if(firstArg == NULL) {
+		if (firstArg == NULL) {
 			printFormatSaveFileRequired(0);
 			return;
 		}
 
-		if(secondArg != NULL) {
+		if (secondArg != NULL) {
 			printFormatSaveFileRequired(1);
 			return;
 		}
 
-		if(currentGameMode != EDIT && currentGameMode != SOLVE) {
+		if (currentGameMode != EDIT && currentGameMode != SOLVE) {
 			validModes[0] = EDIT;
 			validModes[1] = SOLVE;
 			printInvalidMode(token, validModes, 2);
@@ -532,17 +566,17 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 	}
 
 	else if (isStringsEqual(token, "hint") && !isGameOverFlag) {
-		if(firstArg == NULL || secondArg == NULL) {
+		if (firstArg == NULL || secondArg == NULL) {
 			printFormatRowColLittleArg(token);
 			return;
 		}
 
-		if(thirdArg != NULL) {
+		if (thirdArg != NULL) {
 			printFormatRowColTooManyArg(token);
 			return;
 		}
 
-		if(currentGameMode != SOLVE) {
+		if (currentGameMode != SOLVE) {
 			validModes[0] = SOLVE;
 			printInvalidMode(token, validModes, 1);
 			return;
@@ -555,17 +589,17 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 	}
 
 	else if (isStringsEqual(token, "guess_hint") && !isGameOverFlag) {
-		if(firstArg == NULL || secondArg == NULL) {
+		if (firstArg == NULL || secondArg == NULL) {
 			printFormatRowColLittleArg(token);
 			return;
 		}
 
-		if(thirdArg != NULL) {
+		if (thirdArg != NULL) {
 			printFormatRowColTooManyArg(token);
 			return;
 		}
 
-		if(currentGameMode != SOLVE) {
+		if (currentGameMode != SOLVE) {
 			validModes[0] = SOLVE;
 			printInvalidMode(token, validModes, 1);
 			return;
@@ -574,16 +608,16 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 		firstIntArg = atoi(firstArg);
 		secondIntArg = atoi(secondArg);
 
-		handleCommandGuessHint(board, secondIntArg-1, firstIntArg-1);
+		handleCommandGuessHint(board, secondIntArg - 1, firstIntArg - 1);
 	}
 
 	else if (isStringsEqual(token, "num_solutions") && !isGameOverFlag) {
-		if(firstArg != NULL) {
+		if (firstArg != NULL) {
 			printFormatCommandGetsNoArgs(token);
 			return;
 		}
 
-		if(currentGameMode != EDIT && currentGameMode != SOLVE) {
+		if (currentGameMode != EDIT && currentGameMode != SOLVE) {
 			validModes[0] = EDIT;
 			validModes[1] = SOLVE;
 			printInvalidMode(token, validModes, 2);
@@ -594,12 +628,12 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 	}
 
 	else if (isStringsEqual(token, "autofill") && !isGameOverFlag) {
-		if(firstArg != NULL) {
+		if (firstArg != NULL) {
 			printFormatCommandGetsNoArgs(token);
 			return;
 		}
 
-		if(currentGameMode != SOLVE) {
+		if (currentGameMode != SOLVE) {
 			validModes[0] = SOLVE;
 			printInvalidMode(token, validModes, 1);
 			return;
@@ -610,14 +644,13 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 		handleCommandAutoFill(board, moveList, curr);
 	}
 
-
 	else if (isStringsEqual(token, "reset") && !isGameOverFlag) {
-		if(firstArg != NULL) {
+		if (firstArg != NULL) {
 			printFormatCommandGetsNoArgs(token);
 			return;
 		}
 
-		if(currentGameMode != EDIT && currentGameMode != SOLVE) {
+		if (currentGameMode != EDIT && currentGameMode != SOLVE) {
 			validModes[0] = EDIT;
 			validModes[1] = SOLVE;
 			printInvalidMode(token, validModes, 2);
@@ -629,7 +662,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 
 	/* there is reset instead */
 	else if (isStringsEqual(token, "restart")) {
-		if(firstArg != NULL) {
+		if (firstArg != NULL) {
 			printFormatCommandGetsNoArgs(token);
 			return;
 		}
@@ -638,11 +671,10 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 	}
 
 	else if (isStringsEqual(token, "exit")) {
-		if(firstArg != NULL) {
+		if (firstArg != NULL) {
 			printFormatCommandGetsNoArgs(token);
 			return;
 		}
-
 
 		handleCommandExit(board);
 		return;
@@ -655,5 +687,4 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **c
 
 	printBoard(*boardP, markErrors, currentGameMode);
 }
-
 
