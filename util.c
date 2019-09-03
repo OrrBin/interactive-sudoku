@@ -75,7 +75,6 @@ Board *cpyBoardImpl(Board* board, Board* destination, int asFixed) {
 	destination->cells = cells;
 	destination->blockHeight = board->blockHeight;
 	destination->blockWidth = board->blockWidth;
-	destination->solution = (Cell*) malloc((board->dimension * board->dimension) * sizeof(Cell));;
 
 	return destination;
 }
@@ -106,8 +105,6 @@ void freeBoard(Board *board) {
 	if (board != NULL) {
 		if (board->cells != NULL)
 			free(board->cells);
-		if (board->solution != NULL)
-			free(board->solution);
 		free(board);
 	}
 }

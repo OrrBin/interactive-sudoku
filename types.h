@@ -41,7 +41,6 @@ typedef struct Boards
 {
 	int dimension;
 	Cell* cells ;
-	Cell* solution;
 
 	int numOfEmptyCells;
 	int blockHeight;

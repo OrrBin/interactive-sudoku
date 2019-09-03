@@ -76,8 +76,8 @@ int validateValue(Board *board, int row, int col, int value) {
 		return true;
 	}
 	valid = validateBlock(board, row, col, value)
-																			&& validateRow(board, row, col, value)
-																			&& validateCol(board, row, col, value);
+		&& validateRow(board, row, col, value)
+		&& validateCol(board, row, col, value);
 
 	return valid;
 }
@@ -273,7 +273,6 @@ Board *initEmptyBoard(int dimension, int blockHeight, int blockWidth) {
 	board->numOfEmptyCells = dimension * dimension;
 	board->blockHeight = blockHeight;
 	board->blockWidth = blockWidth;
-	board->solution = (Cell *) malloc((dimension * dimension) * sizeof(Cell));
 
 	return board;
 }
@@ -308,8 +307,6 @@ Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight,
 	solution = cpyBoard(board, solution);
 
 	randomizeBackTracking(solution, solution);
-
-	board->solution = cpyCellArray(solution->cells, dimension * dimension);
 
 	while (i < numberOfCellsToFill) {
 		randCol = rand() % dimension;
