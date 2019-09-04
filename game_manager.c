@@ -222,12 +222,12 @@ void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList,
 	index = cellNum(board, row, col);
 	previousValue = board->cells[index].value;
 
-	if(row < 1 || row > board->dimension || col < 1 || col > board->dimension) {
+	if(row < 0 || row > board->dimension - 1 || col < 0 || col > board->dimension - 1) {
 		printf("specified row or column are not in the allowed range: %d-%d\n", 1, board->dimension);
 		return;
 	}
 
-	if(val < 1 || val > board->dimension) {
+	if(val < 0 || val > board->dimension) {
 		printf("specified value is not in the allowed range: %d-%d\n", 1, board->dimension);
 		return;
 	}
@@ -248,8 +248,8 @@ void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList,
 		move = malloc(sizeof(Move));
 		move->col = col, move->row = row, move->isFirstMoveOfCommand =
 				isFirstMoveOfCommand, move->isLastMoveOfCommand =
-				isLastMoveOfCommand, move->previousValue = previousValue, move->newValue =
-				val;
+						isLastMoveOfCommand, move->previousValue = previousValue, move->newValue =
+								val;
 		gll_remove_all_from_curr(moveList, *curr);
 		gll_pushBack(moveList, move);
 		*curr = moveList->last;
@@ -312,10 +312,20 @@ void handleCommandSave(Board *board, char *filePath) {
 }
 
 void handleCommandHint(Board *board, int row, int col) {
+	if(row < 0 || row > board->dimension - 1 || col < 0 || col > board->dimension - 1) {
+		printf("specified row or column are not in the allowed range: %d-%d\n", 1, board->dimension);
+		return;
+	}
+
 	hint(board, row - 1, col - 1);
 }
 
 void handleCommandGuessHint(Board *board, int row, int col) {
+	if(row < 0 || row > board->dimension - 1 || col < 0 || col > board->dimension - 1) {
+		printf("specified row or column are not in the allowed range: %d-%d\n", 1, board->dimension);
+		return;
+	}
+
 	guessHint(board, row, col);
 }
 

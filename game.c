@@ -119,8 +119,9 @@ int setValueOfCell(Board *board, int row, int col, int value) {
 		board->cells[cellNum(board, row, col)].isError = false;
 	} else {
 		board->cells[cellNum(board, row, col)].isError = true;
-		findErrors(board);
 	}
+
+	findErrors(board);
 
 	return 1;
 }
