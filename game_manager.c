@@ -222,6 +222,16 @@ void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList,
 	index = cellNum(board, row, col);
 	previousValue = board->cells[index].value;
 
+	if(row < 1 || row > board->dimension || col < 1 || col > board->dimension) {
+		printf("specified row or column are not in the allowed range: %d-%d\n", 1, board->dimension);
+		return;
+	}
+
+	if(val < 1 || val > board->dimension) {
+		printf("specified value is not in the allowed range: %d-%d\n", 1, board->dimension);
+		return;
+	}
+
 	if (board->cells[cellNum(board, row, col)].isFixed) {
 		printf("Can't set value of cell (%d,%d) because it is fixed\n", row + 1,
 				col + 1);
