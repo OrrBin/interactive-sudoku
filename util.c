@@ -105,8 +105,6 @@ void freeBoard(Board *board) {
 	if (board != NULL) {
 		if (board->cells != NULL)
 			free(board->cells);
-		if (board->solution != NULL)
-			free(board->solution);
 		free(board);
 	}
 }
@@ -208,7 +206,7 @@ LPSol *initLPSol(int dimension) {
 			solution->varIndexes[i * dimension + j] = NULL;
 		}
 	}
-	solution->solution = NULL;
+	solution->theSolution = NULL;
 	solution->solutionFound = false;
 	return solution;
 }
@@ -223,7 +221,7 @@ void freeLPSol(LPSol *solution) {
 			if (varIndexes[i * dimension + j] != NULL) {
 				list = varIndexes[i * dimension + j];
 				for(t = 0; t < list->size; t++) {
-					free(gll_get(list, t));
+					free((intTuple2 *) gll_get(list, t));
 				}
 				gll_destroy(list);
 			}
@@ -232,8 +230,8 @@ void freeLPSol(LPSol *solution) {
 
 	free(varIndexes);
 
-	if (solution->solution != NULL) {
-		free(solution->solution);
+	if (solution->theSolution != NULL) {
+		free(solution->theSolution);
 	}
 
 	free(solution);

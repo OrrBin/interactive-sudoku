@@ -76,8 +76,8 @@ int validateValue(Board *board, int row, int col, int value) {
 		return true;
 	}
 	valid = validateBlock(board, row, col, value)
-																			&& validateRow(board, row, col, value)
-																			&& validateCol(board, row, col, value);
+										&& validateRow(board, row, col, value)
+										&& validateCol(board, row, col, value);
 
 	return valid;
 }
@@ -165,7 +165,7 @@ void hint(Board *board, int row, int col) {
 		index = getVarIndex(solution, row, col, v);
 		if(index == -1)
 			continue;
-		value = solution->solution[index];
+		value = solution->theSolution[index];
 		if(value == 1.0) {
 			printf("Set value of (%d, %d) to %d\n", row+1, col+1, v);
 			break;
@@ -174,6 +174,58 @@ void hint(Board *board, int row, int col) {
 
 	freeLPSol(solution);
 }
+
+void guess(Board *board, float threshold) {
+	int v, index, i, row, col, chosenValue = -1;
+	float maxLPValue = -1;
+	double value;
+	LPSol *solution;
+
+	if(isBoardErroneous(board)) {
+		printf("Error: cannot guess because the board is erroneous\n");
+		return;
+	}
+
+
+	solution = LPsolve(board, false);
+	if(!solution->solutionFound) {
+		printf("Error: can't guess because board is unsolvable\n");
+		freeLPSol(solution);
+		return;
+	}
+
+	for(i = 0; i < (board->dimension)*(board->dimension); i++) {
+		row = cellRow(board, i);
+		col = cellCol(board, i);
+
+		if(board->cells[i].value != 0) {
+			continue;
+		}
+
+		chosenValue = -1;
+		maxLPValue = -1;
+		for (v = 1; v <= board->dimension; v++) {
+			if(!validateValue(board, row, col ,v)) {
+				continue;
+			}
+			index = getVarIndex(solution, row, col, v);
+			if(index == -1)
+				continue;
+			value = solution->theSolution[index];
+			if(value >= threshold && value > maxLPValue) {
+				chosenValue = v;
+				maxLPValue = value;
+			}
+		}
+
+		if(chosenValue > 0) {
+			setValueOfCell(board, row, col, chosenValue);
+		}
+	}
+
+	freeLPSol(solution);
+}
+
 
 void guessHint(Board *board, int row, int col) {
 	int v, index;
@@ -203,7 +255,7 @@ void guessHint(Board *board, int row, int col) {
 		index = getVarIndex(solution, row, col, v);
 		if(index == -1)
 			continue;
-		value = solution->solution[index];
+		value = solution->theSolution[index];
 		if(value > 0) {
 			printf("%d with probability of %f\n", v, value);
 		}
@@ -255,25 +307,21 @@ void exitGame(Board *board) {
 
 Board *initEmptyBoard(int dimension, int blockHeight, int blockWidth) {
 	int i = 0;
-	Cell *cells1, *cells2;
+	Cell *cells;
 	Board *board = (Board *) malloc(sizeof(Board));
 
-	cells1 = (Cell *) malloc((dimension * dimension) * sizeof(Cell));
-	cells2 = (Cell *) malloc((dimension * dimension) * sizeof(Cell));
+	cells = (Cell *) malloc((dimension * dimension) * sizeof(Cell));
 
 	for (i = 0; i < dimension * dimension; i++) {
-		cells1[i].value = 0;
-		cells1[i].isFixed = 0;
-		cells1[i].isError = 0;
-		cells2[i].value = 0;
-		cells2[i].isFixed = 0;
-		cells2[i].isError = 0;
+		cells[i].value = 0;
+		cells[i].isFixed = 0;
+		cells[i].isError = 0;
 	}
 
 	i = 0;
 
 	board->dimension = dimension;
-	board->cells = cells1;
+	board->cells = cells;
 	board->numOfEmptyCells = dimension * dimension;
 	board->blockHeight = blockHeight;
 	board->blockWidth = blockWidth;
@@ -311,8 +359,6 @@ Board* initGameWithNumberOfCellsToFill(int dimension, int blockHeight,
 	solution = cpyBoard(board, solution);
 
 	randomizeBackTracking(solution, solution);
-
-	board->solution = cpyCellArray(solution->cells, dimension * dimension);
 
 	while (i < numberOfCellsToFill) {
 		randCol = rand() % dimension;
@@ -427,13 +473,14 @@ int findNumberOFSolutions(Board *board) {
 }
 
 void autoFillBoard(Board *board, gll_t *moveList, gll_node_t **curr, enum boolean doPrint) {
-	int i, *validValue, row, col;
+	int i, *validValue = NULL, row, col;
 	int isFirstMoveOfCommand, isLastMoveOfCommand;
 	Board *tmp = (Board *) malloc(sizeof(Board));
 	enum boolean didChange = false;
 	if(isBoardErroneous(board))
 	{
 		printf("error in autofill command. board is erroneous\n");
+		free(tmp);
 		return;
 	}
 
@@ -446,7 +493,7 @@ void autoFillBoard(Board *board, gll_t *moveList, gll_node_t **curr, enum boolea
 		if(checkValidValuesNum(tmp,row, col) == 1 && !isCellFixed(tmp, row, col)) {
 			didChange = true;
 			validValue = checkValidValues(tmp,row , col);
-			handleCommandSet(board, row, col, validValue[0], moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand);
+			handleCommandSet(board, row, col, validValue[0], moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand, false);
 			if (isFirstMoveOfCommand==1)
 			{
 				isFirstMoveOfCommand=0;
@@ -454,6 +501,9 @@ void autoFillBoard(Board *board, gll_t *moveList, gll_node_t **curr, enum boolea
 			if(doPrint) {
 				printf("Auto filled cell (%d,%d) to %d\n", col+1, row+1, validValue[0]);
 			}
+
+			if(validValue != NULL)
+				free(validValue);
 		}
 	}
 
@@ -465,7 +515,6 @@ void autoFillBoard(Board *board, gll_t *moveList, gll_node_t **curr, enum boolea
 	}
 
 	freeBoard(tmp);
-	free(validValue);
 }
 
 Board* restart(Board *board) {
