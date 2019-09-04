@@ -55,10 +55,15 @@ Board *initEmptyBoard(int dimension, int blockHeight, int blockWidth);
 void playTurn(Board **boardP, gll_t *moveList, gll_node_t **curr);
 
 /*
- * hint gets from user board, row and col.
- * it expose the value of board->solution[row][col].
+ * TODO
  */
 void hint(Board *board, int row, int col);
+
+/**
+ * Solves the board using LP, and fills all cells with legal values with a score greater then x
+ */
+void guess(Board *board, float threshold);
+
 
 /*
  * prints all legal values and their LP score
@@ -66,10 +71,7 @@ void hint(Board *board, int row, int col);
 void guessHint(Board *board, int row, int col);
 
 /*
- * checks whether or not there is a valid solution
- * to the current board. If there is a solution it
- * saves it in board->solution and lets the user know.
- * Else, it's print relevant message.
+ * TODO
  */
 enum boolean validate(Board *board, enum boolean shouldPrint);
 

@@ -76,8 +76,8 @@ int validateValue(Board *board, int row, int col, int value) {
 		return true;
 	}
 	valid = validateBlock(board, row, col, value)
-		&& validateRow(board, row, col, value)
-		&& validateCol(board, row, col, value);
+										&& validateRow(board, row, col, value)
+										&& validateCol(board, row, col, value);
 
 	return valid;
 }
@@ -174,6 +174,58 @@ void hint(Board *board, int row, int col) {
 
 	freeLPSol(solution);
 }
+
+void guess(Board *board, float threshold) {
+	int v, index, i, row, col, chosenValue = -1;
+	float maxLPValue = -1;
+	double value;
+	LPSol *solution;
+
+	if(isBoardErroneous(board)) {
+		printf("Error: cannot guess because the board is erroneous\n");
+		return;
+	}
+
+
+	solution = LPsolve(board, false);
+	if(!solution->solutionFound) {
+		printf("Error: can't guess because board is unsolvable\n");
+		freeLPSol(solution);
+		return;
+	}
+
+	for(i = 0; i < (board->dimension)*(board->dimension); i++) {
+		row = cellRow(board, i);
+		col = cellCol(board, i);
+
+		if(board->cells[i].value != 0) {
+			continue;
+		}
+
+		chosenValue = -1;
+		maxLPValue = -1;
+		for (v = 1; v <= board->dimension; v++) {
+			if(!validateValue(board, row, col ,v)) {
+				continue;
+			}
+			index = getVarIndex(solution, row, col, v);
+			if(index == -1)
+				continue;
+			value = solution->theSolution[index];
+			if(value >= threshold && value > maxLPValue) {
+				chosenValue = v;
+				maxLPValue = value;
+			}
+		}
+
+		if(chosenValue > 0) {
+			setValueOfCell(board, row, col, chosenValue);
+		}
+	}
+
+	freeLPSol(solution);
+}
+
 
 void guessHint(Board *board, int row, int col) {
 	int v, index;
@@ -449,6 +501,9 @@ void autoFillBoard(Board *board, gll_t *moveList, gll_node_t **curr, enum boolea
 			if(doPrint) {
 				printf("Auto filled cell (%d,%d) to %d\n", col+1, row+1, validValue[0]);
 			}
+
+			if(validValue != NULL)
+				free(validValue);
 		}
 	}
 
@@ -460,8 +515,6 @@ void autoFillBoard(Board *board, gll_t *moveList, gll_node_t **curr, enum boolea
 	}
 
 	freeBoard(tmp);
-	if(validValue != NULL)
-		free(validValue);
 }
 
 Board* restart(Board *board) {

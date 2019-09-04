@@ -221,7 +221,7 @@ void freeLPSol(LPSol *solution) {
 			if (varIndexes[i * dimension + j] != NULL) {
 				list = varIndexes[i * dimension + j];
 				for(t = 0; t < list->size; t++) {
-					free(gll_get(list, t));
+					free((intTuple2 *) gll_get(list, t));
 				}
 				gll_destroy(list);
 			}
