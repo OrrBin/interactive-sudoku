@@ -529,6 +529,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList,
 	}
 
 	else if (isStringsEqual(token, "redo")) {
+
 		if (firstArg != NULL) {
 			printFormatCommandGetsNoArgs(token);
 			return;
@@ -542,6 +543,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList,
 		}
 
 		handleCommandRedo(board, moveList, curr);
+
 	}
 
 	else if (isStringsEqual(token, "save")) {

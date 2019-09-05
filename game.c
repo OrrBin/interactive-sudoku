@@ -297,6 +297,7 @@ void playTurn(Board **boardP, gll_t *moveList, gll_node_t **curr) {
 		exit(1);
 	}
 	parseCommand(boardP, cmd, moveList, curr);
+	printMoves(moveList, curr);
 }
 
 void exitGame(Board *board) {

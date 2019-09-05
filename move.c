@@ -38,6 +38,7 @@ int undo(Board *board, gll_t* list, gll_node_t **currentMove)
 
 int redo(Board *board, gll_t* list, gll_node_t **currentMove)
 {
+
 	Move *move;
 	if(list->size==1)
 	{
@@ -59,7 +60,6 @@ int redo(Board *board, gll_t* list, gll_node_t **currentMove)
 		move = (Move*) (*currentMove)->data;
 	}
 	redoSingleMove(board, move);
-	*currentMove=(*currentMove)->next;
 	return 1;
 }
 
@@ -85,4 +85,24 @@ void printMove(gll_node_t *currentMove)
 	move = (Move*) currentMove->data;
 	printf("row is %d\ncol is %d\n prev is %d\nnew is %d\nis first? %d\nis last? %d\n",
 			move->row, move->col, move->previousValue, move->newValue, move->isFirstMoveOfCommand, move->isLastMoveOfCommand);
+	printf("----------");
+}
+
+void printMoves(gll_t* moveList, gll_node_t **currentMove)
+{
+	int i, size;
+	gll_node_t *node = (gll_node_t *) malloc(sizeof(gll_node_t));
+
+	size = moveList->size;
+	printf("size of list is %d\n", size);
+	if (size==1)
+		return;
+	node = moveList->first->next;
+	for(i=1; i<size; i++)
+	{
+		if(*currentMove==node)
+			printf("this is current move:\n");
+		printMove(node);
+		node=node->next;
+	}
 }

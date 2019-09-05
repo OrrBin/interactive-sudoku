@@ -61,6 +61,8 @@ int main() {
 
 
 
+
+
 	gll_pushBack(moveList, first);
 	curr=moveList->first;
 
