@@ -62,7 +62,7 @@ void hint(Board *board, int row, int col);
 /**
  * Solves the board using LP, and fills all cells with legal values with a score greater then x
  */
-void guess(Board *board, float threshold);
+void guess(Board *board, float threshold, gll_t *moveList, gll_node_t **curr);
 
 
 /*

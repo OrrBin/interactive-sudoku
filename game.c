@@ -176,11 +176,15 @@ void hint(Board *board, int row, int col) {
 	freeLPSol(solution);
 }
 
-void guess(Board *board, float threshold) {
+void guess(Board *board, float threshold, gll_t *moveList, gll_node_t **curr) {
 	int v, index, i, row, col, chosenValue = -1;
+	int isFirstMoveOfCommand, isLastMoveOfCommand;
 	float maxLPValue = -1;
 	double value;
 	LPSol *solution;
+
+	isFirstMoveOfCommand=1;
+	isLastMoveOfCommand=0;
 
 	if(isBoardErroneous(board)) {
 		printf("Error: cannot guess because the board is erroneous\n");
@@ -220,8 +224,16 @@ void guess(Board *board, float threshold) {
 		}
 
 		if(chosenValue > 0) {
-			setValueOfCell(board, row, col, chosenValue);
+			handleCommandSet(board, row, col, chosenValue, moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand, false);
+			if (isFirstMoveOfCommand==1)
+				{
+					isFirstMoveOfCommand=0;
+				}
 		}
+	}
+	if(moveList->size > 1)
+	{
+		(((Move*) moveList->last->data)->isLastMoveOfCommand)=1;
 	}
 
 	freeLPSol(solution);

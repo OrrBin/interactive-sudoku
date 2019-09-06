@@ -272,8 +272,8 @@ void handleCommandValidate(Board *board) {
 	validate(board, true);
 }
 
-void handleCommandGuess(Board *board, float threshold) {
-	guess(board, threshold);
+void handleCommandGuess(Board *board, float threshold, gll_t *moveList, gll_node_t **curr) {
+	guess(board, threshold, moveList, curr);
 }
 
 void handleCommandGenerate(int x, int y) {
@@ -506,7 +506,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList,
 
 		threshold = atof(firstArg);
 
-		handleCommandGuess(board, threshold);
+		handleCommandGuess(board, threshold, moveList, curr);
 	}
 
 	else if (isStringsEqual(token, "generate")) {
