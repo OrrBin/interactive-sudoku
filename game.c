@@ -539,3 +539,23 @@ Board* restart(Board *board) {
 int isGameOver(Board *board) {
 	return board->numOfEmptyCells == 0;
 }
+
+void emptyCellsFromFullBoard(Board *board, int numOfCells, gll_t *moveList, gll_node_t **curr)
+{
+	int i, index, dim, row, col;
+	dim = board->blockHeight*board->blockWidth;
+	i=0;
+
+	while(i<numOfCells)
+	{
+		index = rand() % (dim*dim);
+		while (board->cells[index].value==0)
+		{
+			index = rand() % (dim*dim);
+		}
+		row= cellRow(board, index);
+		col= cellCol(board, index);
+		handleCommandSet(board, row, col, 0, moveList, curr, 0, 0, false);
+		i++;
+	}
+}

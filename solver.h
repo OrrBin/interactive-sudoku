@@ -1,7 +1,7 @@
 /*
  * solver.h
  *
- *  Created on: 22 боай 2019
+ *  Created on: 22 пїЅпїЅпїЅпїЅ 2019
  *      Author: yarden.flori
  */
 
@@ -44,4 +44,4 @@ int *checkValidValues(Board *board, int row, int col);
 /*
  * solves the board if possible
  */
-void solve(Board *board);
+int solve(Board *board, int print, gll_t *moveList, gll_node_t **curr);

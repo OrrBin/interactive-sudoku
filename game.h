@@ -103,5 +103,5 @@ int findErrors(Board *board);
  * checks whether or not game completed.
  */
 int isGameOver(Board *board);
-
+void emptyCellsFromFullBoard(Board *board, int numOfCells, gll_t *moveList, gll_node_t **curr);
 #endif /* GAME_H_ */

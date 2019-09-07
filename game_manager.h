@@ -30,6 +30,7 @@ void handleCommandRedo(Board *board, gll_t* moveList, gll_node_t **curr);
 void handleCommandAutoFill(Board *board, gll_t *moveList, gll_node_t **curr);
 void handleCommandReset(Board *board, gll_t *moveList, gll_node_t **curr);
 void handleCommandGuess(Board *board, float threshold, gll_t *moveList, gll_node_t **curr);
+void handleCommandGenerate(int x, int y, Board *board, gll_t *moveList, gll_node_t **curr);
 
 
 #endif /* GAME_MANAGER_H_ */

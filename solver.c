@@ -12,15 +12,19 @@
 #include "stack.h"
 #include "linear_programming_solver.h"
 
-void solve(Board *board) {
+int solve(Board *board, int print, gll_t *moveList, gll_node_t **curr) {
 	int row, col, val, index;
 	LPSol *solution;
 
 	solution = LPsolve(board, true);
 
-	if( !solution->solutionFound ) {
-		printf("Failed to find solution to the given board\n");
-		return;
+	if( !solution->solutionFound )
+	{
+		if(print == 1)
+		{
+			printf("Failed to find solution to the given board\n");
+		}
+		return 0;
 	}
 
 
@@ -30,7 +34,7 @@ void solve(Board *board) {
 
 				index = getVarIndex(solution, row, col, val);
 				if(index != -1 && (solution->theSolution)[index] == 1.0) {
-					setValueOfCell(board, row, col, val);
+					handleCommandSet(board, row, col, val, moveList, curr, 0, 0, false);
 					break;
 				}
 			}
@@ -38,6 +42,7 @@ void solve(Board *board) {
 	}
 
 	freeLPSol(solution);
+	return 1;
 }
 
 

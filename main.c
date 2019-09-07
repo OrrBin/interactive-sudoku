@@ -68,6 +68,7 @@ int main() {
 
 
 	board = initEmptyBoard(9, 3, 3);
+
 	printf("start game by entering solve command or edit command\n");
 	while (1) {
 		playTurn(&board, moveList, &curr);

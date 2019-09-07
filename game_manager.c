@@ -232,7 +232,7 @@ void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList,
 		return;
 	}
 
-	if (board->cells[cellNum(board, row, col)].isFixed) {
+	if (board->cells[cellNum(board, row, col)].isFixed && currentGameMode!=EDIT) {
 		printf("Can't set value of cell (%d,%d) because it is fixed\n", row + 1,
 				col + 1);
 		return;
@@ -276,8 +276,109 @@ void handleCommandGuess(Board *board, float threshold, gll_t *moveList, gll_node
 	guess(board, threshold, moveList, curr);
 }
 
-void handleCommandGenerate(int x, int y) {
+void handleCommandGenerate(int x, int y, Board *board, gll_t *moveList, gll_node_t **curr) {
+
+	int i,j, blockHeight, blockWidth, dim, indexCell, indexVal, val, numOfValidValues, row, col, success, isFirstMoveOfCommand, isLastMoveOfCommand;
+	int *validValues=NULL;
+	gll_node_t *prevCurr;
+	LPSol *solution;
+	Board *copy = (Board *) malloc(sizeof(Board));
 	printf("handle generate x: %d, y: %d\n", x, y);
+	prevCurr=*curr;
+	copy = cpyBoard(board, copy);
+	blockHeight=copy->blockHeight;
+	blockWidth=copy->blockWidth;
+	dim= blockHeight*blockWidth;
+	success=0;
+	isFirstMoveOfCommand=1;
+	isLastMoveOfCommand=0;
+
+	if(x>copy->numOfEmptyCells)
+	{
+		printf("There is not enough empty cells for your command\n");
+		return;
+	}
+
+	if(y>dim*dim)
+	{
+		printf("your second parameter should be between 0 to %d\n", dim*dim);
+		return;
+	}
+
+	for(j=0; j<1000; j++)
+	{
+		printf("iteration %d from 1000\n", j);
+		for(i=0; i<x; i++)
+		{
+			indexCell = rand() % (dim*dim);
+			while(copy->cells[indexCell].value!=0)
+			{
+				indexCell = rand() % (dim*dim);
+			}
+			row= cellRow(copy, indexCell);
+			col= cellCol(copy, indexCell);
+			numOfValidValues = checkValidValuesNum(copy, row, col);
+			if(numOfValidValues==0)
+			{
+				printf("no valid values for cell %d %d in iteration %d\n", row, col, i);
+				cpyBoard(board, copy);
+				break;
+			}
+			validValues = checkValidValues(copy,row , col);
+			indexVal=(rand()%numOfValidValues);
+			handleCommandSet(copy, row, col, validValues[indexVal], moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand, true);
+			if(isFirstMoveOfCommand==1)
+			{
+				isFirstMoveOfCommand=0;
+			}
+			printf("i is %d\n", i);
+		}
+		if(i!=x)
+		{
+			*curr=prevCurr;
+			gll_remove_all_from_curr(moveList, *curr);
+			isFirstMoveOfCommand=1;
+			cpyBoard(board,copy);
+			continue;
+		}
+		else
+		{
+			solution = LPsolve(board, true);
+			if(!solution->solutionFound)
+			{
+				*curr=prevCurr;
+				gll_remove_all_from_curr(moveList, *curr);
+				isFirstMoveOfCommand=1;
+				cpyBoard(board,copy);
+				continue;
+			}
+			else
+			{
+				success=solve(copy, 0, moveList, curr);
+				if(success)
+				{
+					emptyCellsFromFullBoard(copy, (dim*dim)-y, moveList, curr);
+					cpyBoard(copy, board);
+					((Move*) moveList->last->data)->isLastMoveOfCommand=1;
+					break;
+				}
+				else
+				{
+					*curr=prevCurr;
+					gll_remove_all_from_curr(moveList, *curr);
+					isFirstMoveOfCommand=1;
+					cpyBoard(board,copy);
+					continue;
+				}
+			}
+		}
+	}
+	if(!success)
+	{
+		printf("We tried to generate for 1000 times, but unfortunately the command failed\n");
+	}
+
+
 }
 
 void handleCommandUndo(Board *board, gll_t* moveList, gll_node_t **curr) {
@@ -529,7 +630,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList,
 		firstIntArg = atoi(firstArg);
 		secondIntArg = atoi(secondArg);
 
-		handleCommandGenerate(firstIntArg, secondIntArg);
+		handleCommandGenerate(firstIntArg, secondIntArg, board, moveList, curr);
 	}
 
 	else if (isStringsEqual(token, "undo")) {
