@@ -9,6 +9,7 @@
 
 #include "util.h"
 #include "game.h"
+#include "game_manager.h"
 #include "stack.h"
 #include "linear_programming_solver.h"
 

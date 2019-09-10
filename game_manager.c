@@ -11,6 +11,8 @@
 #include "board_writer.h"
 #include "board_reader.h"
 #include "util.h"
+#include "solver.h"
+#include "linear_programming_solver.h"
 #include "game.h"
 #include "gll.h"
 #include "move.h"
@@ -278,7 +280,7 @@ void handleCommandGuess(Board *board, float threshold, gll_t *moveList, gll_node
 
 void handleCommandGenerate(int x, int y, Board *board, gll_t *moveList, gll_node_t **curr) {
 
-	int i,j, blockHeight, blockWidth, dim, indexCell, indexVal, val, numOfValidValues, row, col, success, isFirstMoveOfCommand, isLastMoveOfCommand;
+	int i,j, blockHeight, blockWidth, dim, indexCell, indexVal, numOfValidValues, row, col, success, isFirstMoveOfCommand, isLastMoveOfCommand;
 	int *validValues=NULL;
 	gll_node_t *prevCurr;
 	LPSol *solution;
