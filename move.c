@@ -60,17 +60,18 @@ int redo(Board *board, gll_t* list, gll_node_t **currentMove)
 		move = (Move*) (*currentMove)->data;
 	}
 	redoSingleMove(board, move);
+	*currentMove=(*currentMove)->next;
 	return 1;
 }
 
 void cancelSingleMove(Board *board, Move *move)
 {
-	setValueOfCell(board, move->row, move->col, move->previousValue);
+	setValueOfCell(board, move->row, move->col, move->previousValue, SOLVE);
 }
 
 void redoSingleMove(Board *board, Move *move)
 {
-	setValueOfCell(board, move->row, move->col, move->newValue);
+	setValueOfCell(board, move->row, move->col, move->newValue, SOLVE);
 }
 
 void addMoveToCurrentAndCleanNextMoves (gll_t* list, gll_node_t **currentMove, Move *move)

@@ -145,7 +145,7 @@ void printGameOver() {
 	printf("Puzzle solved successfully\n");
 }
 
-void handleCommandSolve(Board **board, char *filePath) {
+void handleCommandSolve(Board **board, char *filePath, gll_t *moveList, gll_node_t **curr) {
 	Board *newBoard = readBoardFromfile(filePath);
 
 	if (newBoard == NULL) {
@@ -157,9 +157,9 @@ void handleCommandSolve(Board **board, char *filePath) {
 	*board = newBoard;
 
 	if(moveList != NULL) {
-		gll_destroy(moveList);
+		*curr=moveList->first;
+		gll_remove_all_from_curr(moveList, *curr);
 	}
-	moveList = gll_init();
 	currentGameMode = SOLVE;
 
 	findErrors(*board);
@@ -171,16 +171,15 @@ void handleCommandSolve(Board **board, char *filePath) {
 
 }
 
-void handleCommandEdit(Board **board, char *filePath) {
+void handleCommandEdit(Board **board, char *filePath, gll_t *moveList, gll_node_t **curr) {
 	Board *newBoard;
+
+	*curr=moveList->first;
+	gll_remove_all_from_curr(moveList, *curr);
 	if (filePath == NULL) {
 		freeBoard(*board);
 		*board = initEmptyBoard(9, 3, 3);
 
-		if(moveList != NULL) {
-			gll_destroy(moveList);
-		}
-		moveList = gll_init();
 		currentGameMode = EDIT;
 	} else {
 		newBoard = readBoardFromfile(filePath);
@@ -191,9 +190,6 @@ void handleCommandEdit(Board **board, char *filePath) {
 
 		freeBoard(*board);
 		*board = newBoard;
-
-		free(moveList);
-		moveList = gll_init();
 
 		currentGameMode = EDIT;
 		findErrors(*board);
@@ -220,7 +216,7 @@ void handleCommandPrintBoard(Board *board) {
 }
 
 void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList,
-		gll_node_t **curr, int isFirstMoveOfCommand, int isLastMoveOfCommand, enum boolean shouldPrint) {
+	gll_node_t **curr, int isFirstMoveOfCommand, int isLastMoveOfCommand, enum boolean shouldPrint, enum mode currentGameMode) {
 
 	int setCellResult, previousValue, index;
 	enum boolean isError = false;
@@ -244,7 +240,7 @@ void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList,
 		return;
 	}
 
-	setCellResult = setValueOfCell(board, row, col, val);
+	setCellResult = setValueOfCell(board, row, col, val, currentGameMode);
 	findErrors(board);
 
 	if(shouldPrint)
@@ -332,7 +328,7 @@ void handleCommandGenerate(int x, int y, Board *board, gll_t *moveList, gll_node
 			}
 			validValues = checkValidValues(copy,row , col);
 			indexVal=(rand()%numOfValidValues);
-			handleCommandSet(copy, row, col, validValues[indexVal], moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand, true);
+			handleCommandSet(copy, row, col, validValues[indexVal], moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand, true, EDIT);
 			if(isFirstMoveOfCommand==1)
 			{
 				isFirstMoveOfCommand=0;
@@ -491,7 +487,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList,
 			return;
 		}
 
-		handleCommandSolve(boardP, firstArg);
+		handleCommandSolve(boardP, firstArg, moveList, curr);
 		return;
 	}
 
@@ -501,7 +497,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList,
 			return;
 		}
 
-		handleCommandEdit(boardP, firstArg);
+		handleCommandEdit(boardP, firstArg, moveList, curr);
 		return;
 	}
 
@@ -572,7 +568,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList,
 		thirdIntArg = atoi(thirdArg);
 
 		handleCommandSet(board, secondIntArg - 1, firstIntArg - 1, thirdIntArg,
-				moveList, curr, 1, 1, true);
+				moveList, curr, 1, 1, true, currentGameMode);
 
 		return;
 
