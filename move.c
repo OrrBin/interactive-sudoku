@@ -39,6 +39,7 @@ int undo(Board *board, List* list, ListNode **currentMove)
 int redo(Board *board, List* list, ListNode **currentMove)
 {
 
+	int flag=0;
 	Move *move;
 	if(list->size==1)
 	{
@@ -55,12 +56,14 @@ int redo(Board *board, List* list, ListNode **currentMove)
 
 	while(move->isLastMoveOfCommand==0)
 	{
+		flag=1;
 		redoSingleMove(board, move);
 		*currentMove=(*currentMove)->next;
 		move = (Move*) (*currentMove)->data;
 	}
 	redoSingleMove(board, move);
-
+	if(flag==1)
+		*currentMove=(*currentMove)->next;
 	return 1;
 }
 
