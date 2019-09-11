@@ -200,7 +200,7 @@ LPSol *initLPSol(int dimension) {
 	LPSol *solution = malloc(sizeof(LPSol));
 
 	solution->dimension = dimension;
-	solution->varIndexes = malloc(dimension * dimension * sizeof(gll_t *));
+	solution->varIndexes = malloc(dimension * dimension * sizeof(List *));
 
 	for (i = 0; i < dimension; i++) {
 		for (j = 0; j < dimension; j++) {
@@ -214,17 +214,17 @@ LPSol *initLPSol(int dimension) {
 
 void freeLPSol(LPSol *solution) {
 	int i, j, t, dimension = solution->dimension;
-	gll_t *list;
-	gll_t **varIndexes = solution->varIndexes;
+	List *list;
+	List **varIndexes = solution->varIndexes;
 
 	for (i = 0; i < dimension; i++) {
 		for (j = 0; j < dimension; j++) {
 			if (varIndexes[i * dimension + j] != NULL) {
 				list = varIndexes[i * dimension + j];
 				for(t = 0; t < list->size; t++) {
-					free((intTuple2 *) gll_get(list, t));
+					free((intTuple2 *) listGet(list, t));
 				}
-				gll_destroy(list);
+				gllDestroy(list);
 			}
 		}
 	}

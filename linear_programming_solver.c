@@ -39,12 +39,12 @@ void addVar(LPSol *solution, int i, int j, int v, int index) {
 	intTuple2 *tuple = malloc(sizeof(intTuple2));
 	int dimension = solution->dimension;
 	if (solution->varIndexes[i * dimension + j] == NULL) {
-		solution->varIndexes[i * dimension + j] = gll_init();
+		solution->varIndexes[i * dimension + j] = listInit();
 	}
 
 	tuple->item1 = v;
 	tuple->item2 = index;
-	gll_pushBack(solution->varIndexes[i * dimension + j], tuple);
+	listPushBack(solution->varIndexes[i * dimension + j], tuple);
 }
 
 int addVariables(Board *board, LPSol *solution) {
@@ -87,7 +87,7 @@ int getVarIndex(LPSol *solution, int row, int col, int value) {
 
 	int size, idx;
 	intTuple2 *tuple;
-	gll_t *list = solution->varIndexes[row*(solution->dimension) + col];
+	List *list = solution->varIndexes[row*(solution->dimension) + col];
 	if(list == NULL) {
 		return -1;
 	}
@@ -95,7 +95,7 @@ int getVarIndex(LPSol *solution, int row, int col, int value) {
 	size = list->size;
 
 	for(idx = 0; idx < size; idx++) {
-		tuple = (intTuple2 *) gll_get(list, idx);
+		tuple = (intTuple2 *) listGet(list, idx);
 		if(tuple->item1 == value) {
 			return tuple->item2;
 		}

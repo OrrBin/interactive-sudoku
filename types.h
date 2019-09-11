@@ -5,7 +5,7 @@
  *      Author: orrbo
  */
 
-#include "gll.h"
+#include "list.h"
 
 #ifndef TYPES_H_
 #define TYPES_H_
@@ -51,7 +51,7 @@ typedef struct Boards
 typedef struct LPSol {
 	int dimension;
 	enum boolean solutionFound;
-	gll_t **varIndexes;
+	List **varIndexes;
 	double *theSolution;
 } LPSol;
 

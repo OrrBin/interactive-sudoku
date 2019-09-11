@@ -8,8 +8,8 @@
 #ifndef GAME_H_
 #define GAME_H_
 
+#include "list.h"
 #include "util.h"
-#include "gll.h"
 /*
  * validateValue gets a board, row, col, and value.
  * it checks whether or not value might be set to
@@ -52,7 +52,7 @@ Board *initEmptyBoard(int dimension, int blockHeight, int blockWidth);
  * and call for the relevant function to
  * execute it.
  */
-void playTurn(Board **boardP, gll_t *moveList, gll_node_t **curr);
+void playTurn(Board **boardP, List *moveList, ListNode **curr);
 
 /*
  * TODO
@@ -62,7 +62,7 @@ void hint(Board *board, int row, int col);
 /**
  * Solves the board using LP, and fills all cells with legal values with a score greater then x
  */
-void guess(Board *board, float threshold, gll_t *moveList, gll_node_t **curr);
+void guess(Board *board, float threshold, List *moveList, ListNode **curr);
 
 
 /*
@@ -84,7 +84,7 @@ int findNumberOFSolutions(Board *board);
  * Fills cells with only one legal value.
  * If doPrint is not 0, then prints every change
  */
-void autoFillBoard(Board *board, gll_t *moveList, gll_node_t **curr, enum boolean doPrint);
+void autoFillBoard(Board *board, List *moveList, ListNode **curr, enum boolean doPrint);
 
 /*
  * restart free the memory used for the current board
@@ -103,5 +103,5 @@ int findErrors(Board *board);
  * checks whether or not game completed.
  */
 int isGameOver(Board *board);
-void emptyCellsFromFullBoard(Board *board, int numOfCells, gll_t *moveList, gll_node_t **curr);
+void emptyCellsFromFullBoard(Board *board, int numOfCells, List *moveList, ListNode **curr);
 #endif /* GAME_H_ */

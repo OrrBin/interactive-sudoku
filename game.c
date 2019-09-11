@@ -5,7 +5,6 @@
 #include "board_reader.h"
 #include "util.h"
 #include "solver.h"
-#include "gll.h"
 #include "move.h"
 #include "game_manager.h"
 
@@ -23,6 +22,7 @@
 #include "util.h"
 #include "solver.h"
 #include "linear_programming_solver.h"
+#include "list.h"
 
 
 int validateRow(Board *board, int row, int col, int value) {
@@ -176,7 +176,7 @@ void hint(Board *board, int row, int col) {
 	freeLPSol(solution);
 }
 
-void guess(Board *board, float threshold, gll_t *moveList, gll_node_t **curr) {
+void guess(Board *board, float threshold, List *moveList, ListNode **curr) {
 	int v, index, i, row, col, chosenValue = -1;
 	int isFirstMoveOfCommand, isLastMoveOfCommand;
 	float maxLPValue = -1;
@@ -300,7 +300,7 @@ enum boolean validate(Board *board, enum boolean shouldPrint) {
 
 }
 
-void playTurn(Board **boardP, gll_t *moveList, gll_node_t **curr) {
+void playTurn(Board **boardP, List *moveList, ListNode **curr) {
 	char *result;
 	char cmd[MAX_CHARS_IN_COMMAND];
 	result = getStringFromUser(cmd);
@@ -486,7 +486,7 @@ int findNumberOFSolutions(Board *board) {
 	return exhaustiveBackTracking(board);
 }
 
-void autoFillBoard(Board *board, gll_t *moveList, gll_node_t **curr, enum boolean doPrint) {
+void autoFillBoard(Board *board, List *moveList, ListNode **curr, enum boolean doPrint) {
 	int i, *validValue = NULL, row, col;
 	int isFirstMoveOfCommand, isLastMoveOfCommand;
 	Board *tmp = (Board *) malloc(sizeof(Board));
@@ -540,7 +540,7 @@ int isGameOver(Board *board) {
 	return board->numOfEmptyCells == 0;
 }
 
-void emptyCellsFromFullBoard(Board *board, int numOfCells, gll_t *moveList, gll_node_t **curr)
+void emptyCellsFromFullBoard(Board *board, int numOfCells, List *moveList, ListNode **curr)
 {
 	int i, index, dim, row, col;
 	dim = board->blockHeight*board->blockWidth;

@@ -8,11 +8,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "move.h"
-#include "gll.h"
 #include "types.h"
 #include "game.h"
+#include "list.h"
 
-int undo(Board *board, gll_t* list, gll_node_t **currentMove)
+int undo(Board *board, List* list, ListNode **currentMove)
 {
 	Move *move;
 	if(list->size==1 || list->first==*currentMove)
@@ -36,7 +36,7 @@ int undo(Board *board, gll_t* list, gll_node_t **currentMove)
 	return 1;
 }
 
-int redo(Board *board, gll_t* list, gll_node_t **currentMove)
+int redo(Board *board, List* list, ListNode **currentMove)
 {
 
 	Move *move;
@@ -60,7 +60,7 @@ int redo(Board *board, gll_t* list, gll_node_t **currentMove)
 		move = (Move*) (*currentMove)->data;
 	}
 	redoSingleMove(board, move);
-	*currentMove=(*currentMove)->next;
+
 	return 1;
 }
 
@@ -74,13 +74,13 @@ void redoSingleMove(Board *board, Move *move)
 	setValueOfCell(board, move->row, move->col, move->newValue, SOLVE);
 }
 
-void addMoveToCurrentAndCleanNextMoves (gll_t* list, gll_node_t **currentMove, Move *move)
+void addMoveToCurrentAndCleanNextMoves (List* list, ListNode **currentMove, Move *move)
 {
-	gll_remove_all_from_curr(list, *currentMove);
-	gll_pushBack(list, move);
+	gllRemoveAllFromCurr(list, *currentMove);
+	listPushBack(list, move);
 }
 
-void printMove(gll_node_t *currentMove)
+void printMove(ListNode *currentMove)
 {
 	Move *move;
 	move = (Move*) currentMove->data;
@@ -89,10 +89,10 @@ void printMove(gll_node_t *currentMove)
 	printf("----------");
 }
 
-void printMoves(gll_t* moveList, gll_node_t **currentMove)
+void printMoves(List* moveList, ListNode **currentMove)
 {
 	int i, size;
-	gll_node_t *node = (gll_node_t *) malloc(sizeof(gll_node_t));
+	ListNode *node = (ListNode *) malloc(sizeof(ListNode));
 
 	size = moveList->size;
 	printf("size of list is %d\n", size);
@@ -113,11 +113,11 @@ void printMoves(gll_t* moveList, gll_node_t **currentMove)
 	}
 }
 
-void freeMoveList(gll_t *list)
+void freeMoveList(List *list)
 {
 	Move *move;
-  gll_node_t *currNode = list->first;
-  gll_node_t *nextNode;
+  ListNode *currNode = list->first;
+  ListNode *nextNode;
 
   while(currNode != NULL) {
     nextNode = currNode->next;

@@ -12,7 +12,8 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "gll.h"
+
+#include "list.h"
 #include "util.h"
 
 /*
@@ -22,17 +23,17 @@
  * to execute the command, or print error of invalid
  * command.
  */
-void parseCommand(Board **boardP, char* command, gll_t *moveList, gll_node_t **curr);
-void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList,
-	gll_node_t **curr, int isFirstMoveOfCommand, int isLastMoveOfCommand, enum boolean shouldPrint, enum mode currentGameMode) ;
-void handleCommandSolve(Board **board, char *filePath, gll_t *moveList, gll_node_t **curr);
-void handleCommandEdit(Board **board, char *filePath, gll_t *moveList, gll_node_t **curr);
-void handleCommandUndo(Board *board, gll_t* moveList, gll_node_t **curr);
-void handleCommandRedo(Board *board, gll_t* moveList, gll_node_t **curr);
-void handleCommandAutoFill(Board *board, gll_t *moveList, gll_node_t **curr);
-void handleCommandReset(Board *board, gll_t *moveList, gll_node_t **curr);
-void handleCommandGuess(Board *board, float threshold, gll_t *moveList, gll_node_t **curr);
-void handleCommandGenerate(int x, int y, Board *board, gll_t *moveList, gll_node_t **curr);
+void parseCommand(Board **boardP, char* command, List *moveList, ListNode **curr);
+void handleCommandSet(Board *board, int row, int col, int val, List *moveList,
+	ListNode **curr, int isFirstMoveOfCommand, int isLastMoveOfCommand, enum boolean shouldPrint, enum mode currentGameMode) ;
+void handleCommandSolve(Board **board, char *filePath, List *moveList, ListNode **curr);
+void handleCommandEdit(Board **board, char *filePath, List *moveList, ListNode **curr);
+void handleCommandUndo(Board *board, List* moveList, ListNode **curr);
+void handleCommandRedo(Board *board, List* moveList, ListNode **curr);
+void handleCommandAutoFill(Board *board, List *moveList, ListNode **curr);
+void handleCommandReset(Board *board, List *moveList, ListNode **curr);
+void handleCommandGuess(Board *board, float threshold, List *moveList, ListNode **curr);
+void handleCommandGenerate(int x, int y, Board *board, List *moveList, ListNode **curr);
 
 
 #endif /* GAME_MANAGER_H_ */

@@ -44,4 +44,4 @@ int *checkValidValues(Board *board, int row, int col);
 /*
  * solves the board if possible
  */
-int solve(Board *board, int print, gll_t *moveList, gll_node_t **curr);
+int solve(Board *board, int print, List *moveList, ListNode **curr);

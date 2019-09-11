@@ -14,7 +14,7 @@
 struct Stack* createStack()
 {
     struct Stack* stack = (struct Stack*)malloc(sizeof(struct Stack));
-    stack->list = gll_init();
+    stack->list = listInit();
     stack->top = NULL;
     return stack;
 }
@@ -26,19 +26,19 @@ int isEmpty(struct Stack *stack)
 
 void push(struct Stack *stack, void* data)
 {
-	gll_pushBack(stack->list, data);
+	listPushBack(stack->list, data);
 	stack->top =stack->list->last;
 }
 
 void *pop (struct Stack *stack)
 {
-	gll_node_t *node = stack->list->last;
+	ListNode *node = stack->list->last;
 	void *data;
 	if(node == NULL)
 	    return NULL;
 	data = node->data;
 
-	if(gll_remove(stack->list, (stack->list->size-1)) == NULL)
+	if(listRemove(stack->list, (stack->list->size-1)) == NULL)
 	    return NULL;
 
 	stack->top=stack->list->last;

@@ -16,21 +16,22 @@
 #include "stack.h"
 #include "move.h"
 #include "board_writer.h"
+#include "list.h"
 
 
 int main() {
 
 	Board* board;
-	gll_t *moveList;
-	gll_node_t *curr;
+	List *moveList;
+	ListNode *curr;
 	Move *first = NULL;
 
 
 	SP_BUFF_SET()
-	moveList = gll_init();
+	moveList = listInit();
 
 
-	gll_pushBack(moveList, first);
+	listPushBack(moveList, first);
 	curr=moveList->first;
 
 

@@ -13,7 +13,7 @@
 #include "stack.h"
 #include "linear_programming_solver.h"
 
-int solve(Board *board, int print, gll_t *moveList, gll_node_t **curr) {
+int solve(Board *board, int print, List *moveList, ListNode **curr) {
 	int row, col, val, index;
 	LPSol *solution;
 

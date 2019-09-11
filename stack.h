@@ -7,7 +7,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "gll.h"
+
+#include "list.h"
 
 #ifndef STACK_H_
 #define STACK_H_
@@ -17,8 +18,8 @@
 #endif /* STACK_H_ */
 
 typedef struct Stack {
-    gll_t *list;
-    gll_node_t *top;
+    List *list;
+    ListNode *top;
 }Stack;
 
 struct Stack* createStack();

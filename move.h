@@ -20,13 +20,13 @@ typedef struct Moves
 	int newValue;
 }Move;
 
-int undo(Board *board, gll_t* list, gll_node_t **currentMove);
-int redo(Board *board, gll_t* list, gll_node_t **currentMove);
+int undo(Board *board, List* list, ListNode **currentMove);
+int redo(Board *board, List* list, ListNode **currentMove);
 void cancelSingleMove(Board *board, Move *move);
 void redoSingleMove(Board *board, Move *move);
-void addMoveToCurrentAndCleanNextMoves (gll_t* list, gll_node_t **currentMove, Move *move);
-void printMove(gll_node_t *currentMove);
-void printMoves(gll_t* moveList, gll_node_t **currentMove);
-void freeMoveList(gll_t *list);
+void addMoveToCurrentAndCleanNextMoves (List* list, ListNode **currentMove, Move *move);
+void printMove(ListNode *currentMove);
+void printMoves(List* moveList, ListNode **currentMove);
+void freeMoveList(List *list);
 #endif /* MOVE_H_ */
 
