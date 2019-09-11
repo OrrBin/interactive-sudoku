@@ -410,7 +410,7 @@ void handleCommandSave(Board *board, char *filePath) {
 		return;
 	}
 
-	if (writeBoardToFile(board, filePath) != 0) {
+	if (writeBoardToFile(board, filePath, currentGameMode) != 0) {
 		printf("Error: there was an error saving your game to file: %s\n",
 				filePath);
 	} else {

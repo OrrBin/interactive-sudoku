@@ -8,20 +8,26 @@
 #include <stdlib.h>
 #include "util.h"
 
-void writeLineToFile(Board *board, FILE *filePtr, int row) {
+void writeLineToFile(Board *board, FILE *filePtr, int row, enum mode gameMode) {
 	int col;
 	for(col = 0; col < board->dimension; col++) {
 		fprintf(filePtr, "%d", board->cells[cellNum(board, row, col)].value);
-		if(isCellFixed(board, row, col)) {
+		if(gameMode == EDIT && board->cells[cellNum(board, row, col)].value != 0) {
 			fprintf(filePtr, ".");
 		}
+		else if(isCellFixed(board, row, col)) {
+			fprintf(filePtr, ".");
+		}
+
 		if (!isLastCellInRow(board, col)){
 			fprintf(filePtr, " ");
 		}
 	}
+
+
 }
 
-int writeBoardToFile(Board *board, char *filePath) {
+int writeBoardToFile(Board *board, char *filePath, enum mode gameMode) {
 	FILE *filePtr;
 	int i;
 	filePtr = fopen(filePath, "w");
@@ -35,7 +41,7 @@ int writeBoardToFile(Board *board, char *filePath) {
 	fprintf(filePtr,"%d\n", board->blockWidth);
 
 	for(i = 0; i < board->dimension; i++) {
-		writeLineToFile(board, filePtr, i);
+		writeLineToFile(board, filePtr, i, gameMode);
 		fprintf(filePtr,"\n");
 	}
 

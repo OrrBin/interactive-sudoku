@@ -14,4 +14,4 @@
 
 #include "types.h"
 
-int writeBoardToFile(Board *board, char *filePath);
+int writeBoardToFile(Board *board, char *filePath, enum mode gameMode);
