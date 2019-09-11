@@ -806,7 +806,8 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList,
 		}
 
 		if(moveList != NULL) {
-			gll_destroy(moveList);
+			freeMoveList(moveList);
+			free(moveList);
 		}
 		handleCommandExit(board);
 		return;

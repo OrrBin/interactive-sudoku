@@ -105,4 +105,24 @@ void printMoves(gll_t* moveList, gll_node_t **currentMove)
 		printMove(node);
 		node=node->next;
 	}
+
+	if(node != NULL) {
+		free((Move *) node->data);
+		free(node);
+	}
+}
+
+void freeMoveList(gll_t *list)
+{
+	Move *move;
+  gll_node_t *currNode = list->first;
+  gll_node_t *nextNode;
+
+  while(currNode != NULL) {
+    nextNode = currNode->next;
+    move = (Move *) currNode->data;
+    free(move);
+    free(currNode);
+    currNode = nextNode;
+  }
 }
