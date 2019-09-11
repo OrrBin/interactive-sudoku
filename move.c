@@ -60,6 +60,7 @@ int redo(Board *board, gll_t* list, gll_node_t **currentMove)
 		move = (Move*) (*currentMove)->data;
 	}
 	redoSingleMove(board, move);
+	*currentMove=(*currentMove)->next;
 	return 1;
 }
 
