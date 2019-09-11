@@ -62,7 +62,7 @@ int redo(Board *board, List* list, ListNode **currentMove)
 		move = (Move*) (*currentMove)->data;
 	}
 	redoSingleMove(board, move);
-	if(flag==1)
+	if(!flag)
 		*currentMove=(*currentMove)->next;
 	return 1;
 }
