@@ -64,6 +64,7 @@ Board *cpyBoardImpl(Board* board, Board* destination, int asFixed) {
 	}
 	for (i = 0; i < board->dimension * board->dimension; i++) {
 		cells[i].value = board->cells[i].value;
+		cells[i].isError=board->cells[i].isError;
 
 		if (asFixed && cells[i].value != 0)
 			cells[i].isFixed = 1;
