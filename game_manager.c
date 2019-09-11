@@ -156,7 +156,9 @@ void handleCommandSolve(Board **board, char *filePath) {
 	freeBoard(*board);
 	*board = newBoard;
 
-	free(moveList);
+	if(moveList != NULL) {
+		gll_destroy(moveList);
+	}
 	moveList = gll_init();
 	currentGameMode = SOLVE;
 
@@ -175,7 +177,9 @@ void handleCommandEdit(Board **board, char *filePath) {
 		freeBoard(*board);
 		*board = initEmptyBoard(9, 3, 3);
 
-		free(moveList);
+		if(moveList != NULL) {
+			gll_destroy(moveList);
+		}
 		moveList = gll_init();
 		currentGameMode = EDIT;
 	} else {
@@ -801,6 +805,9 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList,
 			return;
 		}
 
+		if(moveList != NULL) {
+			gll_destroy(moveList);
+		}
 		handleCommandExit(board);
 		return;
 	}
