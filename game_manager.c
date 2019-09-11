@@ -216,7 +216,7 @@ void handleCommandPrintBoard(Board *board) {
 }
 
 void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList,
-		gll_node_t **curr, int isFirstMoveOfCommand, int isLastMoveOfCommand, enum boolean shouldPrint) {
+	gll_node_t **curr, int isFirstMoveOfCommand, int isLastMoveOfCommand, enum boolean shouldPrint, enum mode currentGameMode) {
 
 	int setCellResult, previousValue, index;
 	enum boolean isError = false;
@@ -240,7 +240,7 @@ void handleCommandSet(Board *board, int row, int col, int val, gll_t *moveList,
 		return;
 	}
 
-	setCellResult = setValueOfCell(board, row, col, val);
+	setCellResult = setValueOfCell(board, row, col, val, currentGameMode);
 	findErrors(board);
 
 	if(shouldPrint)
@@ -328,7 +328,7 @@ void handleCommandGenerate(int x, int y, Board *board, gll_t *moveList, gll_node
 			}
 			validValues = checkValidValues(copy,row , col);
 			indexVal=(rand()%numOfValidValues);
-			handleCommandSet(copy, row, col, validValues[indexVal], moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand, true);
+			handleCommandSet(copy, row, col, validValues[indexVal], moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand, true, EDIT);
 			if(isFirstMoveOfCommand==1)
 			{
 				isFirstMoveOfCommand=0;
@@ -568,7 +568,7 @@ void parseCommand(Board **boardP, char* command, gll_t *moveList,
 		thirdIntArg = atoi(thirdArg);
 
 		handleCommandSet(board, secondIntArg - 1, firstIntArg - 1, thirdIntArg,
-				moveList, curr, 1, 1, true);
+				moveList, curr, 1, 1, true, currentGameMode);
 
 		return;
 

@@ -35,7 +35,7 @@ int solve(Board *board, int print, gll_t *moveList, gll_node_t **curr) {
 
 				index = getVarIndex(solution, row, col, val);
 				if(index != -1 && (solution->theSolution)[index] == 1.0) {
-					handleCommandSet(board, row, col, val, moveList, curr, 0, 0, false);
+					handleCommandSet(board, row, col, val, moveList, curr, 0, 0, false, EDIT);
 					break;
 				}
 			}
@@ -51,7 +51,7 @@ int solve(Board *board, int print, gll_t *moveList, gll_node_t **curr) {
 int handleCell(Board *board, int row, int col, int value,
 		int (*callback)(Board *, int, int)) {
 	int result;
-	setValueOfCell(board, row, col, value);
+	setValueOfCell(board, row, col, value, SOLVE);
 	if (!isLastCell(board, row, col)) {
 		if (isLastCellInRow(board, col)) {
 			result = callback(board, row + 1, 0);
@@ -144,7 +144,7 @@ int exhaustiveBackTracking(Board *board) {
 
 		if(validateValue(cpy, cellRow(cpy, cell->cellNum), cellCol(cpy, cell->cellNum), newVal)) {
 			cell->value = newVal;
-			setValueOfCell(cpy, cellRow(cpy, cell->cellNum), cellCol(cpy, cell->cellNum), newVal);
+			setValueOfCell(cpy, cellRow(cpy, cell->cellNum), cellCol(cpy, cell->cellNum), newVal, SOLVE);
 			newCell = nextNonFixedCell(cpy, (cell->cellNum)+1);
 			if(newCell == NULL) {
 				clearCell(cpy, cellRow(cpy, cell->cellNum), cellCol(cpy, cell->cellNum));

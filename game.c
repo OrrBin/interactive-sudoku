@@ -99,9 +99,9 @@ int findErrors(Board *board) {
 	return result;
 }
 
-int setValueOfCell(Board *board, int row, int col, int value) {
+int setValueOfCell(Board *board, int row, int col, int value, enum mode currentGameMode) {
 	int oldValue;
-	if (board->cells[cellNum(board, row, col)].isFixed) {
+	if (board->cells[cellNum(board, row, col)].isFixed && currentGameMode!=EDIT) {
 		printf("Error: cell is fixed\n");
 		return 0;
 	}
@@ -224,7 +224,7 @@ void guess(Board *board, float threshold, gll_t *moveList, gll_node_t **curr) {
 		}
 
 		if(chosenValue > 0) {
-			handleCommandSet(board, row, col, chosenValue, moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand, false);
+			handleCommandSet(board, row, col, chosenValue, moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand, false, SOLVE);
 			if (isFirstMoveOfCommand==1)
 				{
 					isFirstMoveOfCommand=0;
@@ -507,7 +507,7 @@ void autoFillBoard(Board *board, gll_t *moveList, gll_node_t **curr, enum boolea
 		if(checkValidValuesNum(tmp,row, col) == 1 && !isCellFixed(tmp, row, col)) {
 			didChange = true;
 			validValue = checkValidValues(tmp,row , col);
-			handleCommandSet(board, row, col, validValue[0], moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand, false);
+			handleCommandSet(board, row, col, validValue[0], moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand, false, SOLVE);
 			if (isFirstMoveOfCommand==1)
 			{
 				isFirstMoveOfCommand=0;
@@ -555,7 +555,7 @@ void emptyCellsFromFullBoard(Board *board, int numOfCells, gll_t *moveList, gll_
 		}
 		row= cellRow(board, index);
 		col= cellCol(board, index);
-		handleCommandSet(board, row, col, 0, moveList, curr, 0, 0, false);
+		handleCommandSet(board, row, col, 0, moveList, curr, 0, 0, false, EDIT);
 		i++;
 	}
 }

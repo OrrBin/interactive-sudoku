@@ -24,7 +24,7 @@ int validateValue(Board *board, int row, int col, int value);
  * If yes, it is do it. Else, it prints the relevant
  * error.
  */
-int setValueOfCell(Board *board, int row, int col, int value);
+int setValueOfCell(Board *board, int row, int col, int value, enum mode currentGameMode);
 
 /*
  * clearCell clears the cell board[row][col].

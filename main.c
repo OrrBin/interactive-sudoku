@@ -17,36 +17,7 @@
 #include "move.h"
 #include "board_writer.h"
 
-/*
-int testExhaustiveBackTracking() {
-	int result = 0;
-	Board *board;
-	SP_BUFF_SET()
-	;
-	board = initGame(3, 3, 1);
-	result = exhaustiveBackTracking(board);
 
-	printf("%d", result);
-	return 0;
-}
-
-int main() {
-
-	return testExhaustiveBackTracking();
-
-	int i=5;
-	int *x;
-
-	struct Stack *stack;
-	stack = createStack();
-	printf("%d\n" ,isEmpty(stack));
-	push(stack, &i);
-	printf("%d" ,isEmpty(stack));
-	x=(int*) pop(stack);
-	printf("%d", *x);
-	return 0;*/
-
-/*	Board* board; */
 int main() {
 
 	Board* board;
@@ -55,12 +26,8 @@ int main() {
 	Move *first = NULL;
 
 
-
 	SP_BUFF_SET()
 	moveList = gll_init();
-
-
-
 
 
 	gll_pushBack(moveList, first);
