@@ -404,7 +404,7 @@ void handleCommandSave(Board *board, char *filePath) {
 		return;
 	}
 
-	if (!validate(board, false)) {
+	if (currentGameMode == EDIT && !validate(board, false)) {
 		printf("Error: can't save because the board is not solvable: %s\n",
 				filePath);
 		return;
