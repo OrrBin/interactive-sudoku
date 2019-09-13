@@ -35,7 +35,7 @@ int solve(Board *board, int print, List *moveList, ListNode **curr) {
 
 				index = getVarIndex(solution, row, col, val);
 				if(index != -1 && (solution->theSolution)[index] == 1.0) {
-					handleCommandSet(board, row, col, val, moveList, curr, 0, 0, false, EDIT);
+					handleCommandSet(board, row, col, val, moveList, curr, 0, 0, false);
 					break;
 				}
 			}

@@ -79,7 +79,7 @@ void redoSingleMove(Board *board, Move *move)
 
 void addMoveToCurrentAndCleanNextMoves (List* list, ListNode **currentMove, Move *move)
 {
-	gllRemoveAllFromCurr(list, *currentMove);
+	removeAllMovesFromCurr(list, *currentMove);
 	listPushBack(list, move);
 }
 
@@ -129,4 +129,35 @@ void freeMoveList(List *list)
     free(currNode);
     currNode = nextNode;
   }
+}
+
+int removeAllMovesFromCurr(List *list, ListNode *current)
+{
+	ListNode *currNode;
+	ListNode *nextNode;
+
+	if(list->first==NULL)
+		return 1;
+
+	currNode=current;
+
+	if(current->next==NULL)
+	{
+		return 1;
+	}
+
+
+	currNode = currNode->next;
+	nextNode = currNode->next;
+
+	while(nextNode!=NULL)
+	{
+		free((Move *) currNode->data);
+		listRemoveByNode(list, currNode);
+		currNode=nextNode;
+		nextNode=nextNode->next;
+	}
+	free((Move *) currNode->data);
+	listRemoveByNode(list, currNode);
+	return 1;
 }

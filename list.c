@@ -15,8 +15,8 @@
 #define C_OK 0
 #define C_NOK -1
 
-static ListNode *gll_findNode(List *, int);
-static ListNode *gll_initNode(void *);
+static ListNode *listFindNode(List *, int);
+static ListNode *listInitNode(void *);
 
 /*
  * Initialize a new list
@@ -37,7 +37,7 @@ List *listInit()
  * in:        pointer to data
  * returns:   pointer to new node
  */
-static ListNode *gll_initNode(void *data)
+static ListNode *listInitNode(void *data)
 {
   ListNode *node = (ListNode *) malloc(sizeof(ListNode));
   node->data = data;
@@ -54,7 +54,7 @@ static ListNode *gll_initNode(void *data)
  */
 void *listGet(List *list, int pos)
 {
-  ListNode *node = gll_findNode(list, pos);
+  ListNode *node = listFindNode(list, pos);
   if(node != NULL)
     return node->data;
   else
@@ -68,7 +68,7 @@ void *listGet(List *list, int pos)
  * in:        position
  * returns:   pointer to Node / NULL on failure
  */
-static ListNode *gll_findNode(List *list, int pos)
+static ListNode *listFindNode(List *list, int pos)
 {
 	ListNode *currNode;
 	  int currPos;
@@ -107,7 +107,7 @@ static ListNode *gll_findNode(List *list, int pos)
 int listPushBack(List *list, void *data)
 {
   /* initialize new node */
-  ListNode *newNode = gll_initNode(data);
+  ListNode *newNode = listInitNode(data);
 
   /* if list is empty */
   if(list->size == 0) {
@@ -130,7 +130,7 @@ int listPushBack(List *list, void *data)
  */
 void *listRemove(List *list, int pos)
 {
-  ListNode *currNode = gll_findNode(list, pos);
+  ListNode *currNode = listFindNode(list, pos);
   void *data = NULL;
 
   if(currNode == NULL)
@@ -154,7 +154,7 @@ void *listRemove(List *list, int pos)
 }
 
 
-void *gllRemoveByNode(List *list, ListNode *node)
+void *listRemoveByNode(List *list, ListNode *node)
 {
   ListNode *currNode = node;
   void *data = NULL;
@@ -181,10 +181,9 @@ void *gllRemoveByNode(List *list, ListNode *node)
 
 /*
  * destroys a list and frees all list related memory
- * Does not touch the data stored at the nodes!
- * in:        pointer to list
+ * Does not touch the data stored at the nodes
  */
-void gllDestroy(List *list)
+void listDestroy(List *list)
 {
   ListNode *currNode = list->first;
   ListNode *nextNode;
@@ -195,33 +194,4 @@ void gllDestroy(List *list)
     currNode = nextNode;
   }
   free(list);
-}
-
-int gllRemoveAllFromCurr(List *list, ListNode *current)
-{
-	ListNode *currNode;
-	ListNode *nextNode;
-
-	if(list->first==NULL)
-		return 1;
-
-	currNode=current;
-
-	if(current->next==NULL)
-	{
-		return 1;
-	}
-
-
-	currNode = currNode->next;
-	nextNode = currNode->next;
-
-	while(nextNode!=NULL)
-	{
-		gllRemoveByNode(list, currNode);
-		currNode=nextNode;
-		nextNode=nextNode->next;
-	}
-	gllRemoveByNode(list, currNode);
-	return 1;
 }

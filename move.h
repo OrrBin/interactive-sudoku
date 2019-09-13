@@ -28,5 +28,6 @@ void addMoveToCurrentAndCleanNextMoves (List* list, ListNode **currentMove, Move
 void printMove(ListNode *currentMove);
 void printMoves(List* moveList, ListNode **currentMove);
 void freeMoveList(List *list);
+int removeAllMovesFromCurr(List *list, ListNode *current);
 #endif /* MOVE_H_ */
 

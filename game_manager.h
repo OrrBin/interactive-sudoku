@@ -25,7 +25,7 @@
  */
 void parseCommand(Board **boardP, char* command, List *moveList, ListNode **curr);
 void handleCommandSet(Board *board, int row, int col, int val, List *moveList,
-	ListNode **curr, int isFirstMoveOfCommand, int isLastMoveOfCommand, enum boolean shouldPrint, enum mode currentGameMode) ;
+	ListNode **curr, int isFirstMoveOfCommand, int isLastMoveOfCommand, enum boolean shouldPrint) ;
 void handleCommandSolve(Board **board, char *filePath, List *moveList, ListNode **curr);
 void handleCommandEdit(Board **board, char *filePath, List *moveList, ListNode **curr);
 void handleCommandUndo(Board *board, List* moveList, ListNode **curr);

@@ -38,13 +38,13 @@ int listPushBack(List *, void *);
 
 /*  remove functions */
 void *listRemove(List *, int);
-void *gllRemoveByNode(List *list, ListNode *node);
+void *listRemoveByNode(List *list, ListNode *node);
 void *gllPopBack(List *);
 
 
 /*  destructive functions */
-void gllDestroy(List *);
-int gllRemoveAllFromCurr(List *list, ListNode *currNode);
+void listDestroy(List *);
+int removeAllMovesFromCurr(List *list, ListNode *currNode);
 
 
 #endif /* LIST_H_ */

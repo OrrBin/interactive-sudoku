@@ -158,7 +158,7 @@ void handleCommandSolve(Board **board, char *filePath, List *moveList, ListNode 
 
 	if(moveList != NULL) {
 		*curr=moveList->first;
-		gllRemoveAllFromCurr(moveList, *curr);
+		removeAllMovesFromCurr(moveList, *curr);
 	}
 	currentGameMode = SOLVE;
 
@@ -175,7 +175,7 @@ void handleCommandEdit(Board **board, char *filePath, List *moveList, ListNode *
 	Board *newBoard;
 
 	*curr=moveList->first;
-	gllRemoveAllFromCurr(moveList, *curr);
+	removeAllMovesFromCurr(moveList, *curr);
 	if (filePath == NULL) {
 		freeBoard(*board);
 		*board = initEmptyBoard(9, 3, 3);
@@ -216,7 +216,7 @@ void handleCommandPrintBoard(Board *board) {
 }
 
 void handleCommandSet(Board *board, int row, int col, int val, List *moveList,
-	ListNode **curr, int isFirstMoveOfCommand, int isLastMoveOfCommand, enum boolean shouldPrint, enum mode currentGameMode) {
+		ListNode **curr, int isFirstMoveOfCommand, int isLastMoveOfCommand, enum boolean shouldPrint) {
 
 	int setCellResult, previousValue, index;
 	enum boolean isError = false;
@@ -252,7 +252,7 @@ void handleCommandSet(Board *board, int row, int col, int val, List *moveList,
 				isFirstMoveOfCommand, move->isLastMoveOfCommand =
 						isLastMoveOfCommand, move->previousValue = previousValue, move->newValue =
 								val;
-		gllRemoveAllFromCurr(moveList, *curr);
+		removeAllMovesFromCurr(moveList, *curr);
 		listPushBack(moveList, move);
 		*curr = moveList->last;
 	}
@@ -328,7 +328,7 @@ void handleCommandGenerate(int x, int y, Board *board, List *moveList, ListNode 
 			}
 			validValues = checkValidValues(copy,row , col);
 			indexVal=(rand()%numOfValidValues);
-			handleCommandSet(copy, row, col, validValues[indexVal], moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand, true, EDIT);
+			handleCommandSet(copy, row, col, validValues[indexVal], moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand, true);
 			if(isFirstMoveOfCommand==1)
 			{
 				isFirstMoveOfCommand=0;
@@ -338,7 +338,7 @@ void handleCommandGenerate(int x, int y, Board *board, List *moveList, ListNode 
 		if(i!=x)
 		{
 			*curr=prevCurr;
-			gllRemoveAllFromCurr(moveList, *curr);
+			removeAllMovesFromCurr(moveList, *curr);
 			isFirstMoveOfCommand=1;
 			cpyBoard(board,copy);
 			continue;
@@ -349,7 +349,7 @@ void handleCommandGenerate(int x, int y, Board *board, List *moveList, ListNode 
 			if(!solution->solutionFound)
 			{
 				*curr=prevCurr;
-				gllRemoveAllFromCurr(moveList, *curr);
+				removeAllMovesFromCurr(moveList, *curr);
 				isFirstMoveOfCommand=1;
 				cpyBoard(board,copy);
 				continue;
@@ -367,13 +367,17 @@ void handleCommandGenerate(int x, int y, Board *board, List *moveList, ListNode 
 				else
 				{
 					*curr=prevCurr;
-					gllRemoveAllFromCurr(moveList, *curr);
+					removeAllMovesFromCurr(moveList, *curr);
 					isFirstMoveOfCommand=1;
 					cpyBoard(board,copy);
 					continue;
 				}
 			}
 		}
+	}
+
+	if(solution != NULL) {
+		freeLPSol(solution);
 	}
 	if(!success)
 	{
@@ -420,7 +424,7 @@ void handleCommandHint(Board *board, int row, int col) {
 		return;
 	}
 
-	hint(board, row - 1, col - 1);
+	hint(board, row, col);
 }
 
 void handleCommandGuessHint(Board *board, int row, int col) {
@@ -568,7 +572,7 @@ void parseCommand(Board **boardP, char* command, List *moveList,
 		thirdIntArg = atoi(thirdArg);
 
 		handleCommandSet(board, secondIntArg - 1, firstIntArg - 1, thirdIntArg,
-				moveList, curr, 1, 1, true, currentGameMode);
+				moveList, curr, 1, 1, true);
 
 		return;
 
@@ -710,7 +714,7 @@ void parseCommand(Board **boardP, char* command, List *moveList,
 		firstIntArg = atoi(firstArg);
 		secondIntArg = atoi(secondArg);
 
-		handleCommandHint(board, secondIntArg, firstIntArg);
+		handleCommandHint(board, secondIntArg - 1, firstIntArg - 1);
 	}
 
 	else if (isStringsEqual(token, "guess_hint") && !isGameOverFlag) {

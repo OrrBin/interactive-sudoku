@@ -224,7 +224,7 @@ void freeLPSol(LPSol *solution) {
 				for(t = 0; t < list->size; t++) {
 					free((intTuple2 *) listGet(list, t));
 				}
-				gllDestroy(list);
+				listDestroy(list);
 			}
 		}
 	}

@@ -224,7 +224,7 @@ void guess(Board *board, float threshold, List *moveList, ListNode **curr) {
 		}
 
 		if(chosenValue > 0) {
-			handleCommandSet(board, row, col, chosenValue, moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand, false, SOLVE);
+			handleCommandSet(board, row, col, chosenValue, moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand, false);
 			if (isFirstMoveOfCommand==1)
 				{
 					isFirstMoveOfCommand=0;
@@ -310,7 +310,6 @@ void playTurn(Board **boardP, List *moveList, ListNode **curr) {
 		exit(1);
 	}
 	parseCommand(boardP, cmd, moveList, curr);
-	printMoves(moveList, curr);
 }
 
 void exitGame(Board *board) {
@@ -507,7 +506,7 @@ void autoFillBoard(Board *board, List *moveList, ListNode **curr, enum boolean d
 		if(checkValidValuesNum(tmp,row, col) == 1 && !isCellFixed(tmp, row, col)) {
 			didChange = true;
 			validValue = checkValidValues(tmp,row , col);
-			handleCommandSet(board, row, col, validValue[0], moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand, false, SOLVE);
+			handleCommandSet(board, row, col, validValue[0], moveList, curr, isFirstMoveOfCommand, isLastMoveOfCommand, false);
 			if (isFirstMoveOfCommand==1)
 			{
 				isFirstMoveOfCommand=0;
@@ -555,7 +554,7 @@ void emptyCellsFromFullBoard(Board *board, int numOfCells, List *moveList, ListN
 		}
 		row= cellRow(board, index);
 		col= cellCol(board, index);
-		handleCommandSet(board, row, col, 0, moveList, curr, 0, 0, false, EDIT);
+		handleCommandSet(board, row, col, 0, moveList, curr, 0, 0, false);
 		i++;
 	}
 }
