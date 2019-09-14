@@ -8,18 +8,12 @@
 #ifndef LIST_H_
 #define LIST_H_
 
-
-
-
 typedef struct node {
   void *data;
   struct node *prev;
   struct node *next;
 } ListNode;
 
-/*
- * Generic Linked List Type: gll_t
- */
 typedef struct {
   int size;
   ListNode *first;
@@ -30,11 +24,11 @@ typedef struct {
 /*  create new list */
 List *listInit();
 
-/*  get/find functions */
-void *listGet(List *, int);
+/*  get node by position */
+void *listGet(List *, int pos);
 
-/*  add functions */
-int listPushBack(List *, void *);
+/*  add last */
+int listPushBack(List *list, void *data);
 
 /*  remove functions */
 void *listRemove(List *, int);

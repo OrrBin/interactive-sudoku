@@ -8,11 +8,8 @@
 #ifndef GAME_MANAGER_H_
 #define GAME_MANAGER_H_
 
-
-
 #include <stdio.h>
 #include <string.h>
-
 #include "list.h"
 #include "util.h"
 
@@ -24,6 +21,8 @@
  * command.
  */
 void parseCommand(Board **boardP, char* command, List *moveList, ListNode **curr);
+
+/*functions for handling commands*/
 void handleCommandSet(Board *board, int row, int col, int val, List *moveList,
 	ListNode **curr, int isFirstMoveOfCommand, int isLastMoveOfCommand, enum boolean shouldPrint) ;
 void handleCommandSolve(Board **board, char *filePath, List *moveList, ListNode **curr);

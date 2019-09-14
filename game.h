@@ -55,8 +55,8 @@ Board *initEmptyBoard(int dimension, int blockHeight, int blockWidth);
 void playTurn(Board **boardP, List *moveList, ListNode **curr);
 
 /*
- * TODO
- */
+gets a board and indexes, and prints a possible value for the relevant cell
+*/
 void hint(Board *board, int row, int col);
 
 /**
@@ -71,7 +71,7 @@ void guess(Board *board, float threshold, List *moveList, ListNode **curr);
 void guessHint(Board *board, int row, int col);
 
 /*
- * TODO
+ * returns whether or not the board has a valit solution
  */
 enum boolean validate(Board *board, enum boolean shouldPrint);
 
@@ -97,11 +97,19 @@ Board* restart(Board *board);
  */
 void exitGame(Board *board);
 
+/*
+ * checks for errors in the board
+ */
 int findErrors(Board *board);
 
 /*
  * checks whether or not game completed.
  */
 int isGameOver(Board *board);
+
+/*
+ * clear numOfCells cells from the board
+ */
 void emptyCellsFromFullBoard(Board *board, int numOfCells, List *moveList, ListNode **curr);
+
 #endif /* GAME_H_ */

@@ -9,9 +9,6 @@
 #ifndef UTIL_H_
 #define UTIL_H_
 
-
-#endif /* UTIL_H_ */
-
 /*
  * printing a board
  */
@@ -110,3 +107,5 @@ LPSol *initLPSol(int dimension);
  * free linear programming solution object
  */
 void freeLPSol(LPSol *solution);
+
+#endif /* UTIL_H_ */

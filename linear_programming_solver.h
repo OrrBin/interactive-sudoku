@@ -10,9 +10,14 @@
 
 #include "types.h"
 
+/*
+ * solve a board using LP
+ */
 LPSol *LPsolve(Board *board, enum boolean isInteger);
 
+/*
+ * gets row and col, and returns the relevant index in the solution
+ */
 int getVarIndex(LPSol *solution, int row, int col, int value);
-
 
 #endif /* LINEAR_PROGRAMMING_SOLVER_H_ */

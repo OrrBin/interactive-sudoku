@@ -8,10 +8,11 @@
 #ifndef BOARD_READER_H_
 #define BOARD_READER_H_
 
+#include "types.h"
 
+/*gets file path with data which represent board, and return Board struct with this data*/
+Board *readBoardFromfile(char * filePath);
 
 #endif /* BOARD_READER_H_ */
 
-#include "types.h"
 
-Board *readBoardFromfile(char * filePath);

@@ -8,10 +8,6 @@
 #ifndef SOLVER_H_
 #define SOLVER_H_
 
-
-
-#endif /* SOLVER_H_ */
-
 /**
  * Solve the given board using the back tracking algorithm.
  * The solution would be stored at destination at the end of the run if
@@ -45,3 +41,5 @@ int *checkValidValues(Board *board, int row, int col);
  * solves the board if possible
  */
 int solve(Board *board, int print, List *moveList, ListNode **curr);
+
+#endif /* SOLVER_H_ */
